@@ -58,4 +58,6 @@ ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
 
+RUN bash ./src/ubuntu/install/neovim/install_neovim.sh
+
 CMD ["--tail-log"]

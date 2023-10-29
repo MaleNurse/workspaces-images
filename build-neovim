@@ -16,15 +16,22 @@ SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
   exit 1
 }
 
-PRIV="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh"
-[ -f ${PRIV} ] && {
-  cp ${PRIV} ${PRIV}-$$
-  cat ${PRIV} | sed -e "s/__GITHUB_API_TOKEN__/${GH_TOKEN}/" > /tmp/gh$$
-  cp /tmp/gh$$ ${PRIV}
-  rm -f /tmp/gh$$
-}
+PRIVS="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh \
+       ${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovide.sh"
+for priv in ${PRIVS}
+do
+  [ -f ${priv} ] && {
+    cp ${priv} ${priv}-$$
+    cat ${priv} | sed -e "s/__GITHUB_API_TOKEN__/${GH_TOKEN}/" > /tmp/gh$$
+    cp /tmp/gh$$ ${priv}
+    rm -f /tmp/gh$$
+  }
+done
 
 sudo docker build -t kasmweb/neovim:dev \
                   -f dockerfile-kasm-ubuntu-jammy-neovim .
 
-[ -f ${PRIV}-$$ ] && mv ${PRIV}-$$ ${PRIV}
+for priv in ${PRIVS}
+do
+  [ -f ${priv}-$$ ] && mv ${priv}-$$ ${priv}
+done

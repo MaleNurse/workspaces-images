@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Lazyman
-Comment=Neovim Configuration Manager
-Exec=xfce4-terminal --tab --title Lazyman --command lazyman
+Name=Nvims
+Comment=Neovim Configuration Selector
+Exec=xfce4-terminal --tab --title Nvims --command "nvims %f"
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 Categories=System;
