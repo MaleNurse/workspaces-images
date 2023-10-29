@@ -1,5 +1,26 @@
 #!/bin/bash
 
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+
+# Set the Github API token
+[ "${GH_TOKEN}" ] || {
+  [ -f $HOME/.private ] && source $HOME/.private
+}
+[ "${GH_TOKEN}" ] || {
+  printf "\nNo Github token set in the environment"
+  printf "\nSet GH_TOKEN in $HOME/.private"
+  printf "\nExiting\n"
+  exit 1
+}
+
+PRIV="${SCRIPT_PATH}/src/ubuntu/install/neovim/kasm-user/.private"
+[ -f ${PRIV} ] && {
+  cat ${PRIV} | sed -e "s/__GITHUB_API_TOKEN__/${GH_TOKEN}/" > /tmp/gh$$
+  cp /tmp/gh$$ ${PRIV}
+  rm -f /tmp/gh$$
+}
+
 sudo docker build --build-arg GH_TOKEN=${GH_TOKEN} \
                   -t kasmweb/neovim:dev \
-		  -f dockerfile-kasm-ubuntu-jammy-neovim .
+                  -f dockerfile-kasm-ubuntu-jammy-neovim .

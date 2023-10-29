@@ -10,7 +10,7 @@ DL_URL=
 
 # GH_TOKEN, a GitHub token must be set in the environment
 [ "${GH_TOKEN}" ] || {
-  [ -f $HOME/.private ] && source $HOME/.privat
+  [ -f $HOME/.private ] && source $HOME/.private
 }
 rm -f $HOME/.private
 
