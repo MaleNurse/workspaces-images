@@ -14,11 +14,10 @@ apt-get install -y lsd
 apt-get install -y figlet
 apt-get install -y luarocks
 apt-get install -y lolcat
+apt-get install -y wl-clipboard
+apt-get install -y xclip
 apt-get install -y xsel
 apt-get install -y python3
 apt-get install -y python3-venv
 apt-get install -y ruby
 apt-get install -y ruby-dev
-apt-get install -y wl-clipboard
-apt-get install -y wl-copy
-apt-get install -y xclip

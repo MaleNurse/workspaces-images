@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=lazyman
 Comment=Neovim Configuration Manager
-Exec=xfce4-terminal --tab --geometry 100x40 --title Lazyman --command lazyman
+Exec=xfce4-terminal --tab --geometry 100x40 --title Lazyman --command "lazyman noinstall"
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 Categories=System;

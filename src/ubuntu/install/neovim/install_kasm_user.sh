@@ -44,5 +44,10 @@ if [ -d $HOME/bin ]; then
 else
   cp -a ${SCRIPT_PATH}/kasm-user/bin $HOME
 fi
+if [ -d $HOME/.cargo ]; then
+  cp ${SCRIPT_PATH}/kasm-user/.cargo/env $HOME/.cargo
+else
+  cp -a ${SCRIPT_PATH}/kasm-user/.cargo $HOME
+fi
 
 chown -R 1000:1000 $HOME/
