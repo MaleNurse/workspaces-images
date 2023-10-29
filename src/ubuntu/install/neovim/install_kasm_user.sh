@@ -39,5 +39,10 @@ if [ -d $HOME/Desktop ]; then
 else
   cp -a ${SCRIPT_PATH}/kasm-user/Desktop $HOME
 fi
+if [ -d $HOME/bin ]; then
+  cp ${SCRIPT_PATH}/kasm-user/bin/* $HOME/bin
+else
+  cp -a ${SCRIPT_PATH}/kasm-user/bin $HOME
+fi
 
 chown -R 1000:1000 $HOME/

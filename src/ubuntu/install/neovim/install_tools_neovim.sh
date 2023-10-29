@@ -19,4 +19,6 @@ apt-get install -y python3
 apt-get install -y python3-venv
 apt-get install -y ruby
 apt-get install -y ruby-dev
-apt-get install -y xclip wl-clipboard wl-copy
+apt-get install -y wl-clipboard
+apt-get install -y wl-copy
+apt-get install -y xclip

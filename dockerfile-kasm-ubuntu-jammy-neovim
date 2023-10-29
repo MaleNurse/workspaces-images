@@ -18,6 +18,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/misc/install_tools.sh \
                   /ubuntu/install/neovim/install_tools_neovim.sh \
                   /ubuntu/install/neovim/install_kasm_user.sh \
+                  /ubuntu/install/neovim/install_neovim.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/chromium/install_chromium.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
