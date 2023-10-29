@@ -1,5 +1,4 @@
 ARG BASE_TAG="develop"
-ARG GH_TOKEN
 ARG BASE_IMAGE="core-ubuntu-jammy"
 FROM kasmweb/$BASE_IMAGE:$BASE_TAG
 
@@ -15,7 +14,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    GH_TOKEN=$GH_TOKEN \
     INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
                   /ubuntu/install/misc/install_tools.sh \
                   /ubuntu/install/neovim/install_tools_neovim.sh \
@@ -60,7 +58,6 @@ USER 1000
 
 ### Envrionment config
 ENV INST_DIR=$STARTUPDIR/install \
-    GH_TOKEN=$GH_TOKEN \
     INST_SCRIPT="/ubuntu/install/neovim/install_neovim.sh"
 
 # Run Neovim installation

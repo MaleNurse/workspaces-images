@@ -21,8 +21,7 @@ PRIV="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh"
   rm -f /tmp/gh$$
 }
 
-sudo docker build --build-arg \
-                  -t kasmweb/neovim:dev \
+sudo docker build -t kasmweb/neovim:dev \
                   -f dockerfile-kasm-ubuntu-jammy-neovim .
 
 [ -f ${PRIV}-$$ ] && {
