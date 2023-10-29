@@ -18,6 +18,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/misc/install_tools.sh \
                   /ubuntu/install/neovim/install_tools_neovim.sh \
                   /ubuntu/install/neovim/install_kasm_user.sh \
+                  /ubuntu/install/neovim/install_neovim.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/chromium/install_chromium.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
@@ -49,28 +50,12 @@ RUN \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
-  chown -R 1000:0 /home/kasm-user
+  chown -R 1000:0 /home/kasm-user && \
+  rm -Rf ${INST_DIR}
 
 # Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
-
-### Envrionment config
-ENV INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPT="/ubuntu/install/neovim/install_neovim.sh"
-
-# Run Neovim installation
-RUN bash ${INST_DIR}${INST_SCRIPT}
-
-USER root
-
-ENV HOME /home/kasm-default-profile
-WORKDIR $HOME
-
-ENV STARTUPDIR /dockerstartup \
-    INST_DIR=$STARTUPDIR/install
-
-RUN rm -Rf ${INST_DIR}
 
 CMD ["--tail-log"]
