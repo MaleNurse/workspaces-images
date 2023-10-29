@@ -2,6 +2,7 @@
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd $(dirname "${SCRIPT_PATH}")
 
 [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
 [ "${GH_TOKEN}" ] || {
