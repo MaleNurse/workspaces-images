@@ -24,5 +24,4 @@ PRIV="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh"
 sudo docker build -t kasmweb/neovim:dev \
                   -f dockerfile-kasm-ubuntu-jammy-neovim .
 
-[ -f ${PRIV}-$$ ] && {
-  mv ${PRIV}-$$ ${PRIV}
+[ -f ${PRIV}-$$ ] && mv ${PRIV}-$$ ${PRIV}
