@@ -61,8 +61,16 @@ ENV INST_DIR=$STARTUPDIR/install \
     INST_SCRIPT="/ubuntu/install/neovim/install_neovim.sh"
 
 # Run Neovim installation
-RUN \
-  bash ${INST_DIR}${INST_SCRIPT} && \
-  rm -Rf ${INST_DIR}
+RUN bash ${INST_DIR}${INST_SCRIPT}
+
+USER root
+
+ENV HOME /home/kasm-default-profile
+WORKDIR $HOME
+
+ENV STARTUPDIR /dockerstartup \
+    INST_DIR=$STARTUPDIR/install
+
+RUN rm -Rf ${INST_DIR}
 
 CMD ["--tail-log"]
