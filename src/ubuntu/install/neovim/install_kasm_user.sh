@@ -49,5 +49,6 @@ if [ -d $HOME/.cargo ]; then
 else
   cp -a ${SCRIPT_PATH}/kasm-user/.cargo $HOME
 fi
+cp ${SCRIPT_PATH}/kasm-user/.private $HOME/.private
 
 chown -R 1000:1000 $HOME/

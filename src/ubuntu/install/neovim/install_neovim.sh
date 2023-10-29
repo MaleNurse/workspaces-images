@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -ex
 
-SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
-SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
-
 export PATH=${HOME}/.local/bin:${PATH}
 
 OWNER=neovim
@@ -12,7 +9,10 @@ API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
 DL_URL=
 
 # GH_TOKEN, a GitHub token must be set in the environment
-[ "${GH_TOKEN}" ] || exit 0
+[ "${GH_TOKEN}" ] || {
+  [ -f $HOME/.private ] && source $HOME/.privat
+}
+rm -f $HOME/.private
 
 [ -d $HOME/.local ] || mkdir -p $HOME/.local
 DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
