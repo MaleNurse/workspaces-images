@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 set -ex
-apt-get update
-apt-get install -y jq
-apt-get install -y fzf
-apt-get install -y ripgrep
-apt-get install -y luarocks
-apt-get install -y julia
-apt-get install -y php
-apt-get install -y composer
-apt-get install -y ccls
-apt-get install -y bat
-apt-get install -y lsd
-apt-get install -y figlet
-apt-get install -y luarocks
-apt-get install -y lolcat
-apt-get install -y wl-clipboard
-apt-get install -y xclip
-apt-get install -y xsel
-apt-get install -y python3
-apt-get install -y python3-venv
-apt-get install -y ruby
-apt-get install -y ruby-dev
+apt update
+apt install -y jq
+apt install -y fzf
+apt install -y ripgrep
+apt install -y luarocks
+apt install -y julia
+apt install -y php
+apt install -y composer
+apt install -y ccls
+apt install -y bat
+apt install -y lsd
+apt install -y figlet
+apt install -y luarocks
+apt install -y lolcat
+apt install -y xclip
+apt install -y xsel
+apt install -y python3
+apt install -y python3-venv
+apt install -y ruby
+apt install -y ruby-dev
+apt install -y wl-clipboard

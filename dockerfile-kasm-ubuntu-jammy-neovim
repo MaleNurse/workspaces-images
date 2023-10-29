@@ -1,10 +1,12 @@
 ARG BASE_TAG="develop"
+ARG GH_TOKEN
 ARG BASE_IMAGE="core-ubuntu-jammy"
 FROM kasmweb/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
 ENV HOME /home/kasm-default-profile
+ENV GH_TOKEN $GH_TOKEN
 ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
