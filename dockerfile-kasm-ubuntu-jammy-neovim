@@ -51,7 +51,7 @@ RUN \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
-  chown -R 1000:0 /home/kasm-user && \
+  chown -R 1000:0 /home/kasm-user
 
 # Userspace Runtime
 ENV HOME /home/kasm-user

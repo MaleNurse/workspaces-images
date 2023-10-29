@@ -9,10 +9,7 @@ API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
 DL_URL=
 
 # GH_TOKEN, a GitHub token must be set in the environment
-[ "${GH_TOKEN}" ] || {
-  [ -f $HOME/.private ] && source $HOME/.private
-}
-rm -f $HOME/.private
+export GH_TOKEN="__GITHUB_API_TOKEN__"
 
 [ -d $HOME/.local ] || mkdir -p $HOME/.local
 DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
