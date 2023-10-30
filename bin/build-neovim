@@ -18,11 +18,14 @@ cd $(dirname "${SCRIPT_PATH}")
 }
 
 PRIVS="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh \
-       ${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovide.sh"
+       ${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovide.sh \
+       ${SCRIPT_PATH}/src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
+       ${SCRIPT_PATH}/src/ubuntu/install/neovim/kasm-user/bin/install-neovide"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
-    cp ${priv} ${priv}-$$
+    bpriv=$(basename ${priv})
+    cp ${priv} /tmp/${bpriv}-$$
     cat ${priv} | sed -e "s/__GITHUB_API_TOKEN__/${GH_TOKEN}/" > /tmp/gh$$
     cp /tmp/gh$$ ${priv}
     rm -f /tmp/gh$$
@@ -34,5 +37,6 @@ sudo docker build -t kasmweb/neovim:dev \
 
 for priv in ${PRIVS}
 do
-  [ -f ${priv}-$$ ] && mv ${priv}-$$ ${priv}
+  bpriv=$(basename ${priv})
+  [ -f /tmp/${bpriv}-$$ ] && mv /tmp/${bpriv}-$$ ${priv}
 done

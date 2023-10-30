@@ -1,0 +1,37 @@
+#!/bin/bash
+
+export PATH="$HOME/.local/bin:$PATH"
+
+have_nvim=$(type -p nvim)
+have_neov=$(type -p neovide)
+
+[ "${have_nvim}" ] || {
+  [ -x $HOME/bin/install-neovim ] && $HOME/bin/install-neovim
+}
+
+[ "${have_neov}" ] || {
+  [ -x $HOME/bin/install-neovide ] && $HOME/bin/install-neovide
+}
+
+have_nvim=$(type -p nvim)
+have_neov=$(type -p neovide)
+
+# We gave it out best shot
+rm -f $HOME/bin/install-neovim
+rm -f $HOME/bin/install-neovide
+
+[ -f $HOME/.config/autostart/postinstall.desktop ] && {
+  rm -f $HOME/.config/autostart/postinstall.desktop
+}
+
+have_lazy=$(type -p lazyman)
+[ "${have_lazy}" ] && {
+  xfce4-terminal --tab --title Lazyman --command "lazyman -Q noinstall"
+}
+
+[ -f $HOME/.config/nvim-Lazyman/.initialized ] || {
+  [ -f $HOME/.local/share/applications/lazyman-install.desktop ] && {
+    cp $HOME/.local/share/applications/lazyman-install.desktop \
+       $HOME/.config/autostart/lazyman.desktop
+  }
+}
