@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+
 apt update
 apt install -y jq
 apt install -y fzf

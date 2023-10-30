@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-set -ex
+#
 
+umask 022
 export PATH=${HOME}/.local/bin:${PATH}
 
 OWNER=neovim

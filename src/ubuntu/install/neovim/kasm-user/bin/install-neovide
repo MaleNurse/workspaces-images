@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
-set -ex
-
-export PATH="$HOME/.local/bin:$PATH:$HOME/.cargo/bin"
-
-# GH_TOKEN, a GitHub token must be set in the environment
-export GH_TOKEN="__GITHUB_API_TOKEN__"
-
-[ -d $HOME/.local ] || mkdir -p $HOME/.local
-
-have_cargo=$(type -p cargo)
+#
 
 cargo_install() {
   [ "${have_cargo}" ] || {
@@ -84,6 +75,16 @@ dl_asset() {
     printf " done"
   }
 }
+
+umask 022
+export PATH="$HOME/.local/bin:$PATH:$HOME/.cargo/bin"
+
+# GH_TOKEN, a GitHub token must be set in the environment
+export GH_TOKEN="__GITHUB_API_TOKEN__"
+
+[ -d $HOME/.local ] || mkdir -p $HOME/.local
+
+have_cargo=$(type -p cargo)
 
 have_neovide=$(command -v neovide)
 [ "${have_neovide}" ] && {
