@@ -17,10 +17,8 @@ cd $(dirname "${SCRIPT_PATH}")
   exit 1
 }
 
-PRIVS="${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovim.sh \
-       ${SCRIPT_PATH}/src/ubuntu/install/neovim/install_neovide.sh \
-       ${SCRIPT_PATH}/src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
-       ${SCRIPT_PATH}/src/ubuntu/install/neovim/kasm-user/bin/install-neovide"
+PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
