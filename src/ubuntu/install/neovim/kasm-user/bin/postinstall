@@ -43,7 +43,7 @@ LOGDIR="$HOME/logs"
 
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
-# have_neov=$(type -p neovide)
+have_neov=$(type -p neovide)
 
 [ "${have_nvim}" ] || {
   [ -x $HOME/bin/install-neovim ] && {
@@ -51,11 +51,11 @@ have_nvim=$(type -p nvim)
   }
 }
 
-# [ "${have_neov}" ] || {
-#   [ -x $HOME/bin/install-neovide ] && {
-#     ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
-#   }
-# }
+[ "${have_neov}" ] || {
+  [ -x $HOME/bin/install-neovide ] && {
+    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
+  }
+}
 
 # We gave it our best shot
 rm -f /home/*/bin/install-neovim
