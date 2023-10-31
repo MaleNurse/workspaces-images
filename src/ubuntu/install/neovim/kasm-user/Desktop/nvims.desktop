@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Nvims
 Comment=Neovim Configuration Selector
-Exec=xfce4-terminal --tab --title Nvims --command "nvims %f"
+Exec=xfce4-terminal --title Nvims --command "bash -c nvims %f"
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 Categories=System;
