@@ -21,13 +21,13 @@ have_neov=$(type -p neovide)
 
 [ "${have_nvim}" ] || {
   [ -x $HOME/bin/install-neovim ] && {
-    xfce4-terminal --title "Install Neovim" --command "/home/kasm-user/bin/install-neovim; exit"
+    xfce4-terminal --title "Install Neovim" --command "${HOME}/bin/install-neovim; exit"
   }
 }
 
 [ "${have_neov}" ] || {
   [ -x $HOME/bin/install-neovide ] && {
-    xfce4-terminal --title "Install Neovide" --command "/home/kasm-user/bin/install-neovide; exit"
+    xfce4-terminal --title "Install Neovide" --command "${HOME}/bin/install-neovide; exit"
   }
 }
 
