@@ -18,7 +18,9 @@ cd $(dirname "${SCRIPT_PATH}")
 }
 
 PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide"
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-jetbrains \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
