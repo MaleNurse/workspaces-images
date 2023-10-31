@@ -17,7 +17,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
                   /ubuntu/install/misc/install_tools.sh \
                   /ubuntu/install/neovim/install_tools_neovim.sh \
-                  /ubuntu/install/neovim/install_kasm_user.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/chromium/install_chromium.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
@@ -49,12 +48,18 @@ RUN \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
-  chown -R 1000:0 /home/kasm-user && \
-  rm -Rf ${INST_DIR}
+  chown -R 1000:0 /home/kasm-user
 
 # Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
+
+RUN bash ${INST_DIR}/ubuntu/install/neovim/install_kasm_user.sh
+
+# Cleanup
+USER root
+
+RUN rm -Rf ${INST_DIR}
 
 CMD ["--tail-log"]
