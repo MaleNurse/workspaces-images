@@ -41,7 +41,7 @@ COPY ./src/ubuntu/install/neovim $INST_SCRIPTS/neovim/
 RUN \
   bash $INST_SCRIPTS/neovim/install_tools_neovim.sh && \
   bash $INST_SCRIPTS/neovim/install_kasm_user.sh && \
-  rm -rf $INST_SCRIPTS/sublime_text/
+  rm -rf $INST_SCRIPTS/neovim/
 
 ### Install Sublime Text
 COPY ./src/ubuntu/install/sublime_text $INST_SCRIPTS/sublime_text/
