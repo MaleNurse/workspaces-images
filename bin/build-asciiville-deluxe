@@ -17,9 +17,9 @@ cd $(dirname "${SCRIPT_PATH}")
   exit 1
 }
 
-PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/bin/install-asciiville \
-       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/bin/install-jetbrains \
-       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/asciiville-deluxe/kasm-user/bin/install-asciiville \
+       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville-deluxe/kasm-user/bin/install-jetbrains \
+       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville-deluxe/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
@@ -32,7 +32,7 @@ do
 done
 
 sudo docker build -t kasmweb/asciiville-deluxe:dev \
-                  -f dockerfile-kasm-asciiville-deluxe .
+                  -f kasm-asciiville-deluxe.Dockerfile .
 
 for priv in ${PRIVS}
 do

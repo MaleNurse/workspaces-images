@@ -17,10 +17,10 @@ cd $(dirname "${SCRIPT_PATH}")
   exit 1
 }
 
-PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-jetbrains \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim-deluxe/kasm-user/bin/install-neovim \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim-deluxe/kasm-user/bin/install-neovide \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim-deluxe/kasm-user/bin/install-jetbrains \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim-deluxe/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
@@ -33,7 +33,7 @@ do
 done
 
 sudo docker build -t kasmweb/neovim-deluxe:dev \
-                  -f dockerfile-kasm-neovim-deluxe .
+                  -f kasm-neovim-deluxe.Dockerfile .
 
 for priv in ${PRIVS}
 do

@@ -16,8 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_DIR=$STARTUPDIR/install \
     INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
                   /ubuntu/install/misc/install_tools.sh \
-                  /ubuntu/install/asciiville/install_tools_asciiville.sh \
-                  /ubuntu/install/asciiville/install_kasm_user.sh \
+                  /ubuntu/install/neovim/install_tools_neovim.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/chromium/install_chromium.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
@@ -45,6 +44,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \

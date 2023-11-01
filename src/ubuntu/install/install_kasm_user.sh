@@ -2,6 +2,8 @@
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+SCRIPT_PATH="${SCRIPT_PATH}/$1"
+
 umask 022
 
 [ -d $HOME ] || mkdir -p $HOME

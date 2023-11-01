@@ -37,11 +37,13 @@ COPY ./src/ubuntu/install/firefox/firefox.desktop $HOME/Desktop/
 RUN bash $INST_SCRIPTS/firefox/install_firefox.sh && rm -rf $INST_SCRIPTS/firefox/
 
 ### Install Neovim dependencies and user config
-COPY ./src/ubuntu/install/neovim $INST_SCRIPTS/neovim/
+COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
+COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
 RUN \
-  bash $INST_SCRIPTS/neovim/install_tools_neovim.sh && \
-  bash $INST_SCRIPTS/neovim/install_kasm_user.sh && \
-  rm -rf $INST_SCRIPTS/neovim/
+  bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
+  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
+  rm -rf $INST_SCRIPTS/neovim-deluxe/ && \
+  rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 ### Install Sublime Text
 COPY ./src/ubuntu/install/sublime_text $INST_SCRIPTS/sublime_text/
