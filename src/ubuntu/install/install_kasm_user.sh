@@ -18,6 +18,11 @@ if [ -d $HOME/.config ]; then
   else
     cp -a ${SCRIPT_PATH}/kasm-user/.config/autostart $HOME/.config
   fi
+  if [ -d $HOME/.config/kitty ]; then
+    tar cf - -C ${SCRIPT_PATH}/kasm-user/.config kitty | tar xf - -C $HOME/.config
+  else
+    cp -a ${SCRIPT_PATH}/kasm-user/.config/kitty $HOME/.config
+  fi
   if [ -d $HOME/.config/xfce4 ]; then
     tar cf - -C ${SCRIPT_PATH}/kasm-user/.config xfce4 | tar xf - -C $HOME/.config
   else
