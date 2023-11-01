@@ -13,41 +13,37 @@ col=0
 row=2
 col=1
 
+[/home/kasm-user/Desktop/neovide.desktop]
+row=5
+col=0
+
 [/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
 row=3
 col=1
-
-[/home/kasm-user/Desktop/code.desktop]
-row=2
-col=2
 
 [/home/kasm-user/Desktop/nextcloud.desktop]
 row=1
 col=1
 
-[/home/kasm-user/Desktop/neovide.desktop]
-row=5
+[/home/kasm-user/Desktop/lazyman.desktop]
+row=4
+col=0
+
+[/home/kasm-user/Desktop/Downloads]
+row=0
 col=0
 
 [/home/kasm-user/Desktop/gimp.desktop]
 row=3
 col=2
 
-[/home/kasm-user/Desktop/Downloads]
-row=0
-col=0
-
 [/home/kasm-user/Desktop/signal-desktop.desktop]
-row=1
-col=2
-
-[/home/kasm-user/Desktop/lazyman.desktop]
-row=4
-col=0
-
-[/home/kasm-user/Desktop/exo-file-manager.desktop]
 row=5
 col=1
+
+[/home/kasm-user/Desktop/code.desktop]
+row=2
+col=2
 
 [/home/kasm-user/Desktop/sublime_text.desktop]
 row=4
@@ -65,15 +61,23 @@ col=1
 row=4
 col=1
 
+[/home/kasm-user/Desktop/xfce4-file-manager.desktop]
+row=5
+col=2
+
+[/home/kasm-user/Desktop/thunderbird.desktop]
+row=1
+col=2
+
 [/home/kasm-user/Desktop/telegram.desktop]
 row=0
 col=2
 
-[/home/kasm-user/Desktop/Uploads]
-row=1
-col=0
-
 [/home/kasm-user/Desktop/nvims.desktop]
 row=6
+col=0
+
+[/home/kasm-user/Desktop/Uploads]
+row=1
 col=0
 

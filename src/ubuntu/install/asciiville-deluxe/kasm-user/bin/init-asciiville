@@ -1,0 +1,1637 @@
+#!/bin/bash
+#
+# ascinit - initialize Asciiville configuration files, install needed utilities
+#           Kasm version used with Docker build, only install user config/packages
+#
+# shellcheck disable=SC2001,SC2002,SC2016,SC2006,SC2059,SC2086,SC2089,SC2181,SC2129
+
+MUSEDIR="/usr/share/asciiville/music"
+CONFDIR="/usr/share/asciiville"
+USERCONF="${HOME}/.config"
+GHUC="https://raw.githubusercontent.com"
+OWNER=doctorfree
+BOLD=$(tput bold 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
+
+# Neovim 0.9+ honors this
+# Override user's setting to install in standard location
+export NVIM_APPNAME="nvim-Lazyman"
+
+usage() {
+  if [ "${have_rich}" ]; then
+    rich "[bold]Usage:[/] [bold italic green]ascinit[/] [cyan]\[-a] \[-c] \[-d] \[-m] \[-M] \[-n] \[-N] \[-q] \[-r] \[-t] \[-y] \[-u] \[arg][/]" --print
+    rich "[bold]Where:[/]" --print
+    rich "    [cyan]-a[/] indicates [yellow] ask to play an animation when done[/]" --print
+    rich "    [cyan]-c[/] indicates [yellow]console mode - no windowing system, headless config[/]" --print
+    rich "    [cyan]-d[/] indicates [yellow]debug mode[/]" --print
+    rich "    [cyan]-m[/] indicates [yellow]setup user Mutt configuration[/]" --print
+    rich "    [cyan]-M[/] indicates [yellow]setup both Mutt and NeoMutt configurations[/]" --print
+    rich "    [cyan]-n[/] indicates [yellow]setup user NeoMutt configuration[/]" --print
+    rich "    [cyan]-N[/] indicates [yellow]prompt for installation of additional terminal emulators[/]" --print
+    rich "    [cyan]-q[/] indicates [yellow]quiet mode[/]" --print
+    rich "    [cyan]-r[/] indicates [yellow]remove service/package[/]" --print
+    rich "    [cyan]-t[/] indicates [yellow]authorize the Rainbow Stream app at Twitter[/]" --print
+    rich "    [cyan]-y[/] indicates [yellow]answer yes at all prompts[/]" --print
+    rich "    [cyan]-u[/] indicates [yellow]display this usage message and exit[/]" --print
+    rich "    If [cyan]arg[/] is [cyan]minimal[/] [yellow]a minimal initialization is performed[/]" --print
+    rich "    If [cyan]arg[/] is [cyan]brew[/] [yellow]Homebrew is installed and used[/]" --print
+    rich "    [cyan]arg[/] can also be one of [cyan]games[/], [cyan]kitty[/], or [cyan]neovim[/]" --print
+    rich "        indicating [yellow]installation or removal[/] of [cyan]arg[/]" --print
+    printf "\n"
+  else
+    printf "\nUsage: ascinit [-a] [-c] [-d] [-m] [-M] [-n] [-N] [-q] [-r] [-t] [-y] [-u] [arg]"
+    printf "\nWhere:"
+    printf "\n\t-a indicates ask to play an animation when done"
+    printf "\n\t-c indicates console mode - no windowing system, headless config"
+    printf "\n\t-d indicates debug mode"
+    printf "\n\t-m indicates setup user Mutt configuration"
+    printf "\n\t-M indicates setup both Mutt and NeoMutt configurations"
+    printf "\n\t-n indicates setup user NeoMutt configuration"
+    printf "\n\t-N indicates prompt for installation of additional terminal emulators"
+    printf "\n\t-q indicates quiet mode"
+    printf "\n\t-r indicates remove service/package"
+    printf "\n\t-t indicates authorize the Rainbow Stream app at Twitter"
+    printf "\n\t-y indicates answer yes at all prompts"
+    printf "\n\t-u indicates display this usage message and exit"
+    printf "\n\tif 'arg' is 'minimal' a minimal initialization is performed"
+    printf "\n\tif 'arg' is 'brew' Homebrew is installed and used"
+    printf "\n\targ can also be one of games, kitty, or neovim"
+    printf "\n\t\tindicating installation of removal of arg\n"
+  fi
+  exit 1
+}
+
+install_package() {
+}
+
+ask_install() {
+}
+
+install_pipx() {
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling pipx ..."
+  }
+  ${PYTHON} -m pip install --user pipx >/dev/null 2>&1
+  ${PYTHON} -m pipx ensurepath --force >/dev/null 2>&1
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+remove_games() {
+  if [ "${darwin}" ]; then
+    remove_package nbsdgames
+    remove_package nethack
+    remove_package ninvaders
+    remove_package c2048
+    remove_package greed
+  else
+    if [ "${debian}" ]; then
+      remove_package bsdgames
+      remove_package greed
+    else
+      remove_package bsd-games
+    fi
+    printf "\n\tRemoving asciigames package ..."
+    if [ "${debian}" ]; then
+      [ "${APT}" ] && sudo ${APT} remove asciigames >/dev/null 2>&1
+    else
+      if [ "${centos}" ] || [ "${fedora}" ]; then
+        [ "${DNF}" ] && sudo ${DNF} remove asciigames >/dev/null 2>&1
+      else
+        if [ "${arch}" ]; then
+          sudo pacman -R --noconfirm asciigames >/dev/null 2>&1
+        fi
+      fi
+    fi
+  fi
+  remove_package nudoku
+  printf "\n"
+}
+
+install_kitty() {
+  have_stow=$(type -p stow)
+  if [ "${have_stow}" ]; then
+    LOCAL=".local/stow/kitty.app"
+  else
+    LOCAL=".local/kitty.app"
+  fi
+  [ "${have_kitty}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Kitty terminal emulator ..."
+    }
+    curl --silent --location \
+      https://sw.kovidgoyal.net/kitty/installer.sh >/tmp/kitty-$$.sh
+    [ $? -eq 0 ] || {
+      rm -f /tmp/kitty-$$.sh
+      curl --insecure --silent --location \
+        https://sw.kovidgoyal.net/kitty/installer.sh >/tmp/kitty-$$.sh
+      cat /tmp/kitty-$$.sh | sed -e "s/curl -/curl -k/" >/tmp/k$$
+      cp /tmp/k$$ /tmp/kitty-$$.sh
+      rm -f /tmp/k$$
+    }
+    if [ -s /tmp/kitty-$$.sh ]; then
+      if [ "${have_stow}" ]; then
+        sh /tmp/kitty-$$.sh launch=n dest=~/.local/stow >/dev/null 2>&1
+        [ -d "${HOME}"/.local/stow ] && {
+          cd "${HOME}"/.local/stow || echo "Unable to stow kitty.app"
+          stow kitty.app
+        }
+      else
+        sh /tmp/kitty-$$.sh launch=n >/dev/null 2>&1
+      fi
+      rm -f /tmp/kitty-$$.sh
+      # Create a symbolic link to add kitty to PATH
+      [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
+      if [ -x ~/${LOCAL}/bin/kitty ]; then
+        [ -x ~/.local/bin/kitty ] || {
+          ln -s ~/${LOCAL}/bin/kitty ~/.local/bin/
+        }
+      else
+        if [ -x /Applications/kitty.app/Contents/MacOS/kitty ]; then
+          [ -x ~/.local/bin/kitty ] || {
+            ln -s /Applications/kitty.app/Contents/MacOS/kitty ~/.local/bin/
+          }
+        else
+          [ "${quiet}" ] || printf "\nUnable to create Kitty link to ~/.local/bin/\n"
+        fi
+      fi
+      # Link the kitty man pages somewhere it can be found by the man command
+      LINMAN="${HOME}/${LOCAL}/share/man"
+      MACMAN="/Applications/kitty.app/Contents/Resources/man"
+      [ -d ~/.local/share/man/man1 ] || mkdir -p ~/.local/share/man/man1
+      [ -f ~/.local/share/man/man1/kitty.1 ] || {
+        [ -d ${HOME}/.local/share/man/man1 ] || {
+          mkdir -p ${HOME}/.local/share/man/man1
+        }
+        if [ -f "${LINMAN}/man1/kitty.1" ]; then
+          ln -s "${LINMAN}/man1/kitty.1" ~/.local/share/man/man1/
+        else
+          [ -f "${MACMAN}/man1/kitty.1" ] && {
+            ln -s "${MACMAN}/man1/kitty.1" ~/.local/share/man/man1/
+          }
+        fi
+      }
+      [ -d ~/.local/share/man/man5 ] || mkdir -p ~/.local/share/man/man5
+      [ -f ~/.local/share/man/man5/kitty.conf.5 ] || {
+        [ -d ${HOME}/.local/share/man/man5 ] || {
+          mkdir -p ${HOME}/.local/share/man/man5
+        }
+        if [ -f "${LINMAN}/man5/kitty.conf.5" ]; then
+          ln -s "${LINMAN}/man5/kitty.conf.5" ~/.local/share/man/man5/
+        else
+          [ -f "${MACMAN}/man5/kitty.conf.5" ] && {
+            ln -s "${MACMAN}/man5/kitty.conf.5" ~/.local/share/man/man5/
+          }
+        fi
+      }
+      # Place the kitty.desktop file somewhere it can be found by the OS
+      [ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
+      [ -f "${HOME}/${LOCAL}/share/applications/kitty.desktop" ] && {
+        [ -f ~/.local/share/applications/kitty.desktop ] || {
+          cp ~/${LOCAL}/share/applications/kitty.desktop \
+            ~/.local/share/applications/
+        }
+      }
+      # If you want to open text files and images in kitty via your file manager
+      # also add the kitty-open.desktop file
+      [ -f "${HOME}/${LOCAL}/share/applications/kitty-open.desktop" ] && {
+        [ -f ~/.local/share/applications/kitty-open.desktop ] || {
+          cp ~/${LOCAL}/share/applications/kitty-open.desktop \
+            ~/.local/share/applications/
+        }
+      }
+      # Update the paths to the kitty and its icon in the kitty.desktop file(s)
+      for desktop in "${HOME}"/.local/share/applications/kitty*.desktop; do
+        [ "${desktop}" == "${HOME}/.local/share/applications/kitty*.desktop" ] && continue
+        [ -f /home/${MPP_USER}/${LOCAL}/share/icons/hicolor/256x256/apps/kitty.png ] && {
+          sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/${LOCAL}/share/icons/hicolor/256x256/apps/kitty.png|g" "${desktop}"
+        }
+        [ -x /home/${MPP_USER}/${LOCAL}/bin/kitty ] && {
+          sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/${LOCAL}/bin/kitty|g" "${desktop}"
+        }
+      done
+      [ "${quiet}" ] || printf " done!\n"
+    else
+      printf "\n${BOLD}ERROR:${NORM} Download of kitty installation script failed"
+      printf "\nSee https://sw.kovidgoyal.net/kitty/binary/#manually-installing"
+      printf "\nto manually install the kitty terminal emulator\n"
+    fi
+    have_kitty=$(type -p kitty)
+  }
+  # Install the Kitty terminfo entry
+  KITERM="${HOME}/.terminfo/x/xterm-kitty"
+  MATERM="${HOME}/.terminfo/78/xterm-kitty"
+  MACAPP="/Applications/kitty.app/Contents/Resources/kitty/terminfo"
+  [ -f "${KITERM}" ] || [ -f "${MATERM}" ] || {
+    [ -d ${HOME}/.terminfo ] || mkdir -p ${HOME}/.terminfo
+    [ -d ${HOME}/.terminfo/x ] || mkdir -p ${HOME}/.terminfo/x
+    [ -d ${HOME}/.terminfo/78 ] || mkdir -p ${HOME}/.terminfo/78
+    have_tic=$(type -p tic)
+    [ "${have_tic}" ] && {
+      if [ -f "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" ]; then
+        tic -x -o ${HOME}/.terminfo \
+          "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" >/dev/null 2>&1
+      else
+        [ -f "${MACAPP}/kitty.terminfo" ] && {
+          tic -x -o ${HOME}/.terminfo \
+            "${MACAPP}/kitty.terminfo" >/dev/null 2>&1
+        }
+      fi
+    }
+    [ -f "${KITERM}" ] || [ -f "${MATERM}" ] || {
+      if [ -f "${HOME}/${LOCAL}/lib/kitty/terminfo/x/xterm-kitty" ]; then
+        cp "${HOME}/${LOCAL}/lib/kitty/terminfo/x/xterm-kitty" "${KITERM}"
+      else
+        if [ -f "${HOME}/${LOCAL}/share/terminfo/x/xterm-kitty" ]; then
+          cp "${HOME}/${LOCAL}/share/terminfo/x/xterm-kitty" "${KITERM}"
+        else
+          if [ -f "${MACAPP}/78/xterm-kitty" ]; then
+            cp "${MACAPP}/78/xterm-kitty" "${MATERM}"
+          else
+            [ "${quiet}" ] || printf "\nUnable to create Kitty terminfo entry ${KITERM}\n"
+          fi
+        fi
+      fi
+    }
+  }
+}
+
+remove_kitty() {
+  rm -rf ~/.local/kitty.app
+  rm -f ~/.local/bin/kitty
+  rm -f ~/.local/share/applications/kitty.desktop
+  rm -f ~/.local/share/applications/kitty-open.desktop
+  rm -f ~/.local/share/man/man1/kitty.1
+  rm -f ~/.local/share/man/man5/kitty.conf.5
+  [ -d /Applications/kitty.app ] && sudo rm -rf /Applications/kitty.app
+}
+
+remove_neovim() {
+  have_brew=$(type -p brew)
+  if [ "${have_brew}" ]; then
+    brew uninstall -q neovim >/dev/null 2>&1
+  else
+    printf "\nCannot locate brew. Skipping Neovim removal."
+  fi
+}
+
+install_neovim() {
+  if [ "${usebrew}" ]; then
+    install_args="-h -q -Q -y -z"
+  else
+    install_args="-q -Q -y -z"
+  fi
+  [ "${debug}" ] && install_args="${install_args} -d"
+  [ -x ${CONFDIR}/tools/bin/lazyman ] && {
+    if [ -d ${USERCONF}/nvim-Lazyman ]; then
+      ${CONFDIR}/tools/bin/lazyman -I ${install_args}
+    else
+      ${CONFDIR}/tools/bin/lazyman ${install_args}
+    fi
+  }
+}
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    export PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "/usr/local/bin"
+pathadd "${HOME}/.local/bin"
+
+# Clear the Bash cache so we know for sure if something is installed
+hash -r
+
+have_go=$(type -p go)
+[ "${have_go}" ] || {
+  [ -x /usr/local/go/bin/go ] && {
+    pathadd "/usr/local/go/bin"
+    have_go=$(type -p go)
+  }
+}
+
+have_mutt=$(type -p mutt)
+have_neomutt=$(type -p neomutt)
+have_gnome=$(type -p gnome-terminal)
+have_tilix=$(type -p tilix)
+have_xfce4=$(type -p xfce4-terminal)
+have_retro=$(type -p cool-retro-term)
+have_rich=$(type -p rich)
+have_apt=$(type -p apt)
+have_aptget=$(type -p apt-get)
+have_dnf=$(type -p dnf)
+have_yum=$(type -p yum)
+
+arch=
+debian=
+fedora=
+mach=$(uname -m)
+APT=
+DNF=
+
+case "${mach}" in
+  arm*)
+    VOPT=
+    ;;
+  *)
+    VOPT="--install-option='--with-audio'"
+    ;;
+esac
+
+if [ "$platform" == "Darwin" ]; then
+  darwin=1
+else
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    [ "${ID}" == "debian" ] || [ "${ID_LIKE}" == "debian" ] && debian=1
+    [ "${ID}" == "arch" ] || [ "${ID_LIKE}" == "arch" ] && arch=1
+    [ "${ID}" == "fedora" ] && fedora=1
+    [ "${arch}" ] || [ "${debian}" ] || [ "${fedora}" ] || {
+      echo "${ID_LIKE}" | grep debian >/dev/null && debian=1
+    }
+  else
+    if [ -f /etc/arch-release ]; then
+      arch=1
+    else
+      case "${mach}" in
+        arm*)
+          debian=1
+          ;;
+        x86*)
+          if [ "${have_apt}" ]; then
+            debian=1
+          else
+            if [ -f /etc/fedora-release ]; then
+              fedora=1
+            else
+              if [ "${have_dnf}" ] || [ "${have_yum}" ]; then
+                # Use Fedora RPM for all other rpm based systems
+                fedora=1
+              else
+                echo "Unknown operating system distribution"
+              fi
+            fi
+          fi
+          ;;
+        *)
+          echo "Unknown machine architecture"
+          ;;
+      esac
+    fi
+  fi
+fi
+
+[ "${debian}" ] && {
+  if [ "${have_apt}" ]; then
+    APT="apt -q -y"
+  else
+    if [ "${have_aptget}" ]; then
+      APT="apt-get -q -y"
+    else
+      echo "Could not locate apt or apt-get."
+    fi
+  fi
+}
+
+[ "${fedora}" ] && {
+  if [ "${have_dnf}" ]; then
+    DNF="dnf --assumeyes --quiet"
+  else
+    if [ "${have_yum}" ]; then
+      DNF="yum --assumeyes --quiet"
+    else
+      echo "Could not locate dnf or yum."
+    fi
+  fi
+}
+
+ask_anim=
+console=
+debug=
+init_twit=
+inst_terms=
+quiet=
+remove=
+prompt=1
+
+while getopts "acdmMNnqrtyu" flag; do
+  case $flag in
+    a)
+      ask_anim=1
+      ;;
+    c)
+      console=1
+      ;;
+    d)
+      debug=1
+      ;;
+    m)
+      [ "${have_mutt}" ] || ask_install Mutt mutt
+      ;;
+    n)
+      [ "${have_neomutt}" ] || ask_install NeoMutt neomutt
+      ;;
+    M)
+      [ "${have_mutt}" ] || ask_install Mutt mutt
+      [ "${have_neomutt}" ] || ask_install NeoMutt neomutt
+      ;;
+    N)
+      inst_terms=1
+      ;;
+    q)
+      quiet=1
+      ;;
+    r)
+      remove=1
+      ;;
+    t)
+      init_twit=1
+      ;;
+    y)
+      prompt=
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+argument=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+[ -d ${USERCONF} ] || mkdir -p ${USERCONF}
+
+have_curl=$(type -p curl)
+have_jq=$(type -p jq)
+have_wget=$(type -p wget)
+have_awk=$(type -p awk)
+have_fc=$(type -p fc-cache)
+have_mktemp=$(type -p mktemp)
+have_unlink=$(type -p unlink)
+have_unzip=$(type -p unzip)
+
+if [ "${darwin}" ]; then
+  usebrew=1
+else
+  usebrew=
+fi
+minimal=
+[ "${argument}" == "minimal" ] && minimal=1
+[ "${argument}" == "brew" ] && usebrew=1
+
+have_kitty=$(type -p kitty)
+[ "${argument}" == "kitty" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving kitty terminal emulator.\n\n"
+    if [ "${prompt}" ]; then
+      while true; do
+        read -r -p "Do you wish to continue with kitty removal ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nKitty removal aborted."
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    fi
+    remove_kitty
+    printf "\n${BOLD}Kitty removed${NORM}"
+    printf "\nTo re-install Kitty run ${BOLD}'ascinit kitty'${NORM}\n\n"
+    exit 0
+  }
+  [ "${quiet}" ] || {
+    printf "\nInstalling Kitty terminal emulator\n"
+  }
+  if [ "${prompt}" ]; then
+    while true; do
+      read -r -p "Do you wish to continue with kitty installation ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nKitty installation aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+  fi
+  install_kitty
+  exit 0
+}
+
+[ "${argument}" == "neovim" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Neovim text editor.\n\n"
+    if [ "${prompt}" ]; then
+      while true; do
+        read -r -p "Do you wish to continue with Neovim removal ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nNeovim removal aborted."
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    fi
+    remove_neovim
+    printf "\n${BOLD}Neovim removed${NORM}"
+    printf "\nTo re-install Neovim run ${BOLD}'ascinit neovim'${NORM}\n\n"
+    exit 0
+  }
+  install_neovim
+  exit 0
+}
+
+# Prompt for Neovim install
+neovim_install=
+[ "${minimal}" ] || {
+  [ -x ${CONFDIR}/tools/bin/lazyman ] && {
+    neovim_install=1
+    printf "\n\n"
+    if [ "${prompt}" ]; then
+      while true; do
+        read -r -p "Install Neovim text editor (optional but recommended) ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            neovim_install=1
+            break
+            ;;
+          [Nn]*)
+            printf "\nSkipping Neovim installation."
+            printf "\nNeovim can be installed later with the command 'ascinit neovim'.\n"
+            neovim_install=
+            break
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    else
+      neovim_install=1
+    fi
+  }
+}
+
+# Prompt for Ascii Games install
+[ "${minimal}" ] || {
+  echo ""
+  games_install=1
+  if [ "${prompt}" ]; then
+    while true; do
+      read -r -p "Install ASCII Games ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          games_install=1
+          break
+          ;;
+        [Nn]*)
+          games_install=
+          printf "\nSkipping Ascii Games installation.\n"
+          printf "\nGames can be installed later with the command 'ascinit games'.\n"
+          break
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+  else
+    games_install=1
+  fi
+}
+
+# Mutt configuration user setup
+[ "${minimal}" ] || {
+  [ -f ${CONFDIR}/mutt/muttrc ] && {
+    [ -d ${HOME}/.mutt ] || {
+      mkdir ${HOME}/.mutt
+      chmod 750 ${HOME}/.mutt
+    }
+    [ -d ${HOME}/.mutt/cache ] || {
+      mkdir ${HOME}/.mutt/cache
+      chmod 750 ${HOME}/.mutt/cache
+    }
+    [ -d ${HOME}/.mutt/cache/headers ] || {
+      mkdir ${HOME}/.mutt/cache/headers
+      chmod 750 ${HOME}/.mutt/cache/headers
+    }
+    [ -d ${HOME}/.mutt/cache/bodies ] || {
+      mkdir ${HOME}/.mutt/cache/bodies
+      chmod 750 ${HOME}/.mutt/cache/bodies
+    }
+    [ -d ${HOME}/.mutt/tmp ] || {
+      mkdir ${HOME}/.mutt/tmp
+      chmod 750 ${HOME}/.mutt/tmp
+    }
+    [ -f ${HOME}/.mutt/certificates ] || {
+      touch ${HOME}/.mutt/certificates
+      chmod 640 ${HOME}/.mutt/certificates
+    }
+    [ -f ${HOME}/.mutt/colors ] || {
+      cp ${CONFDIR}/mutt/colors ${HOME}/.mutt/colors
+      chmod 640 ${HOME}/.mutt/colors
+    }
+    [ -f ${HOME}/.mutt/mailcap ] || {
+      if [ "${console}" ]; then
+        if [ -f ${CONFDIR}/console/mutt/mailcap ]; then
+          cp ${CONFDIR}/console/mutt/mailcap ${HOME}/.mutt/mailcap
+        else
+          cp ${CONFDIR}/mutt/mailcap ${HOME}/.mutt/mailcap
+        fi
+      else
+        cp ${CONFDIR}/mutt/mailcap ${HOME}/.mutt/mailcap
+      fi
+      chmod 640 ${HOME}/.mutt/mailcap
+    }
+    [ -f ${HOME}/.mutt/muttrc ] || {
+      cp ${CONFDIR}/mutt/muttrc ${HOME}/.mutt/muttrc
+      chmod 600 ${HOME}/.mutt/muttrc
+      [ "${quiet}" ] || {
+        echo "A basic ${HOME}/.mutt/muttrc Mutt email client configuration"
+        echo "has been created for you. The default configuration can be used"
+        echo "as a template to create a GMail IMAP Mutt email account."
+        echo "Edit ${HOME}/.mutt/muttrc and add your GMail credentials."
+        echo ""
+        echo "A good starting point for the new Mutt user is the Mutt Wiki at:"
+        echo "https://gitlab.com/muttmua/mutt/-/wikis/home"
+      }
+    }
+  }
+}
+
+# NeoMutt configuration user setup
+[ "${minimal}" ] || {
+  [ "${fedora}" ] && {
+    sudo dnf install dnf-plugins-core -y 2>/dev/null
+    sudo dnf copr enable flatcap/neomutt -y 2>/dev/null
+  }
+}
+[ -d ${CONFDIR}/neomutt ] && {
+  [ -d ${USERCONF}/neomutt ] || {
+    cp -a ${CONFDIR}/neomutt ${USERCONF}/neomutt
+    [ "${console}" ] && {
+      [ -f ${CONFDIR}/console/neomutt/mailcap ] && {
+        cp ${CONFDIR}/console/neomutt/mailcap ${USERCONF}/neomutt/mailcap
+      }
+    }
+    chmod 600 ${USERCONF}/neomutt/accounts/*
+    chmod 750 ${USERCONF}/neomutt/accounts
+    [ -d ${USERCONF}/neomutt/tmp ] || mkdir ${USERCONF}/neomutt/tmp
+    chmod 750 ${USERCONF}/neomutt/tmp
+    [ "${quiet}" ] || {
+      echo ""
+      echo "A ${USERCONF}/neomutt/ NeoMutt email client configuration"
+      echo "has been created for you. Edit your name, email address, and"
+      echo "email account credentials in ${USERCONF}/neomutt/accounts/*"
+      echo ""
+      echo "A good starting point for the NeoMutt user is the NeoMutt Guide at:"
+      echo "https://neomutt.org/guide/"
+      echo ""
+    }
+  }
+}
+
+# Custom W3M configuration for this user unless one exists
+[ -d ${CONFDIR}/w3m ] && {
+  if [ -d ${HOME}/.w3m ]; then
+    for w3mconf in "${CONFDIR}"/w3m/*; do
+      [ "${w3mconf}" == "${CONFDIR}/w3m/*" ] && continue
+      bconf=$(basename "${w3mconf}")
+      [ -f "${HOME}/.w3m/${bconf}" ] || {
+        cp "${w3mconf}" "${HOME}/.w3m/${bconf}"
+        [ "${bconf}" == "mailcap" ] && {
+          [ "${console}" ] && {
+            [ -f ${CONFDIR}/console/w3m/mailcap ] && {
+              cp ${CONFDIR}/console/w3m/mailcap ${HOME}/.w3m/mailcap
+            }
+          }
+        }
+      }
+    done
+  else
+    cp -a ${CONFDIR}/w3m ${HOME}/.w3m
+    [ "${console}" ] && {
+      [ -f ${CONFDIR}/console/w3m/mailcap ] && {
+        cp ${CONFDIR}/console/w3m/mailcap ${HOME}/.w3m/mailcap
+      }
+    }
+  fi
+  # Verify text/markdown is a recognized MIME type
+  [ -f /etc/mime.types ] && {
+    grep ^text/markdown /etc/mime.types >/dev/null || {
+      cp /etc/mime.types ${HOME}/.w3m/mime.types
+      echo 'text/markdown    md markdown' >>${HOME}/.w3m/mime.types
+    }
+  }
+}
+
+# Setup default newsboat configuration for this user unless one exists
+[ -d ${CONFDIR}/newsboat ] && {
+  if [ -d ${USERCONF}/newsboat ]; then
+    cp -an ${CONFDIR}/newsboat ${USERCONF}
+  else
+    [ -d ${HOME}/.newsboat ] || {
+      cp -a ${CONFDIR}/newsboat ${USERCONF}/newsboat
+    }
+  fi
+}
+[ -f ${USERCONF}/newsboat/urls ] && {
+  chmod 600 ${USERCONF}/newsboat/urls
+}
+[ -f ${USERCONF}/newsboat/bookmark.sh ] && {
+  chmod 755 ${USERCONF}/newsboat/bookmark.sh
+}
+[ -f ${USERCONF}/newsboat/kitty-img-pager.sh ] && {
+  chmod 755 ${USERCONF}/newsboat/kitty-img-pager.sh
+}
+
+# Setup default btop configuration for this user unless one exists
+[ -f ${CONFDIR}/btop/btop.conf ] && {
+  if [ -d ${USERCONF}/btop ]; then
+    [ -f ${USERCONF}/btop/btop.conf ] || {
+      cp ${CONFDIR}/btop/btop.conf ${USERCONF}/btop/btop.conf
+      chmod 640 ${USERCONF}/btop/btop.conf
+    }
+  else
+    cp -a ${CONFDIR}/btop ${USERCONF}/btop
+    chmod 640 ${USERCONF}/btop/btop.conf
+  fi
+}
+
+# Setup default khard configuration for this user unless one exists
+[ -d ${CONFDIR}/khard ] && {
+  [ -d ${USERCONF}/khard ] || {
+    cp -a ${CONFDIR}/khard ${USERCONF}/khard
+    chmod 640 ${USERCONF}/khard/khard.conf
+  }
+  [ -d ${HOME}/.contacts ] || {
+    mkdir -p ${HOME}/.contacts
+  }
+  [ -d ${HOME}/.contacts/family ] || {
+    mkdir -p ${HOME}/.contacts/family
+  }
+  [ -d ${HOME}/.contacts/friends ] || {
+    mkdir -p ${HOME}/.contacts/friends
+  }
+}
+
+# Kitty only installs on select architectures
+# In particular, Kitty is not supported on a Raspberry Pi armv7*
+case "${mach}" in
+  x86_64 | aarch64* | armv8* | i386 | i686)
+    install_kitty
+    ;;
+  *)
+    true
+    ;;
+esac
+KITTYCONFDIR="${USERCONF}/kitty"
+KITTYCONF="${KITTYCONFDIR}/asciiville.conf"
+# Setup default kitty configuration for this user unless one exists
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Kitty configuration in ${KITTYCONFDIR} ..."
+}
+# If there is no user kitty config folder then copy the
+# MusicPlayerPlus kitty config folder into the user's home
+if [ -d ${KITTYCONFDIR} ]; then
+  cp -an ${CONFDIR}/kitty ${USERCONF}
+else
+  cp -a ${CONFDIR}/kitty ${KITTYCONFDIR}
+fi
+[ -f ${KITTYCONF} ] && {
+  if [ "${BROWSER}" ]; then
+    # If the user has set the BROWSER environment variable then use it
+    browser_app=$(echo "${BROWSER}" | awk ' { print $1 } ')
+    browser_app=$(basename ${browser_app})
+    have_browser=$(type -p ${browser_app})
+    [ "${have_browser}" ] || BROWSER=default
+  else
+    BROWSER=default
+    have_browser=1
+  fi
+  cat "${KITTYCONF}" | sed -e "s%__SET__BROWSER__%${BROWSER}%" >/tmp/browser$$
+  cp /tmp/browser$$ "${KITTYCONF}"
+  rm -f /tmp/browser$$
+}
+[ -f ${KITTYCONFDIR}/kitty.conf ] || cp ${KITTYCONF} ${KITTYCONFDIR}/kitty.conf
+[ "${quiet}" ] || {
+  printf " done"
+}
+
+# Setup default rifle configuration for this user unless one exists
+[ -f ${CONFDIR}/rifle.conf ] && {
+  [ -f ${USERCONF}/ranger/rifle.conf ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Ranger rifle configuration in ${USERCONF}/ranger/ ..."
+    }
+    [ -d ${USERCONF}/ranger ] || mkdir -p ${USERCONF}/ranger
+    cp ${CONFDIR}/rifle.conf ${USERCONF}/ranger/rifle.conf
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+}
+
+# Setup default rainbowstream configuration for this user unless one exists
+[ -f ${CONFDIR}/rainbow_config.json ] && {
+  [ -f ${HOME}/.rainbow_config.json ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tSetup rainbowstream configuration as ${HOME}/.rainbow_config.json ..."
+    }
+    cp ${CONFDIR}/rainbow_config.json ${HOME}/.rainbow_config.json
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+}
+
+# Setup default tuir configuration for this user unless one exists
+[ -d ${CONFDIR}/tuir ] && {
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling Tuir configuration in ${USERCONF}/tuir ..."
+  }
+  if [ -d ${USERCONF}/tuir ]; then
+    cp -an ${CONFDIR}/tuir ${USERCONF}
+    [ "${console}" ] && {
+      [ -f ${CONFDIR}/console/tuir/mailcap ] && {
+        cp ${CONFDIR}/console/tuir/mailcap ${USERCONF}/tuir/mailcap
+      }
+    }
+    chmod 600 ${USERCONF}/tuir/tuir.cfg
+  else
+    cp -a ${CONFDIR}/tuir ${USERCONF}/tuir
+    [ "${console}" ] && {
+      [ -f ${CONFDIR}/console/tuir/mailcap ] && {
+        cp ${CONFDIR}/console/tuir/mailcap ${USERCONF}/tuir/mailcap
+      }
+    }
+    chmod 600 ${USERCONF}/tuir/tuir.cfg
+  fi
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+# Setup default tmux configuration for this user
+[ -f ${CONFDIR}/tmux.conf ] && {
+  if [ -f ${HOME}/.tmux.conf ]; then
+    diff -u -B <(grep -vE '^\s*(#|$)' ${CONFDIR}/tmux.conf) <(grep -vE '^\s*(#|$)' ${HOME}/.tmux.conf) >/dev/null || {
+      echo ""
+      echo "Asciiville includes extensive configuration for tmux."
+      echo "An existing $HOME/.tmux.conf has been detected."
+      echo "In order to enable many Asciiville tmux features,"
+      echo "it is necessary to install a customized $HOME/.tmux.conf."
+      echo ""
+      echo "Please answer if you would like to:"
+      printf "\n\t[A]ppend customization"
+      printf "\n\t[B]ackup and customize"
+      printf "\n\t[O]verwrite existing"
+      printf "\n\t[S]kip customization\n"
+      echo "Answer 'a', 'b', 'o', or 's'"
+      echo ""
+      while true; do
+        read -r -p "Append/Backup/Overwrite/Skip tmux configuration? (a/b/o/s) " customize
+        case $customize in
+          [Aa]*)
+            cat ${CONFDIR}/tmux.conf >>${HOME}/.tmux.conf
+            echo ""
+            echo "Asciiville tmux configurations are applied"
+            echo "The file ${CONFDIR}/tmux.conf"
+            echo "was appended to $HOME/.tmux.conf"
+            echo "The Asciiville additions follow the comment 'Asciiville'"
+            echo "Please review these changes and customize as needed"
+            break
+            ;;
+          [Bb]*)
+            cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.bak$$
+            cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+            echo ""
+            echo "Asciiville tmux configurations are applied"
+            echo "The file ${CONFDIR}/tmux.conf"
+            echo "was copied to $HOME/.tmux.conf"
+            echo "A backup of the previous file was created at $HOME/.tmux.conf.bak$$"
+            break
+            ;;
+          [Oo]*)
+            cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+            echo ""
+            echo "Asciiville tmux configurations are applied"
+            echo "The file ${CONFDIR}/tmux.conf"
+            echo "was copied to $HOME/.tmux.conf"
+            break
+            ;;
+          [Ss]*)
+            echo ""
+            echo "Asciiville tmux configurations have not been applied"
+            echo "The file $HOME/.tmux.conf remains unmodified"
+            echo "Some Asciiville features will not work properly with tmux"
+            echo ""
+            echo "The file ${CONFDIR}/tmux.conf"
+            echo "contains the Asciiville tmux customizations."
+            echo "To fully enable Asciiville tmux features, merge"
+            echo "${CONFDIR}/tmux.conf with $HOME/.tmux.conf"
+            break
+            ;;
+          *)
+            echo "Please answer 'a', 'b', 'o', or 's'"
+            ;;
+        esac
+      done
+    }
+  else
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Tmux configuration in ${HOME}/.tmux.conf ..."
+    }
+    cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  fi
+}
+
+TPM="${HOME}/.tmux/plugins/tpm"
+
+status_dots=
+[ -d ${TPM} ] || {
+  have_git=$(type -p git)
+  [ "${have_git}" ] && {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Tmux plugins ..."
+      status_dots=1
+    }
+    git clone https://github.com/tmux-plugins/tpm ${TPM} >/dev/null 2>&1
+  }
+}
+
+[ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins >/dev/null 2>&1
+[ "${status_dots}" ] && {
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+  status_dots=
+}
+
+# Use Homebrew only on Darwin unless invoked with the 'brew' argument
+BREW_EXE="brew"
+have_brew=$(type -p brew)
+[ "${usebrew}" ] && {
+  [ "${have_brew}" ] || {
+    # Install Brew
+    BREW_URL="${GHUC}/Homebrew/install/HEAD/install.sh"
+    curl -fsSL "${BREW_URL}" >/tmp/brew-$$.sh
+    [ $? -eq 0 ] || {
+      rm -f /tmp/brew-$$.sh
+      curl -kfsSL "${BREW_URL}" >/tmp/brew-$$.sh
+    }
+    [ -f /tmp/brew-$$.sh ] && {
+      chmod 755 /tmp/brew-$$.sh
+      [ "${quiet}" ] || printf "\n\tInstalling Homebrew, please be patient ... "
+      NONINTERACTIVE=1 /bin/bash -c "/tmp/brew-$$.sh" >/dev/null 2>&1
+      rm -f /tmp/brew-$$.sh
+      [ "${quiet}" ] || printf "done"
+    }
+  }
+}
+if [ -f ${HOME}/.profile ]; then
+  BASHINIT="${HOME}/.profile"
+else
+  if [ -f ${HOME}/.bashrc ]; then
+    BASHINIT="${HOME}/.bashrc"
+  else
+    BASHINIT="${HOME}/.profile"
+  fi
+fi
+# shellcheck disable=SC2016
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  HOMEBREW_HOME="/home/linuxbrew/.linuxbrew"
+  BREW_EXE="${HOMEBREW_HOME}/bin/brew"
+else
+  if [ -x /usr/local/bin/brew ]; then
+    HOMEBREW_HOME="/usr/local"
+    BREW_EXE="${HOMEBREW_HOME}/bin/brew"
+  else
+    if [ -x /opt/homebrew/bin/brew ]; then
+      HOMEBREW_HOME="/opt/homebrew"
+      BREW_EXE="${HOMEBREW_HOME}/bin/brew"
+    else
+      [ "${usebrew}" ] && {
+        echo "WARNING: Homebrew brew executable could not be located"
+      }
+    fi
+  fi
+fi
+GOTEXT='# Go paths
+[ -d ~/go ] && export GOPATH=$HOME/go
+[ "$GOPATH" ] && [ -d "$GOPATH/bin" ] && PATH="$PATH:$GOPATH/bin"
+
+if [ -d __YYY__/opt/go/libexec ]
+then
+  export GOROOT=__YYY__/opt/go/libexec
+else
+  if [ -d __YYY__/opt/go ]
+  then
+    export GOROOT=__YYY__/opt/go
+  else
+    [ -d /usr/local/go ] && export GOROOT=/usr/local/go
+  fi
+fi
+[ -d ${GOROOT}/bin ] && {
+  if [ $(echo $PATH | grep -c ${GOROOT}/bin) -ne "1" ]; then
+    PATH="$PATH:${GOROOT}/bin"
+  fi
+}
+[ -d $HOME/go/bin ] && {
+  if [ $(echo $PATH | grep -c $HOME/go/bin) -ne "1" ]; then
+    PATH="$PATH:$HOME/go/bin"
+  fi
+}
+export PATH'
+
+if [ -f "${BASHINIT}" ]; then
+  grep "export GOROOT" "${BASHINIT}" >/dev/null || {
+    echo "${GOTEXT}" | sed -e "s%__YYY__%${HOMEBREW_HOME}%" >>"${BASHINIT}"
+  }
+  [ "${usebrew}" ] && {
+    grep "^eval \"\$(${BREW_EXE} shellenv)\"" "${BASHINIT}" >/dev/null || {
+      echo 'eval "$(XXX shellenv)"' | sed -e "s%XXX%${BREW_EXE}%" >>"${BASHINIT}"
+    }
+  }
+else
+  echo "${GOTEXT}" | sed -e "s%__YYY__%${HOMEBREW_HOME}%" >"${BASHINIT}"
+  [ "${usebrew}" ] && {
+    echo 'eval "$(XXX shellenv)"' | sed -e "s%XXX%${BREW_EXE}%" >"${BASHINIT}"
+  }
+fi
+[ -f "${HOME}/.zshrc" ] && {
+  grep "export GOROOT" "${HOME}/.zshrc" >/dev/null || {
+    echo "${GOTEXT}" | sed -e "s%__YYY__%${HOMEBREW_HOME}%" >>"${HOME}/.zshrc"
+  }
+  [ "${usebrew}" ] && {
+    grep "^eval \"\$(${BREW_EXE} shellenv)\"" "${HOME}/.zshrc" >/dev/null || {
+      echo 'eval "$(XXX shellenv)"' | sed -e "s%XXX%${BREW_EXE}%" >>"${HOME}/.zshrc"
+    }
+  }
+}
+[ "${usebrew}" ] && eval "$(${BREW_EXE} shellenv)"
+
+[ "${usebrew}" ] && {
+  have_brew=$(type -p brew)
+  if [ "${have_brew}" ]; then
+    BREW_EXE="brew"
+  else
+    [ "${BREW_EXE}" == "brew" ] || {
+      BREWPATH=$(dirname ${BREW_EXE})
+      pathadd "${BREWPATH}"
+      have_brew=$(type -p brew)
+    }
+  fi
+
+  export HOMEBREW_NO_INSTALL_CLEANUP=1
+  export HOMEBREW_NO_ENV_HINTS=1
+  export HOMEBREW_NO_AUTO_UPDATE=1
+}
+
+PYTHON="python3"
+have_python3=$(type -p python3)
+[ "${have_python3}" ] || {
+  echo "[ERROR] Could not find python3 binary."
+  echo "Please add it to your \$PATH and rerun ascinit."
+  exit 1
+}
+
+have_pip=$(type -p pip3)
+[ "${have_pip}" ] || {
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling pip ..."
+  }
+  if [ "${darwin}" ]; then
+    ${PYTHON} -m ensurepip --upgrade
+  else
+    if [ "${debian}" ]; then
+      sudo ${APT} install python3-pip >/dev/null 2>&1
+    else
+      if [ "${arch}" ]; then
+        sudo pacman -S --noconfirm python-pip >/dev/null 2>&1
+      else
+        sudo ${DNF} install python3-pip >/dev/null 2>&1
+      fi
+    fi
+  fi
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+for pkg in setuptools asciimatics ddgr rainbowstream socli future \
+  xtermcolor ffmpeg-python pyaudio term-image urlscan openai; do
+  if ${PYTHON} -m pip list 2>/dev/null | grep ${pkg} >/dev/null; then
+    ${PYTHON} -m pip install --upgrade ${pkg} >/dev/null 2>&1
+  else
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling ${pkg} ..."
+    }
+    ${PYTHON} -m pip install ${pkg} >/dev/null 2>&1
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  fi
+done
+
+have_aic=$(type -p ascii-image-converter)
+[ "${have_aic}" ] || {
+  [ "${quiet}" ] || printf "\n\tInstalling ascii-image-converter ..."
+  have_go=$(type -p go)
+  [ "${have_go}" ] && {
+    go install github.com/TheZoraiz/ascii-image-converter@latest >/dev/null 2>&1
+  }
+  [ "${quiet}" ] || printf " done"
+}
+
+have_mapscii=$(type -p mapscii)
+[ "${have_mapscii}" ] || {
+  [ "${have_npm}" ] && npm install mapscii >/dev/null 2>&1
+}
+
+have_tuir=$(type -p tuir)
+[ "${have_tuir}" ] || {
+  cd "${HOME}" || echo "Could not enter $HOME"
+  [ -d tuir ] && mv tuir tuir$$
+  git clone https://gitlab.com/ajak/tuir.git >/dev/null 2>&1
+  [ -d tuir ] && {
+    cd tuir || echo "Could not enter tuir"
+    cat requirements.txt | sed -e "s/requests=.*/requests>=2.20.0/" >/tmp/tuireq$$
+    cp /tmp/tuireq$$ requirements.txt
+    rm -f /tmp/tuireq$$
+    TUIR_DIR=$(pwd)
+    ${PYTHON} -m pip install -e "${TUIR_DIR}" >/dev/null 2>&1
+    cd ..
+    rm -rf tuir
+  }
+  [ -d tuir$$ ] && mv tuir$$ tuir
+}
+
+pkg=video-to-ascii
+if ${PYTHON} -m pip list 2>/dev/null | grep ${pkg} >/dev/null; then
+  ${PYTHON} -m pip install --upgrade ${pkg} "${VOPT}" >/dev/null 2>&1
+else
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling ${pkg} ..."
+  }
+  ${PYTHON} -m pip install ${pkg} "${VOPT}" >/dev/null 2>&1
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+fi
+
+have_googler=$(type -p googler)
+[ "${have_googler}" ] || {
+  [ -f ${HOME}/.local/bin/googler ] || {
+    [ -d ${HOME}/.local ] || mkdir -p ${HOME}/.local
+    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+    GGDL_URL="${GHUC}/jarun/googler"
+    GGDL_VER="v4.3.2"
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling googler ..."
+    }
+    curl --silent -o ${HOME}/.local/bin/googler \
+      ${GGDL_URL}/${GGDL_VER}/googler 2>/dev/null
+    curl --silent -o ${HOME}/.local/share/man/man1/googler.1 \
+      ${GGDL_URL}/${GGDL_VER}/googler.1 2>/dev/null
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+
+  [ -f ${HOME}/.local/bin/googler ] && {
+    chmod +x ${HOME}/.local/bin/googler
+    ${HOME}/.local/bin/googler -u >/dev/null 2>&1
+  }
+}
+
+# Custom jrnl configuration for this user unless one exists
+[ -d ${CONFDIR}/jrnl ] && {
+  if [ -d ${USERCONF}/jrnl ]; then
+    for jc in "${CONFDIR}"/jrnl/*; do
+      [ "${jc}" == "${CONFDIR}/jrnl/*" ] && continue
+      bj=$(basename ${jc})
+      [ -f ${USERCONF}/jrnl/${bj} ] || cp ${jc} ${USERCONF}/jrnl/${bj}
+    done
+  else
+    cp -a ${CONFDIR}/jrnl ${USERCONF}/jrnl
+  fi
+  [ -d ${HOME}/.local/share/jrnl ] || {
+    [ -d ${HOME}/.local ] || mkdir ${HOME}/.local
+    [ -d ${HOME}/.local/share ] || mkdir ${HOME}/.local/share
+    mkdir ${HOME}/.local/share/jrnl
+  }
+  touch ${HOME}/.local/share/jrnl/journal.txt
+  chmod 600 ${HOME}/.local/share/jrnl/journal.txt
+  touch ${HOME}/.local/share/jrnl/asciiville.txt
+  chmod 600 ${HOME}/.local/share/jrnl/asciiville.txt
+}
+
+install_pipx
+
+# Install the 'jrnl' command if not already installed
+have_jrnl=$(type -p jrnl)
+[ "${have_jrnl}" ] || {
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling and configuring jrnl ..."
+  }
+  pipx install jrnl >/dev/null 2>&1
+  echo "Welcome to @jrnl" >/tmp/jrnl$$
+  echo "" >>/tmp/jrnl$$
+  echo "A simple command line journal application" >>/tmp/jrnl$$
+  jrnl </tmp/jrnl$$ >/dev/null 2>&1
+  echo "Installed @Asciiville" >/tmp/jrnl$$
+  echo "" >>/tmp/jrnl$$
+  echo "See https://github.com/doctorfree/Asciiville#readme" >>/tmp/jrnl$$
+  jrnl asciiville </tmp/jrnl$$ >/dev/null 2>&1
+  rm -f /tmp/jrnl$$
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+# Install the 'rich' command if not already installed
+[ "${have_rich}" ] || {
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling rich-cli ..."
+  }
+  pipx install rich-cli >/dev/null 2>&1
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+[ "${init_twit}" ] && rainbowstream
+
+create_new_profile() {
+  local proterm="$1"
+  local proname="$2"
+  [ "${quiet}" ] || {
+    printf "\n\tCreating '${proname}' ${proterm} terminal profile ..."
+  }
+  if [ "${proterm}" == "gnome" ]; then
+    local profile_ids=($(dconf list $dconfdir/ | grep ^: \
+      | sed 's/\///g' | sed 's/://g'))
+  fi
+  if [ "${proterm}" == "tilix" ]; then
+    local profile_ids=($(dconf list $dconfdir/ | grep -v ^list \
+      | sed 's/\///g' | sed 's/://g'))
+  fi
+local profile_ids_old="$(dconf read "$dconfdir"/list | tr -d "]")"
+  local profile_id="$(uuidgen)"
+  [ "${debug}" ] && {
+    echo "profile_ids_old=${profile_ids_old}"
+    echo "profile_id=${profile_id}"
+  }
+
+  if [ -z "$profile_ids_old" ]; then
+    if [ ${#profile_ids[@]} -gt 0 ]; then
+      for id in "${!profile_ids[@]}"; do
+        profile_ids[${id}]="'profile_ids[${id}]',"
+      done
+      dconf write $dconfdir/list "[${profile_ids[*]} '$profile_id']" 2>/dev/null
+      [ "${debug}" ] && {
+        echo "A: dconf write $dconfdir/list [${profile_ids[*]} '$profile_id']"
+      }
+    else
+      dconf write $dconfdir/list "['$profile_id']" 2>/dev/null
+      [ "${debug}" ] && {
+        echo "B: dconf write $dconfdir/list ['$profile_id']"
+      }
+    fi
+  else
+    dconf write $dconfdir/list "${profile_ids_old}, '$profile_id']" 2>/dev/null
+    [ "${debug}" ] && {
+      echo "C: dconf write $dconfdir/list ${profile_ids_old}, '$profile_id']"
+    }
+  fi
+
+  if [ "${proterm}" == "gnome" ]; then
+    profile_path="$dconfdir/:$profile_id"
+  fi
+  if [ "${proterm}" == "tilix" ]; then
+    profile_path="$dconfdir/$profile_id"
+  fi
+  dconf write $profile_path/visible-name "'$proname'" 2>/dev/null
+
+  # Asciiville profile wants a black background with no transparency
+  dconf write $profile_path/background-color "'rgb(0,0,0)'" 2>/dev/null
+  dconf write $profile_path/foreground-color "'rgb(255,255,255)'" 2>/dev/null
+  dconf write $profile_path/cursor-shape "'underline'" 2>/dev/null
+  dconf write $profile_path/cursor-blink-mode "'off'" 2>/dev/null
+  dconf write $profile_path/use-theme-colors "false" 2>/dev/null
+  if [ "${proterm}" == "gnome" ]; then
+    dconf write $profile_path/use-theme-transparency "false" 2>/dev/null
+    dconf write $profile_path/use-transparent-background "false" 2>/dev/null
+  fi
+  if [ "${proterm}" == "tilix" ]; then
+    dconf write $profile_path/background-transparency-percent "0" 2>/dev/null
+  fi
+  dconf write $profile_path/use-system-font "false" 2>/dev/null
+  dconf write $profile_path/font "'Monospace 18'" 2>/dev/null
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+
+[ "${console}" ] || {
+  [ "${inst_terms}" ] && {
+    [ "${have_gnome}" ] || ask_install Gnome-Terminal gnome-terminal
+    [ "${have_tilix}" ] || ask_install Tilix tilix
+    [ "${have_xfce4}" ] || ask_install Xfce4-terminal xfce4-terminal
+    [ "${have_retro}" ] || ask_install Cool-Retro-Term cool-retro-term
+    have_gnome=$(type -p gnome-terminal)
+    have_tilix=$(type -p tilix)
+    have_xfce4=$(type -p xfce4-terminal)
+    have_retro=$(type -p cool-retro-term)
+  }
+  [ "${have_gnome}" ] && {
+    # If no gnome-terminal Asciiville profile exists, create one
+    declare -a profiles
+    profile_name="Asciiville"
+
+    profile_exists=
+    dconfdir=/org/gnome/terminal/legacy/profiles:
+
+    # profiles=($(gconftool-2 -R $gconfdir | grep $gconfdir | cut -d/ -f5 |  \
+    #          cut -d: -f1))
+    profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
+
+    if [ "$profiles" = "" ]; then
+      create_new_profile gnome ${profile_name}
+    else
+      for i in ${!profiles[*]}; do
+        visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
+        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+        [ "$profile_exists" ] && break
+      done
+    fi
+
+    [ "$profile_exists" ] || {
+      # Create an Asciiville profile in gnome-terminal for this user
+      create_new_profile gnome ${profile_name}
+    }
+  }
+
+  [ "${have_tilix}" ] && {
+    # Create Asciiville Tilix profile, similar to Gnome-terminal's
+    profile_exists=
+    dconfdir=/com/gexperts/Tilix/profiles
+
+    profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
+
+    if [ "$profiles" = "" ]; then
+      create_new_profile tilix ${profile_name}
+    else
+      for i in ${!profiles[*]}; do
+        visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
+        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+        [ "$profile_exists" ] && break
+      done
+    fi
+
+    [ "$profile_exists" ] || {
+      # Create an Asciiville profile in Tilix for this user
+      create_new_profile tilix ${profile_name}
+    }
+  }
+}
+
+[ -d ${CONFDIR}/music ] && {
+  [ -d ${HOME}/Music ] || mkdir -p ${HOME}/Music
+  [ -L ${HOME}/Music/Asciiville ] && rm -f ${HOME}/Music/Asciiville
+  [ -d ${HOME}/Music/Asciiville ] || {
+    ln -s ${CONFDIR}/music ${HOME}/Music/Asciiville
+  }
+}
+
+have_go=$(type -p go)
+[ "${have_go}" ] && {
+  # Install GUM
+  have_gum=$(type -p gum)
+  [ "${have_gum}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling gum ..."
+    }
+    go install github.com/charmbracelet/gum@latest >/dev/null 2>&1
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+  # Install VHS
+  have_vhs=$(type -p vhs)
+  [ "${have_vhs}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling vhs ..."
+    }
+    go install github.com/charmbracelet/vhs@latest >/dev/null 2>&1
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+  # Install GOT
+  have_got=$(type -p got)
+  [ "${have_got}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling got ..."
+    }
+    go install github.com/fedeztk/got/cmd/got@latest >/dev/null 2>&1
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+  # Setup default got configuration for this user unless one exists
+  [ -f ${CONFDIR}/got/config.yml ] && {
+    [ -f ${USERCONF}/got/config.yml ] || {
+      [ -d ${USERCONF} ] || mkdir -p ${USERCONF}
+      [ -d ${USERCONF}/got ] || mkdir -p ${USERCONF}/got
+      cp ${CONFDIR}/got/config.yml ${USERCONF}/got/config.yml
+      [ "${LANG}" ] && {
+        lang=$(echo ${LANG} | awk -F '.' '{print $1}' | awk -F '_' '{print $1}')
+        [ "${lang}" == "en" ] || {
+          cat ${USERCONF}/got/config.yml | sed -e "s/source: en/source: ${lang}/" -e "s/target: es/target: en/" >/tmp/gotconf$$
+          cp /tmp/gotconf$$ ${USERCONF}/got/config.yml
+          rm -f /tmp/gotconf$$
+        }
+      }
+    }
+  }
+  # Install TDRAW
+  have_tdraw=$(type -p tdraw)
+  [ "${have_tdraw}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling tdraw ..."
+    }
+    go install github.com/aca/tdraw@latest >/dev/null 2>&1
+    [ "${quiet}" ] || {
+      printf " done"
+    }
+  }
+}
+
+CONF="${USERCONF}/asciiville/config"
+[ -d ${USERCONF} ] || mkdir ${USERCONF}
+[ -d ${USERCONF}/asciiville ] || mkdir ${USERCONF}/asciiville
+[ -f ${CONF} ] || {
+  [ "${quiet}" ] || {
+    printf "\n\nAsciiville configuration in %s ..." "${CONF}"
+  }
+  touch ${CONF}
+  echo "ARTDIR=/usr/share/asciiville/art" >>${CONF}
+  echo "MUSEDIR=/usr/share/asciiville/music" >>${CONF}
+  echo "SONG=\"${MUSEDIR}/Chronos.mp3\"" >>${CONF}
+  echo "ALTSONG=\"${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav\"" >>${CONF}
+  echo "" >>${CONF}
+  echo "AUDIO=1" >>${CONF}
+  echo "BROWSER=w3m" >>${CONF}
+  echo "COMMAND=btop" >>${CONF}
+  echo "FULLSCREEN=" >>${CONF}
+  echo "MTITLE=\"Btop++ System Monitor\"" >>${CONF}
+  if [ "${have_kitty}" ]; then
+    echo "CURRENT=" >>${CONF}
+    echo "GNOME=" >>${CONF}
+    echo "RETRO=" >>${CONF}
+    echo "TILIX=" >>${CONF}
+    echo "KITTY=1" >>${CONF}
+    echo "XFCE4=" >>${CONF}
+  else
+    if [ "${have_gnome}" ]; then
+      echo "CURRENT=" >>${CONF}
+      echo "GNOME=1" >>${CONF}
+      echo "RETRO=" >>${CONF}
+      echo "TILIX=" >>${CONF}
+      echo "KITTY=" >>${CONF}
+      echo "XFCE4=" >>${CONF}
+    else
+      have_tilix=$(type -p tilix)
+      if [ "${have_tilix}" ]; then
+        echo "CURRENT=" >>${CONF}
+        echo "GNOME=" >>${CONF}
+        echo "RETRO=" >>${CONF}
+        echo "TILIX=1" >>${CONF}
+        echo "KITTY=" >>${CONF}
+        echo "XFCE4=" >>${CONF}
+      else
+        have_xfce4=$(type -p xfce4-terminal)
+        if [ "${have_xfce4}" ]; then
+          echo "CURRENT=" >>${CONF}
+          echo "GNOME=" >>${CONF}
+          echo "RETRO=" >>${CONF}
+          echo "TILIX=" >>${CONF}
+          echo "KITTY=" >>${CONF}
+          echo "XFCE4=1" >>${CONF}
+        else
+          echo "CURRENT=1" >>${CONF}
+          echo "GNOME=" >>${CONF}
+          echo "RETRO=" >>${CONF}
+          echo "TILIX=" >>${CONF}
+          echo "KITTY=" >>${CONF}
+          echo "XFCE4=" >>${CONF}
+        fi
+      fi
+    fi
+  fi
+  echo "LOLCAT=lolcat" >>${CONF}
+  echo "" >>${CONF}
+  echo "shuffle=1" >>${CONF}
+  echo "length=0" >>${CONF}
+  echo "use_lolcat=1" >>${CONF}
+  echo "use_lol=YES" >>${CONF}
+  echo "journal=\"default\"" >>${CONF}
+  echo "style=\"pretty\"" >>${CONF}
+  echo "show_interval=5" >>${CONF}
+  echo "zoom_depth=7" >>${CONF}
+  echo "zoom_interval=4" >>${CONF}
+  echo "art_font_size=4" >>${CONF}
+  echo "txt_font_size=20" >>${CONF}
+  echo "" >>${CONF}
+  echo "defchars='   ...,;:clodxkO0KXNWM'" >>${CONF}
+  echo "revchars='MWNXK0Okxdolc:;,...   '" >>${CONF}
+  echo "revlong='WMZO0QLCJUYXzcvun1il;:,^.. '" >>${CONF}
+  echo "longchars=' ..^,:;li1nuvczXYUJCLQ0OZMW'" >>${CONF}
+  [ "${quiet}" ] || {
+    printf " done"
+  }
+}
+touch ${HOME}/.tetris
+
+printf "\n"
+
+[ "${GOPATH}" ] || export GOPATH="${HOME}/go"
+for gop in ${GOPATH} ${GOPATH}/src ${GOPATH}/pkg ${GOPATH}/bin; do
+  [ -d "${gop}" ] || mkdir -p "${gop}"
+done
+
+[ "${quiet}" ] || {
+  printf "\n\n\tA Neovim text editor configuration has been created for you in"
+  printf "\n\t\t${BOLD}${HOME}/.config/nvim-Lazyman/${NORM}"
+  printf "\n\tA good starting point for the Neovim user is the Neovim User Doc at:"
+  printf "\n\t\t${BOLD}https://neovim.io/doc/user/${NORM}"
+  printf "\n\tTry Neovim out by viewing your Neovim configuration:"
+  printf "\n\t\t${BOLD}export NVIM_APPNAME="nvim-Lazyman" nvim${NORM}"
+  printf "\n\tCheck your configuration with the Neovim command:"
+  printf "\n\t\t${BOLD}:checkhealth${NORM}\n"
+
+  printf "\n\n${BOLD}Asciiville Initialization Complete${NORM}\n"
+  printf "\nLogout, open a new shell, or reinitialize your current shell"
+  printf "\nin order to set your execution PATH appropriately\n"
+  [ "${init_twit}" ] || {
+    printf "\nAuthorize the Rainbow Stream app at Twitter"
+    printf "\nby running the ${BOLD}'rainbowstream'${NORM} command\n"
+  }
+  printf "\nVisit the Asciiville Wiki at:"
+  printf "\n\t${BOLD}https://github.com/doctorfree/Asciiville/wiki${NORM}\n"
+}
+
+if [ "$ask_anim" ]; then
+  type -p asciisplash >/dev/null && {
+    [ "${prompt}" ] && {
+      while true; do
+        read -p "View an ASCII animation ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nExiting.\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    asciisplash -c 1 -a -i
+  }
+else
+  [ "${quiet}" ] || {
+    printf "View an Asciiville animation with:"
+    printf "\n\t${BOLD}asciisplash -c 1 -a -i${NORM}\n"
+  }
+fi

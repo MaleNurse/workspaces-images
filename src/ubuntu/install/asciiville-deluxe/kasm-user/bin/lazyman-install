@@ -1,0 +1,5 @@
+#!/bin/bash
+
+xfce4-terminal --tab --title Lazyman --command "lazyman -z noinstall"
+
+rm -f $HOME/.config/autostart/lazyman*.desktop
