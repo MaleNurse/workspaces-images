@@ -17,10 +17,9 @@ cd $(dirname "${SCRIPT_PATH}")
   exit 1
 }
 
-PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-jetbrains \
-       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/bin/install-asciiville \
+       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/bin/install-jetbrains \
+       ${SCRIPT_PATH}/../src/ubuntu/install/asciiville/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
@@ -32,8 +31,8 @@ do
   }
 done
 
-sudo docker build -t kasmweb/neovim-minimal:dev \
-                  -f kasm-neovim-minimal.Dockerfile .
+sudo docker build -t kasmweb/asciiville-minimal:dev \
+                  -f kasm-asciiville-minimal.Dockerfile .
 
 for priv in ${PRIVS}
 do
