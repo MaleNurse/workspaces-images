@@ -81,6 +81,14 @@ have_lazy=$(type -p lazyman)
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
 }
+[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
+}
+[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
+}
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
