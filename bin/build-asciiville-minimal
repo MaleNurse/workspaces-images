@@ -34,8 +34,14 @@ do
   }
 done
 
-sudo docker build -t kasmweb/asciiville-minimal:dev \
-                  -f kasm-asciiville-minimal.Dockerfile .
+if [ "$1" == "dockerhub" ]
+then
+  sudo docker build -t doctorwhen/kasm:asciiville-minimal \
+                    -f kasm-asciiville-minimal.Dockerfile .
+else
+  sudo docker build -t kasmweb/asciiville-minimal:dev \
+                    -f kasm-asciiville-minimal.Dockerfile .
+fi
 
 for priv in ${PRIVS}
 do

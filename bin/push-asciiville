@@ -1,4 +1,9 @@
 #!/bin/bash
 
-sudo docker tag kasmweb/asciiville doctorwhen/kasm:asciiville
-sudo docker push doctorwhen/kasm:asciiville
+if [ "$1" == "dockerhub" ]
+then
+  sudo docker push doctorwhen/kasm:asciiville
+else
+  sudo docker tag kasmweb/asciiville doctorwhen/kasm:asciiville
+  sudo docker push doctorwhen/kasm:asciiville
+fi

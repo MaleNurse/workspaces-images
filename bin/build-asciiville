@@ -34,8 +34,14 @@ do
   }
 done
 
-sudo docker build -t kasmweb/asciiville:dev \
-                  -f kasm-ubuntu-jammy-asciiville.Dockerfile .
+if [ "$1" == "dockerhub" ]
+then
+  sudo docker build -t doctorwhen/kasm:asciiville \
+                    -f kasm-ubuntu-jammy-asciiville.Dockerfile .
+else
+  sudo docker build -t kasmweb/asciiville:dev \
+                    -f kasm-ubuntu-jammy-asciiville.Dockerfile .
+fi
 
 for priv in ${PRIVS}
 do
