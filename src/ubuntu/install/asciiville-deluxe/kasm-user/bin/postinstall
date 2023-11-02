@@ -16,19 +16,6 @@ umask 022
 notify-send -u critical "Post Installation Configuration" \
                         "Please be patient while the system is configured"
 
-# Correct permissions/ownership
-chmod 755 $HOME
-chmod 644 $HOME/.aliases $HOME/.bashrc
-find $HOME/.config -type f | xargs chmod 644
-find $HOME/.config -type d | xargs chmod 755
-find $HOME/.local -type d | xargs chmod 755
-chmod 755 $HOME/Desktop
-chmod 755 $HOME/Desktop/*
-chmod 755 $HOME/bin
-chmod 755 $HOME/bin/*
-chmod 755 $HOME/.cargo
-chmod 755 $HOME/logs
-
 LOGDIR="$HOME/logs"
 
 # Install JetBrains Mono font
@@ -106,6 +93,19 @@ have_lazy=$(type -p lazyman)
   cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
      $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
 }
+
+# Correct permissions/ownership
+chmod 755 $HOME
+chmod 644 $HOME/.aliases $HOME/.bashrc
+find $HOME/.config -type f | xargs chmod 644
+find $HOME/.config -type d | xargs chmod 755
+find $HOME/.local -type d | xargs chmod 755
+chmod 755 $HOME/Desktop
+chmod 755 $HOME/Desktop/*
+chmod 755 $HOME/bin
+chmod 755 $HOME/bin/*
+chmod 755 $HOME/.cargo
+chmod 755 $HOME/logs
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
