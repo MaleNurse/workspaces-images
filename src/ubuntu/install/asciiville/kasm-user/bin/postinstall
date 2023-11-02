@@ -80,9 +80,16 @@ have_lazy=$(type -p lazyman)
   xfce4-terminal --title Lazyman --command "lazyman -z noinstall"
 }
 
+[ -f /usr/share/applications/asciiville.desktop ] && {
+  cp /usr/share/applications/asciiville.desktop \
+     $HOME/Desktop/asciiville.desktop
+}
+
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/.config/autostart/kitty.desktop
+  cp $HOME/.local/share/applications/kitty.desktop \
+     $HOME/Desktop/kitty.desktop
 }
 
 rm -rf /home/kasm-default-profile/*

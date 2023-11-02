@@ -61,12 +61,6 @@ usage() {
   exit 1
 }
 
-install_package() {
-}
-
-ask_install() {
-}
-
 install_pipx() {
   [ "${quiet}" ] || {
     printf "\n\tInstalling pipx ..."
@@ -76,37 +70,6 @@ install_pipx() {
   [ "${quiet}" ] || {
     printf " done"
   }
-}
-
-remove_games() {
-  if [ "${darwin}" ]; then
-    remove_package nbsdgames
-    remove_package nethack
-    remove_package ninvaders
-    remove_package c2048
-    remove_package greed
-  else
-    if [ "${debian}" ]; then
-      remove_package bsdgames
-      remove_package greed
-    else
-      remove_package bsd-games
-    fi
-    printf "\n\tRemoving asciigames package ..."
-    if [ "${debian}" ]; then
-      [ "${APT}" ] && sudo ${APT} remove asciigames >/dev/null 2>&1
-    else
-      if [ "${centos}" ] || [ "${fedora}" ]; then
-        [ "${DNF}" ] && sudo ${DNF} remove asciigames >/dev/null 2>&1
-      else
-        if [ "${arch}" ]; then
-          sudo pacman -R --noconfirm asciigames >/dev/null 2>&1
-        fi
-      fi
-    fi
-  fi
-  remove_package nudoku
-  printf "\n"
 }
 
 install_kitty() {
@@ -257,31 +220,8 @@ install_kitty() {
   }
 }
 
-remove_kitty() {
-  rm -rf ~/.local/kitty.app
-  rm -f ~/.local/bin/kitty
-  rm -f ~/.local/share/applications/kitty.desktop
-  rm -f ~/.local/share/applications/kitty-open.desktop
-  rm -f ~/.local/share/man/man1/kitty.1
-  rm -f ~/.local/share/man/man5/kitty.conf.5
-  [ -d /Applications/kitty.app ] && sudo rm -rf /Applications/kitty.app
-}
-
-remove_neovim() {
-  have_brew=$(type -p brew)
-  if [ "${have_brew}" ]; then
-    brew uninstall -q neovim >/dev/null 2>&1
-  else
-    printf "\nCannot locate brew. Skipping Neovim removal."
-  fi
-}
-
 install_neovim() {
-  if [ "${usebrew}" ]; then
-    install_args="-h -q -Q -y -z"
-  else
-    install_args="-q -Q -y -z"
-  fi
+  install_args="-q -Q -y -z"
   [ "${debug}" ] && install_args="${install_args} -d"
   [ -x ${CONFDIR}/tools/bin/lazyman ] && {
     if [ -d ${USERCONF}/nvim-Lazyman ]; then
@@ -472,93 +412,17 @@ have_mktemp=$(type -p mktemp)
 have_unlink=$(type -p unlink)
 have_unzip=$(type -p unzip)
 
-if [ "${darwin}" ]; then
-  usebrew=1
-else
-  usebrew=
-fi
+usebrew=
 minimal=
 [ "${argument}" == "minimal" ] && minimal=1
-[ "${argument}" == "brew" ] && usebrew=1
 
 have_kitty=$(type -p kitty)
 [ "${argument}" == "kitty" ] && {
-  [ "${remove}" ] && {
-    printf "\nRemoving kitty terminal emulator.\n\n"
-    if [ "${prompt}" ]; then
-      while true; do
-        read -r -p "Do you wish to continue with kitty removal ? (y/n) " yn
-        case $yn in
-          [Yy]*)
-            break
-            ;;
-          [Nn]*)
-            printf "\nKitty removal aborted."
-            printf "\nExiting.\n\n"
-            exit 0
-            ;;
-          *)
-            echo "Please answer yes or no."
-            ;;
-        esac
-      done
-    fi
-    remove_kitty
-    printf "\n${BOLD}Kitty removed${NORM}"
-    printf "\nTo re-install Kitty run ${BOLD}'ascinit kitty'${NORM}\n\n"
-    exit 0
-  }
-  [ "${quiet}" ] || {
-    printf "\nInstalling Kitty terminal emulator\n"
-  }
-  if [ "${prompt}" ]; then
-    while true; do
-      read -r -p "Do you wish to continue with kitty installation ? (y/n) " yn
-      case $yn in
-        [Yy]*)
-          break
-          ;;
-        [Nn]*)
-          printf "\nKitty installation aborted."
-          printf "\nExiting.\n\n"
-          exit 0
-          ;;
-        *)
-          echo "Please answer yes or no."
-          ;;
-      esac
-    done
-  fi
   install_kitty
   exit 0
 }
 
 [ "${argument}" == "neovim" ] && {
-  [ "${remove}" ] && {
-    printf "\nRemoving Neovim text editor.\n\n"
-    if [ "${prompt}" ]; then
-      while true; do
-        read -r -p "Do you wish to continue with Neovim removal ? (y/n) " yn
-        case $yn in
-          [Yy]*)
-            break
-            ;;
-          [Nn]*)
-            printf "\nNeovim removal aborted."
-            printf "\nExiting.\n\n"
-            exit 0
-            ;;
-          *)
-            echo "Please answer yes or no."
-            ;;
-        esac
-      done
-    fi
-    remove_neovim
-    printf "\n${BOLD}Neovim removed${NORM}"
-    printf "\nTo re-install Neovim run ${BOLD}'ascinit neovim'${NORM}\n\n"
-    exit 0
-  }
   install_neovim
   exit 0
 }
@@ -993,27 +857,6 @@ status_dots=
   status_dots=
 }
 
-# Use Homebrew only on Darwin unless invoked with the 'brew' argument
-BREW_EXE="brew"
-have_brew=$(type -p brew)
-[ "${usebrew}" ] && {
-  [ "${have_brew}" ] || {
-    # Install Brew
-    BREW_URL="${GHUC}/Homebrew/install/HEAD/install.sh"
-    curl -fsSL "${BREW_URL}" >/tmp/brew-$$.sh
-    [ $? -eq 0 ] || {
-      rm -f /tmp/brew-$$.sh
-      curl -kfsSL "${BREW_URL}" >/tmp/brew-$$.sh
-    }
-    [ -f /tmp/brew-$$.sh ] && {
-      chmod 755 /tmp/brew-$$.sh
-      [ "${quiet}" ] || printf "\n\tInstalling Homebrew, please be patient ... "
-      NONINTERACTIVE=1 /bin/bash -c "/tmp/brew-$$.sh" >/dev/null 2>&1
-      rm -f /tmp/brew-$$.sh
-      [ "${quiet}" ] || printf "done"
-    }
-  }
-}
 if [ -f ${HOME}/.profile ]; then
   BASHINIT="${HOME}/.profile"
 else
@@ -1021,25 +864,6 @@ else
     BASHINIT="${HOME}/.bashrc"
   else
     BASHINIT="${HOME}/.profile"
-  fi
-fi
-# shellcheck disable=SC2016
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  HOMEBREW_HOME="/home/linuxbrew/.linuxbrew"
-  BREW_EXE="${HOMEBREW_HOME}/bin/brew"
-else
-  if [ -x /usr/local/bin/brew ]; then
-    HOMEBREW_HOME="/usr/local"
-    BREW_EXE="${HOMEBREW_HOME}/bin/brew"
-  else
-    if [ -x /opt/homebrew/bin/brew ]; then
-      HOMEBREW_HOME="/opt/homebrew"
-      BREW_EXE="${HOMEBREW_HOME}/bin/brew"
-    else
-      [ "${usebrew}" ] && {
-        echo "WARNING: Homebrew brew executable could not be located"
-      }
-    fi
   fi
 fi
 GOTEXT='# Go paths
@@ -1093,24 +917,6 @@ fi
       echo 'eval "$(XXX shellenv)"' | sed -e "s%XXX%${BREW_EXE}%" >>"${HOME}/.zshrc"
     }
   }
-}
-[ "${usebrew}" ] && eval "$(${BREW_EXE} shellenv)"
-
-[ "${usebrew}" ] && {
-  have_brew=$(type -p brew)
-  if [ "${have_brew}" ]; then
-    BREW_EXE="brew"
-  else
-    [ "${BREW_EXE}" == "brew" ] || {
-      BREWPATH=$(dirname ${BREW_EXE})
-      pathadd "${BREWPATH}"
-      have_brew=$(type -p brew)
-    }
-  fi
-
-  export HOMEBREW_NO_INSTALL_CLEANUP=1
-  export HOMEBREW_NO_ENV_HINTS=1
-  export HOMEBREW_NO_AUTO_UPDATE=1
 }
 
 PYTHON="python3"

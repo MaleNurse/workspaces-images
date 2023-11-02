@@ -78,6 +78,8 @@ have_lazy=$(type -p lazyman)
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/.config/autostart/kitty.desktop
+  cp $HOME/.local/share/applications/kitty.desktop \
+     $HOME/Desktop/kitty.desktop
 }
 
 rm -rf /home/kasm-default-profile/*
