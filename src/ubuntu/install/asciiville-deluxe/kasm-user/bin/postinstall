@@ -120,3 +120,5 @@ chmod 755 $HOME/logs
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
+
+kill $(pgrep "notifyd")

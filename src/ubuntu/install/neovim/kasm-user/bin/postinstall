@@ -14,7 +14,7 @@ umask 022
 }
 
 notify-send -u critical "Post Installation Configuration" \
-                        "Please be patient while the system is configured"
+                        "Please be patient while Neovim and Neovide are configured"
 
 # Correct permissions/ownership
 chmod 755 $HOME
@@ -99,3 +99,5 @@ have_lazy=$(type -p lazyman)
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
+
+kill $(pgrep "notifyd")
