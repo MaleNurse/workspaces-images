@@ -14,7 +14,7 @@ umask 022
 }
 
 notify-send -u critical "Post Installation Configuration" \
-                        "Please be patient while the system is configured"
+                        "Please be patient while Asciiville and Lazyman are configured"
 
 LOGDIR="$HOME/logs"
 
@@ -33,7 +33,8 @@ LOGDIR="$HOME/logs"
 
 # Initialize Asciiville
 [ -x $HOME/bin/init-asciiville ] && {
-  ${HOME}/bin/init-asciiville -y > ${LOGDIR}/init-asciiville.log 2>&1
+  xfce4-terminal --title "Asciiville Intialization" \
+                 --command "${HOME}/bin/init-asciiville -y; exit"
 }
 
 # Install Kitty terminal emulator
@@ -67,13 +68,23 @@ rm -f $HOME/.config/autostart/postinstall.desktop
 
 have_lazy=$(type -p lazyman)
 [ "${have_lazy}" ] && {
-  xfce4-terminal --title Lazyman --command "lazyman -z noinstall"
+  xfce4-terminal --title "Lazyman Initialization" \
+                 --command "lazyman -z noinstall; exit"
 }
 
-[ -f /usr/share/applications/asciiville.desktop ] && {
-  cp /usr/share/applications/asciiville.desktop \
+rm -f $HOME/Desktop/xfce4-terminal.desktop
+rm -f $HOME/Desktop/xfce4-file-manager.desktop
+
+if [ -f $HOME/.local/share/applications/asciiville.desktop ]
+then
+  cp $HOME/.local/share/applications/asciiville.desktop \
      $HOME/Desktop/asciiville.desktop
-}
+else
+  [ -f /usr/share/applications/asciiville.desktop ] && {
+    cp /usr/share/applications/asciiville.desktop \
+       $HOME/Desktop/asciiville.desktop
+  }
+fi
 
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \

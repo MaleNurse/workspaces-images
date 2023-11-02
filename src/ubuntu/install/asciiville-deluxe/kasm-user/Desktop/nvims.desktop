@@ -90,7 +90,7 @@ Comment[vi]=Soạn thảo tập tin văn bản
 Comment[wa]=Asspougnî des fitchîs tecses
 Comment[zh_CN]=编辑文本文件
 Comment[zh_TW]=編輯文字檔
-Exec=xfce4-terminal --title Neovim --geometry 90x24 --command "lazyman open"
+Exec=kitty --title="Lazyman Neovim Configuration Manager" --start-as normal --override startup_session=none lazyman open
 Categories=System;
 Terminal=true
 Type=Application
