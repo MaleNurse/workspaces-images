@@ -13,6 +13,9 @@ umask 022
   }
 }
 
+notify-send -u critical "Post Installation Configuration" \
+                        "Please be patient while the system is configured"
+
 # Correct permissions/ownership
 chmod 755 $HOME
 chmod 644 $HOME/.aliases $HOME/.bashrc

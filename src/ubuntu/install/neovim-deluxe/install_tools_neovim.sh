@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
+apt install -y apt-utils
 apt install -y jq
 apt install -y fzf
 apt install -y ripgrep
@@ -14,6 +15,7 @@ apt install -y lsd
 apt install -y figlet
 apt install -y luarocks
 apt install -y lolcat
+apt install -y libnotify-bin
 apt install -y xclip
 apt install -y xsel
 apt install -y python3
