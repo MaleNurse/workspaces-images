@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo docker tag kasmweb/asciiville-deluxe doctorwhen/kasm:asciiville-deluxe
+sudo docker push doctorwhen/kasm:asciiville-deluxe

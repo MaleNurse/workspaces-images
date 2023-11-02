@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo docker tag kasmweb/neovim-deluxe doctorwhen/kasm:neovim-deluxe
+sudo docker push doctorwhen/kasm:neovim-deluxe
