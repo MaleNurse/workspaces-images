@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ "$1" == "dockerhub" ]
+if [ "$1" == "kasmweb" ]
 then
+  sudo docker tag kasmweb/neovim-deluxe doctorwhen/kasm:neovim-deluxe
   sudo docker push doctorwhen/kasm:neovim-deluxe
 else
-  sudo docker tag kasmweb/neovim-deluxe doctorwhen/kasm:neovim-deluxe
   sudo docker push doctorwhen/kasm:neovim-deluxe
 fi

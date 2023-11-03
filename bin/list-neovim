@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker image list | grep kasmweb/neovim
+sudo docker image list | grep neovim

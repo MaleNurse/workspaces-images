@@ -32,12 +32,12 @@ do
   }
 done
 
-if [ "$1" == "dockerhub" ]
+if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --no-cache -t doctorwhen/kasm:neovim \
+  sudo docker build --no-cache -t kasmweb/neovim:dev \
                     -f kasm-ubuntu-jammy-neovim.Dockerfile .
 else
-  sudo docker build --no-cache -t kasmweb/neovim:dev \
+  sudo docker build --no-cache -t doctorwhen/kasm:neovim \
                     -f kasm-ubuntu-jammy-neovim.Dockerfile .
 fi
 

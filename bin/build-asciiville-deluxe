@@ -41,12 +41,12 @@ do
   }
 done
 
-if [ "$1" == "dockerhub" ]
+if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --no-cache -t doctorwhen/kasm:asciiville-deluxe \
+  sudo docker build --no-cache -t kasmweb/asciiville-deluxe:dev \
                     -f kasm-asciiville-deluxe.Dockerfile .
 else
-  sudo docker build --no-cache -t kasmweb/asciiville-deluxe:dev \
+  sudo docker build --no-cache -t doctorwhen/kasm:asciiville-deluxe \
                     -f kasm-asciiville-deluxe.Dockerfile .
 fi
 
