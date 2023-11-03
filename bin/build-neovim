@@ -34,10 +34,10 @@ done
 
 if [ "$1" == "dockerhub" ]
 then
-  sudo docker build -t doctorwhen/kasm:neovim \
+  sudo docker build --no-cache -t doctorwhen/kasm:neovim \
                     -f kasm-ubuntu-jammy-neovim.Dockerfile .
 else
-  sudo docker build -t kasmweb/neovim:dev \
+  sudo docker build --no-cache -t kasmweb/neovim:dev \
                     -f kasm-ubuntu-jammy-neovim.Dockerfile .
 fi
 
