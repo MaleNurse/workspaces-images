@@ -27,10 +27,10 @@ RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansib
 COPY ./src/ubuntu/install/terraform $INST_SCRIPTS/terraform/
 RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/terraform/
 
-COPY ./src/ubuntu/install/asciiville/install_tools_asciiville.sh $INST_SCRIPTS/
+COPY ./src/ubuntu/install/asciiville-minimal/install_tools_asciiville.sh $INST_SCRIPTS/
 RUN bash $INST_SCRIPTS/install_tools_asciiville.sh && rm -f $INST_SCRIPTS/install_tools_asciiville.sh
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-RUN bash $INST_SCRIPTS/install_kasm_user.sh asciiville && rm -f $INST_SCRIPTS/install_kasm_user.sh
+RUN bash $INST_SCRIPTS/install_kasm_user.sh asciiville-minimal && rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 # Update the desktop environment to be optimized for a single application
 RUN cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/

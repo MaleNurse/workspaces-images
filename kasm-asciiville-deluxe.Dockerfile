@@ -91,15 +91,15 @@ RUN \
   rm -rf $INST_SCRIPTS/neovim-deluxe/
 
 ### Install Asciiville dependencies and user config
-COPY ./src/ubuntu/install/asciiville $INST_SCRIPTS/asciiville/
+COPY ./src/ubuntu/install/asciiville-deluxe $INST_SCRIPTS/asciiville-deluxe/
 RUN \
-  bash $INST_SCRIPTS/asciiville/install_tools_asciiville.sh && \
-  rm -rf $INST_SCRIPTS/asciiville/
+  bash $INST_SCRIPTS/asciiville-deluxe/install_tools_asciiville.sh && \
+  rm -rf $INST_SCRIPTS/asciiville-deluxe/
 
 ### Install kasm user home
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
 RUN \
-  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
+  bash $INST_SCRIPTS/install_kasm_user.sh asciiville-deluxe && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 #ADD ./src/common/scripts $STARTUPDIR
