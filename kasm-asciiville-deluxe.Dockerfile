@@ -36,24 +36,6 @@ COPY ./src/ubuntu/install/firefox/ $INST_SCRIPTS/firefox/
 COPY ./src/ubuntu/install/firefox/firefox.desktop $HOME/Desktop/
 RUN bash $INST_SCRIPTS/firefox/install_firefox.sh && rm -rf $INST_SCRIPTS/firefox/
 
-### Install Neovim dependencies and user config
-COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
-COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-RUN \
-  bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
-  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
-  rm -rf $INST_SCRIPTS/neovim-deluxe/ && \
-  rm -f $INST_SCRIPTS/install_kasm_user.sh
-
-### Install Asciiville dependencies and user config
-COPY ./src/ubuntu/install/asciiville $INST_SCRIPTS/asciiville/
-COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-RUN \
-  bash $INST_SCRIPTS/asciiville/install_tools_asciiville.sh && \
-  bash $INST_SCRIPTS/install_kasm_user.sh asciiville && \
-  rm -rf $INST_SCRIPTS/asciiville/ && \
-  rm -f $INST_SCRIPTS/install_kasm_user.sh
-
 ### Install Sublime Text
 COPY ./src/ubuntu/install/sublime_text $INST_SCRIPTS/sublime_text/
 RUN bash $INST_SCRIPTS/sublime_text/install_sublime_text.sh  && rm -rf $INST_SCRIPTS/sublime_text/
@@ -101,6 +83,24 @@ RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/t
 ### Install Telegram
 COPY ./src/ubuntu/install/telegram $INST_SCRIPTS/telegram/
 RUN bash $INST_SCRIPTS/telegram/install_telegram.sh  && rm -rf $INST_SCRIPTS/telegram/
+
+### Install Neovim dependencies and user config
+COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
+RUN \
+  bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
+  rm -rf $INST_SCRIPTS/neovim-deluxe/
+
+### Install Asciiville dependencies and user config
+COPY ./src/ubuntu/install/asciiville $INST_SCRIPTS/asciiville/
+RUN \
+  bash $INST_SCRIPTS/asciiville/install_tools_asciiville.sh && \
+  rm -rf $INST_SCRIPTS/asciiville/
+
+### Install kasm user home
+COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
+RUN \
+  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
+  rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 #ADD ./src/common/scripts $STARTUPDIR
 RUN $STARTUPDIR/set_user_permission.sh $HOME
