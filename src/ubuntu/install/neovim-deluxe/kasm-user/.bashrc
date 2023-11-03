@@ -45,11 +45,11 @@ fi
 if [ $(echo $PATH | grep -c /usr/local/go/bin) -ne "1" ]; then
   PATH="$PATH:/usr/local/go/bin"
 fi
+if [ $(echo $PATH | grep -c /usr/games) -ne "1" ]; then
+  PATH="$PATH:/usr/games"
+fi
 if [ $(echo $PATH | grep -c $HOME/go/bin) -ne "1" ]; then
   PATH="$PATH:$HOME/go/bin"
-fi
-if [ $(echo $PATH | grep -c /usr/local/swift/bin) -ne "1" ]; then
-  PATH="$PATH:/usr/local/swift/bin"
 fi
 if [ $(echo $PATH | grep -c $HOME/bin) -ne "1" ]; then
   PATH="$PATH:$HOME/bin"
@@ -68,13 +68,13 @@ setterm -linewrap on 2>/dev/null
 # colorize man pages
 man() {
   LESS_TERMCAP_mb=$'\e[1;32m' \
-    LESS_TERMCAP_md=$'\e[1;32m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[01;33m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[1;4;31m' \
-    command man "$@"
+  LESS_TERMCAP_md=$'\e[1;32m' \
+  LESS_TERMCAP_me=$'\e[0m' \
+  LESS_TERMCAP_se=$'\e[0m' \
+  LESS_TERMCAP_so=$'\e[01;33m' \
+  LESS_TERMCAP_ue=$'\e[0m' \
+  LESS_TERMCAP_us=$'\e[1;4;31m' \
+  command man "$@"
 }
 
 export LESSHISTFILE=-
@@ -92,7 +92,7 @@ case $- in
 esac
 
 # MEDIAROOT is used by doctorfree's Scripts to identify the media root
-export MEDIAROOT=/u
+export MEDIAROOT=/share/media
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -172,7 +172,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Kitty bassh completions
+# Kitty bash completions
 # source <(kitty + complete setup bash)
 
 if command -v zoxide > /dev/null; then
