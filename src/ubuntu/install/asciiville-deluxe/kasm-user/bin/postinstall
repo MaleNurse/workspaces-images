@@ -14,7 +14,7 @@ umask 022
 }
 
 notify-send -u critical "Post Installation Configuration" \
-                        "Please be patient while Asciiville and Lazyman are configured"
+                        "Please be patient while Asciiville is initialized"
 
 LOGDIR="$HOME/logs"
 
@@ -72,9 +72,6 @@ have_lazy=$(type -p lazyman)
                  --command "lazyman -z noinstall; exit"
 }
 
-rm -f $HOME/Desktop/xfce4-terminal.desktop
-rm -f $HOME/Desktop/xfce4-file-manager.desktop
-
 if [ -f $HOME/.local/share/applications/asciiville.desktop ]
 then
   cp $HOME/.local/share/applications/asciiville.desktop \
@@ -117,6 +114,9 @@ chmod 755 $HOME/bin
 chmod 755 $HOME/bin/*
 chmod 755 $HOME/.cargo
 chmod 755 $HOME/logs
+
+rm -f $HOME/Desktop/xfce4-terminal.desktop
+rm -f $HOME/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
