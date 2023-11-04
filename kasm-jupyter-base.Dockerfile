@@ -2,6 +2,9 @@
 # Distributed under the terms of the Modified BSD License.
 ARG REGISTRY=docker.io
 ARG OWNER=doctorwhen/kasm
+ARG NB_USER="kasm-user"
+ARG NB_UID="1000"
+ARG NB_GID="1000"
 ARG BASE_CONTAINER=$REGISTRY/$OWNER:jupyter-foundation
 FROM $BASE_CONTAINER
 
