@@ -4,7 +4,6 @@ ARG REGISTRY=docker.io
 ARG OWNER=doctorwhen/kasm
 ARG NB_USER="kasm-user"
 ARG NB_UID="1000"
-ARG NB_GID="1000"
 ARG BASE_CONTAINER=$REGISTRY/$OWNER:jupyter-foundation
 FROM $BASE_CONTAINER
 
@@ -49,7 +48,7 @@ RUN mamba install --yes \
     npm cache clean --force && \
     jupyter lab clean && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    fix-permissions "${CONDA_DIR}" && \
+    # fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
 ENV JUPYTER_PORT=8888
