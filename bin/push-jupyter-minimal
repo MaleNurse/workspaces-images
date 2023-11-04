@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$1" == "kasmweb" ]
+then
+  sudo docker tag kasmweb/jupyter-minimal doctorwhen/kasm:jupyter-minimal
+  sudo docker push doctorwhen/kasm:jupyter-minimal
+else
+  sudo docker push doctorwhen/kasm:jupyter-minimal
+fi
