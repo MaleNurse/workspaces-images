@@ -8,9 +8,9 @@ ARG ROOT_CONTAINER=ubuntu:22.04
 FROM $ROOT_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
-ARG NB_USER="jovyan"
+ARG NB_USER="kasm-user"
 ARG NB_UID="1000"
-ARG NB_GID="100"
+ARG NB_GID="1000"
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
@@ -127,7 +127,7 @@ RUN set -x && \
 
 # Configure container startup
 ENTRYPOINT ["tini", "-g", "--"]
-CMD ["start.sh"]
+CMD ["src/ubuntu/install/jupyter-foundation/start.sh"]
 
 # Copy local files as late as possible to avoid cache busting
 COPY ./src/ubuntu/install/jupyter-foundation/run-hooks.sh \

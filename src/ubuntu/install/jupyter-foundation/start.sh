@@ -40,8 +40,7 @@ source /usr/local/bin/run-hooks.sh /usr/local/bin/start-notebook.d
 
 # If the container started as the root user, then we have permission to refit
 # the jovyan user, and ensure file permissions, grant sudo rights, and such
-# things before we run the command passed to start.sh as the desired user
-# (NB_USER).
+# things before we run the command passed to start.sh as the desired user.
 #
 if [ "$(id -u)" == 0 ] ; then
     # Environment variables:
@@ -53,6 +52,12 @@ if [ "$(id -u)" == 0 ] ; then
     # - CHOWN_HOME: a boolean ("1" or "yes") to chown the user's home folder
     # - CHOWN_EXTRA: a comma separated list of paths to chown
     # - CHOWN_HOME_OPTS / CHOWN_EXTRA_OPTS: arguments to the chown commands
+    NB_USER="kasm-user"
+    NB_GROUP="kasm-user"
+    NB_UID="1000"
+    NB_GID="1000"
+    GRANT_SUDO=
+    CHOWN_HOME=
 
     # Refit the jovyan user to the desired the user (NB_USER)
     if id jovyan &> /dev/null ; then
