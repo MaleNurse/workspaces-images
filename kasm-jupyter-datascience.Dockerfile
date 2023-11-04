@@ -64,3 +64,11 @@ RUN mamba install --yes \
     mamba clean --all -f -y
     # fix-permissions "${CONDA_DIR}" && \
     # fix-permissions "/home/${NB_USER}"
+
+# Fix permissions as root
+USER root
+WORKDIR /tmp
+RUN fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+USER ${NB_UID}

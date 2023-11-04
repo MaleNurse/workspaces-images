@@ -51,6 +51,15 @@ RUN mamba install --yes \
     # fix-permissions "${CONDA_DIR}" && \
     # fix-permissions "/home/${NB_USER}"
 
+# Fix permissions as root
+USER root
+WORKDIR /tmp
+RUN fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+USER ${NB_UID}
+WORKDIR /tmp
+
 ENV JUPYTER_PORT=8888
 EXPOSE $JUPYTER_PORT
 

@@ -69,19 +69,32 @@ RUN mamba install --yes \
     # fix-permissions "${CONDA_DIR}" && \
     # fix-permissions "/home/${NB_USER}"
 
+# Fix permissions as root
+USER root
+WORKDIR /tmp
+RUN fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
 # Install facets which does not have a pip or conda package at the moment
+USER ${NB_UID}
 WORKDIR /tmp
 RUN git clone https://github.com/PAIR-code/facets && \
     jupyter nbclassic-extension install facets/facets-dist/ --sys-prefix && \
     rm -rf /tmp/facets
-    # fix-permissions "${CONDA_DIR}" && \
-    # fix-permissions "/home/${NB_USER}"
+
+# Fix permissions as root
+USER root
+WORKDIR /tmp
+RUN fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
 # Import matplotlib the first time to build the font cache.
+USER ${NB_UID}
+WORKDIR /tmp
 ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
 
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
-    # fix-permissions "/home/${NB_USER}"
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+    fix-permissions "/home/${NB_USER}"
 
 USER ${NB_UID}
 
