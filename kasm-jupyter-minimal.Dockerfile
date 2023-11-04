@@ -1,8 +1,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG REGISTRY=quay.io
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/base-notebook
+ARG REGISTRY="docker.io"
+ARG OWNER="doctorwhen/kasm"
+ARG BASE_CONTAINER=$REGISTRY/$OWNER:jupyter-base
 ARG NB_USER="kasm-user"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
