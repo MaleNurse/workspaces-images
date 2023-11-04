@@ -130,7 +130,9 @@ ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start.sh"]
 
 # Copy local files as late as possible to avoid cache busting
-COPY ./src/ubuntu/install/jupyter-foundation/run-hooks.sh start.sh \
+COPY ./src/ubuntu/install/jupyter-foundation/run-hooks.sh \
+      /usr/local/bin/
+COPY ./src/ubuntu/install/jupyter-foundation/start.sh \
       /usr/local/bin/
 
 USER root
