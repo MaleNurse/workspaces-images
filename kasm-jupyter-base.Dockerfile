@@ -47,9 +47,9 @@ RUN mamba install --yes \
     mamba clean --all -f -y && \
     npm cache clean --force && \
     jupyter lab clean && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+    rm -rf "/home/${NB_USER}/.cache/yarn"
     # fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    # fix-permissions "/home/${NB_USER}"
 
 ENV JUPYTER_PORT=8888
 EXPOSE $JUPYTER_PORT
