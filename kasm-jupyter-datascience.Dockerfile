@@ -1,11 +1,11 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG REGISTRY=quay.io
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/scipy-notebook
+ARG REGISTRY="docker.io"
+ARG OWNER="doctorwhen/kasm"
 ARG NB_USER="kasm-user"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
+ARG BASE_CONTAINER=$REGISTRY/$OWNER:jupyter-scipy
 FROM $BASE_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
@@ -61,20 +61,6 @@ RUN mamba install --yes \
     'r-tidyverse' \
     'rpy2' \
     'unixodbc' && \
-    mamba clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-
-######### END CUSTOMIZATIONS ########
-
-USER root
-
-RUN chown -R 1000:0 $HOME
-
-ENV HOME /home/kasm-user
-WORKDIR $HOME
-RUN mkdir -p $HOME && chown -R 1000:0 $HOME
-
-USER 1000
-
-CMD ["--tail-log"]
+    mamba clean --all -f -y
+    # fix-permissions "${CONDA_DIR}" && \
+    # fix-permissions "/home/${NB_USER}"
