@@ -60,16 +60,21 @@ RUN apt-get update && apt-get -y install \
     && chmod +x $HOME/Desktop/*.desktop
 
 # Install Chrome
-COPY ./src/ubuntu/install/data-science/install_chrome.sh /tmp/
+COPY ./src/ubuntu/install/jupyter/install_chrome.sh /tmp/
 RUN bash /tmp/install_chrome.sh
 
 # Install MS Edge
-COPY ./src/ubuntu/install/data-science/install_edge.sh /tmp/
+COPY ./src/ubuntu/install/jupyter/install_edge.sh /tmp/
 RUN bash /tmp/install_edge.sh
 
-COPY ./src/ubuntu/install/data-science/RStudio.desktop $HOME/Desktop/
-COPY ./src/ubuntu/install/data-science/spyder.desktop $HOME/Desktop/
-COPY ./src/ubuntu/install/data-science/jupyter.desktop $HOME/Desktop/
+COPY ./src/ubuntu/install/jupyter/RStudio.desktop $HOME/Desktop/
+COPY ./src/ubuntu/install/jupyter/spyder.desktop $HOME/Desktop/
+COPY ./src/ubuntu/install/jupyter/jupyter.desktop $HOME/Desktop/
+
+### Install kasm user config
+COPY ./src/ubuntu/install/install_kasm_user.sh /tmp/
+RUN \
+  bash /tmp/install_kasm_user.sh jupyter
 
 # Install example packages in the conda environment
 USER 1000
@@ -84,7 +89,7 @@ RUN bash -c "source /opt/anaconda3/bin/activate \
 
 USER root
 
-COPY ./src/ubuntu/install/data-science/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
+COPY ./src/ubuntu/install/jupyter/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
 
 ######### END CUSTOMIZATIONS ########
 
