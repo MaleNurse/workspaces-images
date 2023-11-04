@@ -32,10 +32,10 @@ ENV JULIA_DEPOT_PATH=/opt/julia \
 # Setup Julia
 RUN /opt/setup-scripts/setup-julia.bash
 
-USER ${NB_UID}
-
 # Setup IJulia kernel & other packages
 RUN /opt/setup-scripts/setup-julia-packages.bash
+
+USER ${NB_UID}
 
 # R packages including IRKernel which gets installed globally.
 # r-e1071: dependency of the caret R package
