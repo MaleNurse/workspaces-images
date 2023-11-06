@@ -6,9 +6,9 @@ cd $(dirname "${SCRIPT_PATH}")
 
 if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --no-cache -t kasmweb/jupyter-scipy:dev \
+  sudo docker build --pull --no-cache -t kasmweb/jupyter-scipy:dev \
                     -f kasm-jupyter-scipy.Dockerfile .
 else
-  sudo docker build --no-cache -t doctorwhen/kasm:jupyter-scipy \
+  sudo docker build --pull --no-cache -t doctorwhen/kasm:jupyter-scipy \
                     -f kasm-jupyter-scipy.Dockerfile .
 fi

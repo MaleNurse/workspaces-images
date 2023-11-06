@@ -34,10 +34,10 @@ done
 
 if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --no-cache -t kasmweb/neovim-minimal:dev \
+  sudo docker build --pull --no-cache -t kasmweb/neovim-minimal:dev \
                     -f kasm-neovim-minimal.Dockerfile .
 else
-  sudo docker build --no-cache -t doctorwhen/kasm:neovim-minimal \
+  sudo docker build --pull --no-cache -t doctorwhen/kasm:neovim-minimal \
                     -f kasm-neovim-minimal.Dockerfile .
 fi
 
