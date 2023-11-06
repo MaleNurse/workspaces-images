@@ -1,5 +1,5 @@
 ARG BASE_TAG="develop"
-ARG BASE_IMAGE="core-ubuntu-jammy"
+ARG BASE_IMAGE="ubuntu-jammy-desktop"
 FROM kasmweb/$BASE_IMAGE:$BASE_TAG
 
 USER root
@@ -14,27 +14,27 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
-                  /ubuntu/install/misc/install_tools.sh \
-                  /ubuntu/install/neovim/install_tools_neovim.sh \
-                  /ubuntu/install/chrome/install_chrome.sh \
-                  /ubuntu/install/chromium/install_chromium.sh \
-                  /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/sublime_text/install_sublime_text.sh \
-                  # /ubuntu/install/vs_code/install_vs_code.sh \
-                  /ubuntu/install/nextcloud/install_nextcloud.sh \
-                  /ubuntu/install/remmina/install_remmina.sh \
-                  /ubuntu/install/only_office/install_only_office.sh \
-                  /ubuntu/install/signal/install_signal.sh \
-                  /ubuntu/install/gimp/install_gimp.sh \
-                  /ubuntu/install/zoom/install_zoom.sh \
-                  /ubuntu/install/obs/install_obs.sh \
-                  /ubuntu/install/ansible/install_ansible.sh \
-                  /ubuntu/install/terraform/install_terraform.sh \
-                  /ubuntu/install/telegram/install_telegram.sh \
-                  /ubuntu/install/thunderbird/install_thunderbird.sh \
-                  /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
-                  /ubuntu/install/cleanup/cleanup.sh"
+    #INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
+    #              /ubuntu/install/misc/install_tools.sh \
+    #              /ubuntu/install/chrome/install_chrome.sh \
+    #              /ubuntu/install/chromium/install_chromium.sh \
+    #              /ubuntu/install/firefox/install_firefox.sh \
+    #              /ubuntu/install/sublime_text/install_sublime_text.sh \
+    #              /ubuntu/install/vs_code/install_vs_code.sh \
+    #              /ubuntu/install/nextcloud/install_nextcloud.sh \
+    #              /ubuntu/install/remmina/install_remmina.sh \
+    #              /ubuntu/install/only_office/install_only_office.sh \
+    #              /ubuntu/install/signal/install_signal.sh \
+    #              /ubuntu/install/gimp/install_gimp.sh \
+    #              /ubuntu/install/zoom/install_zoom.sh \
+    #              /ubuntu/install/obs/install_obs.sh \
+    #              /ubuntu/install/ansible/install_ansible.sh \
+    #              /ubuntu/install/terraform/install_terraform.sh \
+    #              /ubuntu/install/telegram/install_telegram.sh \
+    #              /ubuntu/install/thunderbird/install_thunderbird.sh \
+    #              /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
+    #              /ubuntu/install/cleanup/cleanup.sh"
+    INST_SCRIPTS="/ubuntu/install/neovim/install_tools_neovim.sh"
 
 # Copy install scripts
 COPY ./src/ $INST_DIR

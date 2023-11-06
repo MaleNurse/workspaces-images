@@ -2,8 +2,8 @@
 
 if [ "$1" == "kasmweb" ]
 then
-  sudo docker tag kasmweb/neovim doctorwhen/kasm:neovim
-  sudo docker push doctorwhen/kasm:neovim
+  sudo docker tag kasmweb/neovim-jammy doctorwhen/kasm:neovim-jammy
+  sudo docker push doctorwhen/kasm:neovim-jammy
 else
-  sudo docker push doctorwhen/kasm:neovim
+  sudo docker push doctorwhen/kasm:neovim-jammy
 fi
