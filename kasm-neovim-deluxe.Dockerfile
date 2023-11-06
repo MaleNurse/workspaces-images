@@ -50,8 +50,8 @@ COPY ./src/ubuntu/install/sublime_text $INST_SCRIPTS/sublime_text/
 RUN bash $INST_SCRIPTS/sublime_text/install_sublime_text.sh  && rm -rf $INST_SCRIPTS/sublime_text/
 
 ### Install Visual Studio Code
-COPY ./src/ubuntu/install/vs_code $INST_SCRIPTS/vs_code/
-RUN bash $INST_SCRIPTS/vs_code/install_vs_code.sh  && rm -rf $INST_SCRIPTS/vs_code/
+# COPY ./src/ubuntu/install/vs_code $INST_SCRIPTS/vs_code/
+# RUN bash $INST_SCRIPTS/vs_code/install_vs_code.sh  && rm -rf $INST_SCRIPTS/vs_code/
 
 ### Install NextCloud
 COPY ./src/ubuntu/install/nextcloud $INST_SCRIPTS/nextcloud/

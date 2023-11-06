@@ -21,7 +21,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/chromium/install_chromium.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
                   /ubuntu/install/sublime_text/install_sublime_text.sh \
-                  /ubuntu/install/vs_code/install_vs_code.sh \
+                  # /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/nextcloud/install_nextcloud.sh \
                   /ubuntu/install/remmina/install_remmina.sh \
                   /ubuntu/install/only_office/install_only_office.sh \
