@@ -17,13 +17,10 @@ cd $(dirname "${SCRIPT_PATH}")
   exit 1
 }
 
-PATH_PRIVS=$(dirname ${SCRIPT_PATH})
-PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/neovim-deluxe/install_tools_neovim.sh \
-       ${PATH_PRIVS}/neovim-deluxe/kasm-user/bin/install-neovide \
-       ${PATH_PRIVS}/neovim-deluxe/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/neovim-deluxe/kasm-user/bin/install-neovim \
-       ${PATH_PRIVS}/neovim-deluxe/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovim \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-neovide \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/bin/install-jetbrains \
+       ${SCRIPT_PATH}/../src/ubuntu/install/neovim/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
@@ -38,10 +35,10 @@ done
 if [ "$1" == "kasmweb" ]
 then
   sudo docker build --pull --no-cache -t kasmweb/neovim:dev \
-                    -f kasm-neovim.Dockerfile .
+                    -f kasm-ubuntu-jammy-neovim.Dockerfile .
 else
   sudo docker build --pull --no-cache -t doctorwhen/kasm:neovim \
-                    -f kasm-neovim.Dockerfile .
+                    -f kasm-ubuntu-jammy-neovim.Dockerfile .
 fi
 
 for priv in ${PRIVS}
