@@ -4,6 +4,7 @@ apt-get update
 apt-get install -y apt-utils
 apt-get install -y jq
 apt-get install -y fzf
+apt-get install -y g++
 apt-get install -y ripgrep
 apt-get install -y julia
 apt-get install -y php

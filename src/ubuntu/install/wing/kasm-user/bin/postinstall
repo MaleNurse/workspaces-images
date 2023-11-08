@@ -67,6 +67,19 @@ rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
+have_lazy=$(type -p lazyman)
+[ "${have_lazy}" ] && {
+  xfce4-terminal --title "Lazyman Initialization" \
+                 --command "lazyman -z noinstall; exit"
+}
+
+# Fix Lazyman permissions
+[ -d $HOME/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 $HOME/.config/nvim-Lazyman/*.sh
+}
+
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/.config/autostart/kitty.desktop
