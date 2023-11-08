@@ -18,6 +18,12 @@ notify-send -u critical "Post Installation Configuration" \
 
 LOGDIR="$HOME/logs"
 
+# Install VS Code Wing extension
+have_code=$(type -p code)
+[ "${have_code}" ] && {
+  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
+}
+
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1

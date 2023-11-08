@@ -44,5 +44,3 @@ apt-get install nodejs -y
 
 have_npm=$(type -p npm)
 [ "${have_npm}" ] && npm install -g winglang
-have_code=$(type -p code)
-[ "${have_code}" ] && code --install-extension Monada.vscode-wing
