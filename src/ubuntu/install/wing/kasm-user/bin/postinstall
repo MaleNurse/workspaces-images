@@ -18,12 +18,6 @@ notify-send -u critical "Post Installation Configuration" \
 
 LOGDIR="$HOME/logs"
 
-# Install VS Code Wing extension
-have_code=$(type -p code)
-[ "${have_code}" ] && {
-  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
-}
-
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
@@ -38,6 +32,12 @@ have_code=$(type -p code)
   }
 }
 
+# Install VS Code Wing extension
+have_code=$(type -p code)
+[ "${have_code}" ] && {
+  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
+}
+
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] || {
@@ -46,6 +46,25 @@ have_kitty=$(type -p kitty)
   }
 }
 
+# Try to install Neovim and Neovide
+have_nvim=$(type -p nvim)
+have_neov=$(type -p neovide)
+
+[ "${have_nvim}" ] || {
+  [ -x $HOME/bin/install-neovim ] && {
+    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
+  }
+}
+
+[ "${have_neov}" ] || {
+  [ -x $HOME/bin/install-neovide ] && {
+    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
+  }
+}
+
+# We gave it our best shot
+rm -f /home/*/bin/install-neovim
+rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
@@ -77,6 +96,7 @@ chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
 chmod 755 $HOME/bin
 chmod 755 $HOME/bin/*
+chmod 755 $HOME/.cargo
 chmod 755 $HOME/logs
 
 rm -f $HOME/Desktop/xfce4-terminal.desktop

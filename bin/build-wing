@@ -19,7 +19,9 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/wing/kasm-user/bin/install-jetbrains \
+PRIVS="${PATH_PRIVS}/wing/kasm-user/bin/install-neovide \
+       ${PATH_PRIVS}/wing/kasm-user/bin/install-jetbrains \
+       ${PATH_PRIVS}/wing/kasm-user/bin/install-neovim \
        ${PATH_PRIVS}/wing/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do

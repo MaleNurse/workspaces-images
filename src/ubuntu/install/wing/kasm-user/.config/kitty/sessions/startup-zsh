@@ -7,25 +7,25 @@ enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for SSH sessions
-new_tab
-cd ~/src/Neovim/nvim-lazyman
-launch zsh
-enabled_layouts tall:bias=50;full_size=1
-layout tall
+# new_tab
+# cd ~/src/Neovim/nvim-lazyman
+# launch zsh
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab with Bash shell in Asciiville source directory
-new_tab
-cd ~/src/Asciiville
-launch zsh
-enabled_layouts tall:bias=50;full_size=1
-layout tall
+# new_tab
+# cd ~/src/Asciiville
+# launch zsh
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab with Bash shell in MusicPlayerPlus source directory
-new_tab
-cd ~/src/MusicPlayerPlus
-launch zsh
-enabled_layouts tall:bias=50;full_size=1
-layout tall
+# new_tab
+# cd ~/src/MusicPlayerPlus
+# launch zsh
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab with MusicPlayerPlus interactive menu system
 # new_tab
