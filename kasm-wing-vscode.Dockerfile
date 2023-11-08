@@ -36,6 +36,8 @@ ENV HOME /home/kasm-user
 WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
 
+EXPOSE 3000
+
 USER 1000
 
 CMD ["--tail-log"]

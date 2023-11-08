@@ -17,7 +17,7 @@ unset TEMP
 # Or use TMPDIR instead
 export TMPDIR=/tmp
 
-umask 0022
+umask 022
 
 # If you are running through a proxy service some external programs may need
 # to know the proxy setting (e.g. gem). If so, configure and uncomment:
