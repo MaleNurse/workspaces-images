@@ -19,13 +19,13 @@ RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_
 RUN cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png
 RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
 
-### Install Neovim dependencies and user config
+### Install Wing, dependencies, and user config
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
+COPY ./src/ubuntu/install/wing $INST_SCRIPTS/wing/
 RUN \
-  bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
-  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
-  rm -rf $INST_SCRIPTS/neovim-deluxe/ && \
+  bash $INST_SCRIPTS/wing/install_tools_wing.sh && \
+  bash $INST_SCRIPTS/install_kasm_user.sh wing && \
+  rm -rf $INST_SCRIPTS/wing/ && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 RUN $STARTUPDIR/set_user_permission.sh $HOME
