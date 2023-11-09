@@ -28,7 +28,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/gimp/install_gimp.sh \
                   /ubuntu/install/zoom/install_zoom.sh \
                   /ubuntu/install/obs/install_obs.sh \
-                  # /ubuntu/install/ansible/install_ansible.sh \
+                  /ubuntu/install/ansible/install_ansible.sh \
                   /ubuntu/install/terraform/install_terraform.sh \
                   /ubuntu/install/telegram/install_telegram.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
