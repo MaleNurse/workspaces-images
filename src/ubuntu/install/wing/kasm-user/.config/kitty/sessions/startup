@@ -15,10 +15,10 @@ enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Lazyman
-new_tab
-launch bash -c lazyman
-enabled_layouts tall:bias=50;full_size=1
-layout tall
+# new_tab
+# launch bash -c lazyman
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab for SSH sessions
 new_tab
