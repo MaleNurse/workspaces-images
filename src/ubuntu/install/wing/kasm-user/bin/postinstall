@@ -13,8 +13,9 @@ umask 022
   }
 }
 
-notify-send -u critical "Post Installation Configuration" \
-                        "Please be patient while the Wing desktop is initialized"
+notify-send -u critical "One-time Wing Desktop Configuration"
+notify-send -u critical "Installing Neovim Configuration Manager and dependencies" \
+                        "This process can take several minutes, please be patient"
 
 LOGDIR="$HOME/logs"
 
@@ -49,7 +50,6 @@ have_kitty=$(type -p kitty)
   }
 }
 
-notify-send "Installing Neovim"
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)
@@ -73,8 +73,6 @@ rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
-notify-send -u critical "Installing Neovim Configuration Manager and dependencies" \
-                        "This process can take several minutes, please be patient"
 have_lazy=$(type -p install-lazyman)
 [ "${have_lazy}" ] && {
   install-lazyman -z noinstall > ${LOGDIR}/lazyman-install.log 2>&1
