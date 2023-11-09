@@ -7,7 +7,7 @@ tmp
 **.key
 
 # drafts
-bin/postinstall
+bin/postinstall*
 
 # vim files
 .*.sw[a-z]
