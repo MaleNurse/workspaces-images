@@ -1,0 +1,18 @@
+# dirs
+tmp
+
+# certs/keys
+**.pem
+**.crt
+**.key
+
+# drafts
+bin/postinstall
+
+# vim files
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+tmux*log
+.DS_Store

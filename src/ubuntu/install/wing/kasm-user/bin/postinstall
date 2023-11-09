@@ -13,12 +13,41 @@ umask 022
   }
 }
 
-notify-send -u critical "Post Installation Configuration" \
-                        "Please be patient while the Wing desktop is initialized"
+lazy_id=
+crit_id=
+id=
+send_notify() {
+  id="$(gdbus call --session \
+                   --dest org.freedesktop.Notifications \
+                   --object-path /org/freedesktop/Notifications \
+                   --method org.freedesktop.Notifications.Notify \
+                   postinstall \
+                   0 \
+                   update-notifier \
+                   "$1" \
+                   [] \
+                   {} \
+                   0
+        )"
+  id="${id##* }"
+  id="${id%,)}"
+}
+
+diss_notify() {
+  gdbus call --session \
+             --dest org.freedesktop.Notifications \
+             --object-path /org/freedesktop/Notifications \
+             --method org.freedesktop.Notifications.CloseNotification \
+             "$1"
+}
+
+send_notify "Post Installation Configuration" \
+            "Please be patient while the Wing desktop is initialized"
+crit_id="${id}"
 
 LOGDIR="$HOME/logs"
 
-notify-send "Installing JetBrains Nerd Mono font"
+send_notify "Installing JetBrains Nerd Mono font"
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
@@ -32,15 +61,17 @@ notify-send "Installing JetBrains Nerd Mono font"
     done
   }
 }
+diss_notify "${id}"
 
-notify-send "Installing Visual Studio Code Wing extension"
+send_notify "Installing Visual Studio Code Wing extension"
 # Install VS Code Wing extension
 have_code=$(type -p code)
 [ "${have_code}" ] && {
   code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
 }
+diss_notify "${id}"
 
-notify-send "Installing Kitty terminal emulator"
+send_notify "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] || {
@@ -48,39 +79,44 @@ have_kitty=$(type -p kitty)
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
+diss_notify "${id}"
 
-notify-send "Installing Neovim"
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)
 
-notify-send "Installing Neovim"
+send_notify "Installing Neovim"
 [ "${have_nvim}" ] || {
   [ -x $HOME/bin/install-neovim ] && {
     ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
   }
 }
+diss_notify "${id}"
 
-notify-send "Installing Neovide"
+send_notify "Installing Neovide"
 [ "${have_neov}" ] || {
   [ -x $HOME/bin/install-neovide ] && {
     ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
   }
 }
+diss_notify "${id}"
 
 # We gave it our best shot
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
-notify-send "Installing Neovim Configuration Manager"
+send_notify "Installing Neovim dependencies and Configuration Manager" \
+            "This process can take several minutes, please be patient"
+lazy_id="${id}"
 have_lazy=$(type -p install-lazyman)
 [ "${have_lazy}" ] && {
   install-lazyman -z noinstall > ${LOGDIR}/lazyman-install.log 2>&1
 }
 rm -f /home/*/bin/install-lazyman
+diss_notify "${lazy_id}"
 
-notify-send "Installing Desktop entries and fixing permissions"
+send_notify "Installing Desktop entries and fixing permissions"
 # Fix Lazyman permissions
 [ -d $HOME/.config/nvim-Lazyman/scripts ] && {
   chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
@@ -135,5 +171,6 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
+diss_notify "${id}"
 
-kill $(pgrep "notifyd")
+diss_notify "${crit_id}"
