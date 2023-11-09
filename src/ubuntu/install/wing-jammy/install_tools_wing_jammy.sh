@@ -15,7 +15,7 @@ rm -f /etc/apt/sources.list.d/nodesource.list
 # NODE_MAJOR=18
 # NODE_MAJOR=20
 # NODE_MAJOR=21
-NODE_MAJOR=20
+NODE_MAJOR=18
 
 # Update local package index
 apt-get update
