@@ -1,16 +1,10 @@
 # Kitty tabbed startup session
 #
-# Kitty tab for Lazyman
+# Kitty HOME tab
 new_tab
-launch bash -c 'NVIM_APPNAME=nvim-Lazyman nvim'
+launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
-
-# Kitty tab for Asciiville
-# new_tab
-# launch bash -c asciiville
-# enabled_layouts tall:bias=50;full_size=1
-# layout tall
 
 # Kitty tab with Bash shell
 new_tab
@@ -23,6 +17,12 @@ new_tab
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
+
+# Kitty tab for Asciiville
+# new_tab
+# launch bash -c asciiville
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab with Bash shell in Asciiville source directory
 # new_tab

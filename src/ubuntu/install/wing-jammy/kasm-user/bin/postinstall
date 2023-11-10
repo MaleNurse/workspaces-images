@@ -17,7 +17,7 @@ notify-send -u critical "One-time Wing Desktop Configuration"
 
 LOGDIR="$HOME/logs"
 
-notify-send "Installing JetBrains Nerd Mono font"
+notify-send -u critical "Installing JetBrains Nerd Mono font"
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
@@ -32,14 +32,14 @@ notify-send "Installing JetBrains Nerd Mono font"
   }
 }
 
-notify-send "Installing Visual Studio Code Wing extension"
+notify-send -u critical "Installing Visual Studio Code Wing extension"
 # Install VS Code Wing extension
 have_code=$(type -p code)
 [ "${have_code}" ] && {
   code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
 }
 
-notify-send "Installing Kitty terminal emulator"
+notify-send -u critical "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] || {
@@ -52,14 +52,14 @@ have_kitty=$(type -p kitty)
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)
 
-notify-send "Installing Neovim"
+notify-send -u critical "Installing Neovim"
 [ "${have_nvim}" ] || {
   [ -x $HOME/bin/install-neovim ] && {
     ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
   }
 }
 
-notify-send "Installing Neovide"
+notify-send -u critical "Installing Neovide"
 [ "${have_neov}" ] || {
   [ -x $HOME/bin/install-neovide ] && {
     ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
@@ -79,7 +79,7 @@ rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
-notify-send "Installing Desktop entries and fixing permissions"
+notify-send -u critical "Installing Desktop entries and fixing permissions"
 
 # Fix Lazyman permissions
 [ -d $HOME/.config/nvim-Lazyman/scripts ] && {
