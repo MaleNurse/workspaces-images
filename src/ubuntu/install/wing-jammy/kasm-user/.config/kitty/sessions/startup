@@ -2,14 +2,14 @@
 #
 # Kitty tab for Wing development
 new_tab
-cd ~/src/winglang
+cd ~/Wing
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Wing examples
 new_tab
-cd ~/src/winglang/examples
+cd ~/Wing/examples
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
