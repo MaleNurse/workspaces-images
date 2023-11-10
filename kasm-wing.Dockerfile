@@ -52,7 +52,8 @@ RUN \
   chown -R 1000:0 /home/kasm-user && \
   rm -Rf ${INST_DIR}
 
-# Is this necessary?
+# Publishing this port in docker_run_config enables browser access to
+# Wing console from outside the container - http://<ip-address>:3000
 EXPOSE 3000
 
 # Userspace Runtime
