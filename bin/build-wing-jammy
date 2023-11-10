@@ -22,6 +22,7 @@ PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
 PRIVS="${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-neovide \
        ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-jetbrains \
        ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-neovim \
+       ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-lazyman \
        ${PATH_PRIVS}/wing-jammy/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
