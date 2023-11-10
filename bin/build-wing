@@ -22,7 +22,7 @@ PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
 PRIVS="${PATH_PRIVS}/wing/kasm-user/bin/install-neovide \
        ${PATH_PRIVS}/wing/kasm-user/bin/install-jetbrains \
        ${PATH_PRIVS}/wing/kasm-user/bin/install-neovim \
-       ${PATH_PRIVS}/wing/kasm-user/.local/bin/lazyman \
+       ${PATH_PRIVS}/wing/kasm-user/bin/install-lazyman \
        ${PATH_PRIVS}/wing/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
@@ -38,10 +38,10 @@ done
 if [ "$1" == "kasmweb" ]
 then
   sudo docker build --pull --no-cache -t kasmweb/wing:dev \
-                    -f kasm-wing-vscode.Dockerfile .
+                    -f kasm-wing.Dockerfile .
 else
   sudo docker build --pull --no-cache -t doctorwhen/kasm:wing \
-                    -f kasm-wing-vscode.Dockerfile .
+                    -f kasm-wing.Dockerfile .
 fi
 
 for priv in ${PRIVS}

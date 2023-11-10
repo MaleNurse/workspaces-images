@@ -33,7 +33,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/telegram/install_telegram.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
-                  /ubuntu/install/wing-jammy/install_tools_wing_jammy.sh \
+                  /ubuntu/install/wing/install_tools_wing.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts
@@ -44,7 +44,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
-  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh wing-jammy && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh wing && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \

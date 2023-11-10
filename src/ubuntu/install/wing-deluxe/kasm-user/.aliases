@@ -49,8 +49,3 @@ command -v bat > /dev/null && alias less='bat'
 command -v batcat > /dev/null && \
 	alias bat='batcat' && \
 	alias less='batcat'
-
-### Neovim
-if [ -d $HOME/.config/nvim-Lazyman ]; then
-  command -v nvim > /dev/null && alias vi="NVIM_APPNAME=nvim-Lazyman nvim"
-fi

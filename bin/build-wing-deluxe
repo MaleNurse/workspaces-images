@@ -19,11 +19,11 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-neovide \
-       ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-neovim \
-       ${PATH_PRIVS}/wing-jammy/kasm-user/bin/install-lazyman \
-       ${PATH_PRIVS}/wing-jammy/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${PATH_PRIVS}/wing-deluxe/kasm-user/bin/install-neovide \
+       ${PATH_PRIVS}/wing-deluxe/kasm-user/bin/install-jetbrains \
+       ${PATH_PRIVS}/wing-deluxe/kasm-user/bin/install-neovim \
+       ${PATH_PRIVS}/wing-deluxe/kasm-user/bin/install-lazyman \
+       ${PATH_PRIVS}/wing-deluxe/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {
@@ -37,11 +37,11 @@ done
 
 if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --pull --no-cache -t kasmweb/wing-jammy:dev \
-                    -f kasm-wing-jammy.Dockerfile .
+  sudo docker build --pull --no-cache -t kasmweb/wing-deluxe:dev \
+                    -f kasm-wing-deluxe.Dockerfile .
 else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:wing-jammy \
-                    -f kasm-wing-jammy.Dockerfile .
+  sudo docker build --pull --no-cache -t doctorwhen/kasm:wing-deluxe \
+                    -f kasm-wing-deluxe.Dockerfile .
 fi
 
 for priv in ${PRIVS}

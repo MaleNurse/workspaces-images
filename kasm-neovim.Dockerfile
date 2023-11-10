@@ -1,5 +1,5 @@
 ARG BASE_TAG="develop"
-ARG BASE_IMAGE="desktop-deluxe"
+ARG BASE_IMAGE="core-ubuntu-jammy"
 FROM kasmweb/$BASE_IMAGE:$BASE_TAG
 
 USER root
@@ -9,33 +9,52 @@ ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
 ### Envrionment config
-ENV DEBIAN_FRONTEND noninteractive
-ENV KASM_RX_HOME $STARTUPDIR/kasmrx
-ENV INST_SCRIPTS $STARTUPDIR/install
-ENV DONT_PROMPT_WSL_INSTALL "No_Prompt_please"
+ENV DEBIAN_FRONTEND=noninteractive \
+    SKIP_CLEAN=true \
+    KASM_RX_HOME=$STARTUPDIR/kasmrx \
+    DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
+    INST_DIR=$STARTUPDIR/install \
+    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
+                  /ubuntu/install/misc/install_tools.sh \
+                  /ubuntu/install/chrome/install_chrome.sh \
+                  /ubuntu/install/chromium/install_chromium.sh \
+                  /ubuntu/install/firefox/install_firefox.sh \
+                  /ubuntu/install/sublime_text/install_sublime_text.sh \
+                  /ubuntu/install/vs_code/install_vs_code.sh \
+                  /ubuntu/install/nextcloud/install_nextcloud.sh \
+                  /ubuntu/install/remmina/install_remmina.sh \
+                  /ubuntu/install/only_office/install_only_office.sh \
+                  /ubuntu/install/signal/install_signal.sh \
+                  /ubuntu/install/gimp/install_gimp.sh \
+                  /ubuntu/install/zoom/install_zoom.sh \
+                  /ubuntu/install/obs/install_obs.sh \
+                  #/ubuntu/install/ansible/install_ansible.sh \
+                  /ubuntu/install/terraform/install_terraform.sh \
+                  /ubuntu/install/telegram/install_telegram.sh \
+                  /ubuntu/install/thunderbird/install_thunderbird.sh \
+                  /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
+                  /ubuntu/install/neovim/install_tools_neovim.sh \
+                  /ubuntu/install/cleanup/cleanup.sh"
 
-# Add Kasm Branding
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-RUN cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png
-RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+# Copy install scripts
+COPY ./src/ $INST_DIR
 
-### Install Neovim dependencies and user config
-COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
+# Run installations
 RUN \
-  bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
-  bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
-  rm -rf $INST_SCRIPTS/neovim-deluxe/ && \
-  rm -f $INST_SCRIPTS/install_kasm_user.sh
+  for SCRIPT in $INST_SCRIPTS; do \
+    bash ${INST_DIR}${SCRIPT}; \
+  done && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
+  $STARTUPDIR/set_user_permission.sh $HOME && \
+  rm -f /etc/X11/xinit/Xclients && \
+  chown 1000:0 $HOME && \
+  mkdir -p /home/kasm-user && \
+  chown -R 1000:0 /home/kasm-user && \
+  rm -Rf ${INST_DIR}
 
-RUN $STARTUPDIR/set_user_permission.sh $HOME
-
-RUN chown 1000:0 $HOME
-
+# Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
-RUN mkdir -p $HOME && chown -R 1000:0 $HOME
-
 USER 1000
 
 CMD ["--tail-log"]

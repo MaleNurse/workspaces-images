@@ -14,12 +14,14 @@ umask 022
 }
 
 notify-send -u critical "One-time Neovim Desktop Initialization and Configuration"
+notify-send -u critical "Installing Neovim Configuration Manager and dependencies" \
+                        "This process can take several minutes, please be patient"
 
 LOGDIR="$HOME/logs"
 
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
-  notify-send -u critical "Installing JetBrains Nerd Mono font"
+  notify-send "Installing JetBrains Nerd Mono font"
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
   FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
               .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
@@ -36,7 +38,7 @@ LOGDIR="$HOME/logs"
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] || {
   [ -x $HOME/bin/install-kitty ] && {
-    notify-send -u critical "Installing Kitty terminal emulator"
+    notify-send "Installing Kitty terminal emulator"
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
@@ -47,22 +49,20 @@ have_neov=$(type -p neovide)
 
 [ "${have_nvim}" ] || {
   [ -x $HOME/bin/install-neovim ] && {
-    notify-send -u critical "Installing Neovim"
+    notify-send "Installing Neovim"
     ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
   }
 }
 
 [ "${have_neov}" ] || {
   [ -x $HOME/bin/install-neovide ] && {
-    notify-send -u critical "Installing Neovide"
+    notify-send "Installing Neovide"
     ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
   }
 }
 
 have_lazy=$(type -p install-lazyman)
 [ "${have_lazy}" ] && {
-  notify-send -u critical "Installing Neovim Configuration Manager and dependencies" \
-                          "This process can take several minutes, please be patient"
   install-lazyman -z noinstall > ${LOGDIR}/lazyman-install.log 2>&1
 }
 
@@ -72,7 +72,7 @@ rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
 
-notify-send -u critical "Installing Desktop entries and fixing permissions"
+notify-send "Installing Desktop entries and fixing permissions"
 # Fix Lazyman permissions
 [ -d $HOME/.config/nvim-Lazyman/scripts ] && {
   chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh

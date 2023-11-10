@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Neovide
 Comment=Neovim GUI
-Exec=env NVIM_APPNAME="nvim-Lazyman" neovide %f
+Exec=neovide %f
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 Categories=System;

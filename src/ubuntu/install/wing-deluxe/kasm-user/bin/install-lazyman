@@ -29,12 +29,12 @@ BOLD=$(tput bold 2>/dev/null)
 NORM=$(tput sgr0 2>/dev/null)
 LINE=$(tput smul 2>/dev/null)
 
+export GITHUB_TOKEN="__GITHUB_API_TOKEN__"
 # Use a Github API token if one is set
-[ "${GH_TOKEN}" ] || {
-  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  [ "${GH_TOKEN}" ] || {
-    [ -f $HOME/.private ] && source $HOME/.private
-    [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
+[ "${GITHUB_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
+  [ "${GITHUB_TOKEN}" ] || {
+    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
   }
 }
 
@@ -2029,8 +2029,8 @@ show_vers_menu() {
     fi
     nveropts+=("${bob_versions[$ind]} ${status}")
   done
-  if [ "${GH_TOKEN}" ]; then
-    AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
+  if [ "${GITHUB_TOKEN}" ]; then
+    AUTH_HEADER="-H \"Authorization: Bearer ${GITHUB_TOKEN}\""
   else
     AUTH_HEADER=
   fi
@@ -5135,16 +5135,6 @@ fi
   cp ${NVIMCONF} ${CONFBACK}
 }
 
-# Increase user limits before kicking off Neovim install script
-currlimit=$(ulimit -n)
-hardlimit=$(ulimit -Hn)
-[ "$hardlimit" == "unlimited" ] && hardlimit=9999
-if [ "$hardlimit" -gt 4096 ]; then
-  [ "$tellme" ] || ulimit -n 4096
-else
-  [ "$tellme" ] || ulimit -n "$hardlimit"
-fi
-
 [ "${instnvim}" ] && {
   [ -d "${HOME}/.local" ] || mkdir -p "${HOME}/.local"
   [ -d "${HOME}/.local/bin" ] || mkdir -p "${HOME}/.local/bin"
@@ -5508,8 +5498,6 @@ apply_patch "${neovimdir[0]}"
     [ "$tellme" ] || init_neovim "$neovim"
   done
 }
-
-[ "$tellme" ] || ulimit -n "$currlimit"
 
 lazyinst=
 if [ -f "$HOME"/.local/bin/lazyman ]; then

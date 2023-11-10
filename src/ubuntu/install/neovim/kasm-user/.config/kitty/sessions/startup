@@ -1,5 +1,11 @@
-# MusicPlayerPlus Kitty tabbed startup session
+# Kitty tabbed startup session
 #
+# Kitty HOME tab
+new_tab
+launch bash
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
 # Kitty tab with Bash shell
 new_tab
 launch bash
@@ -12,11 +18,11 @@ launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for Lazyman
-new_tab
-launch bash -c lazyman
-enabled_layouts tall:bias=50;full_size=1
-layout tall
+# Kitty tab for Asciiville
+# new_tab
+# launch bash -c asciiville
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall
 
 # Kitty tab with Bash shell in Asciiville source directory
 # new_tab

@@ -14,23 +14,17 @@ launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for HOME directory
-new_tab
-launch bash
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
 # Kitty tab for Lazyman
 # new_tab
 # launch bash -c lazyman
 # enabled_layouts tall:bias=50;full_size=1
 # layout tall
-#
-# Kitty tab for Neovim
-# new_tab
-# launch bash -c 'NVIM_APPNAME=nvim-Lazyman nvim'
-# enabled_layouts tall:bias=50;full_size=1
-# layout tall
+
+# Kitty tab for SSH sessions
+new_tab
+launch bash
+enabled_layouts tall:bias=50;full_size=1
+layout tall
 
 # Kitty tab with Bash shell in Asciiville source directory
 # new_tab

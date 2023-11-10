@@ -21,11 +21,11 @@ RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfc
 
 ### Install Wing, dependencies, and user config
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
-COPY ./src/ubuntu/install/wing $INST_SCRIPTS/wing/
+COPY ./src/ubuntu/install/wing-deluxe $INST_SCRIPTS/wing-deluxe/
 RUN \
-  bash $INST_SCRIPTS/wing/install_tools_wing.sh && \
-  bash $INST_SCRIPTS/install_kasm_user.sh wing && \
-  rm -rf $INST_SCRIPTS/wing/ && \
+  bash $INST_SCRIPTS/wing-deluxe/install_tools_wing.sh && \
+  bash $INST_SCRIPTS/install_kasm_user.sh wing-deluxe && \
+  rm -rf $INST_SCRIPTS/wing-deluxe/ && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 RUN $STARTUPDIR/set_user_permission.sh $HOME

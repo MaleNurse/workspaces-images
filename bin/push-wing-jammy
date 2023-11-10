@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/wing-jammy doctorwhen/kasm:wing-jammy
-  sudo docker push doctorwhen/kasm:wing-jammy
-else
-  sudo docker push doctorwhen/kasm:wing-jammy
-fi
