@@ -13,6 +13,7 @@ umask 022
   }
 }
 
+sleep 4
 notify-send -u critical "One-time Wing Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
                         "This process can take several minutes, please be patient"
@@ -82,10 +83,10 @@ rm -f ${HOME}/.config/autostart/postinstall.desktop
 notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
-git clone https://github.com/winglang/github-aws-oidc.git \
-  ${HOME}/Wing/github-aws-oidc > ${LOGDIR}/clone-aws-oidc.log 2>&1
-git clone https://github.com/winglang/terraform-backend.git \
-  ${HOME}/Wing/terraform-backend > ${LOGDIR}/clone-terraform-backend.log 2>&1
+#git clone https://github.com/winglang/github-aws-oidc.git \
+#  ${HOME}/Wing/github-aws-oidc > ${LOGDIR}/clone-aws-oidc.log 2>&1
+#git clone https://github.com/winglang/terraform-backend.git \
+#  ${HOME}/Wing/terraform-backend > ${LOGDIR}/clone-terraform-backend.log 2>&1
 
 notify-send "Installing Desktop entries and fixing permissions"
 
