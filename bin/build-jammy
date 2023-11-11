@@ -34,10 +34,10 @@ done
 
 if [ "$1" == "kasmweb" ]
 then
-  sudo docker build --pull --no-cache -t kasmweb/jammy:dev \
+  sudo docker build --pull --no-cache -t kasmweb/ubuntu-jammy:dev \
                     -f kasm-jammy.Dockerfile .
 else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:jammy \
+  sudo docker build --pull --no-cache -t doctorwhen/kasm:ubuntu-jammy \
                     -f kasm-jammy.Dockerfile .
 fi
 
