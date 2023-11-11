@@ -14,6 +14,8 @@ umask 022
 }
 
 notify-send -u critical "One-time Wing Desktop Configuration"
+notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
+                        "This process can take several minutes, please be patient"
 
 LOGDIR="${HOME}/logs"
 
@@ -48,6 +50,33 @@ have_kitty=$(type -p kitty)
   }
 }
 
+# Try to install Neovim and Neovide
+have_nvim=$(type -p nvim)
+have_neov=$(type -p neovide)
+
+notify-send "Installing Neovim"
+[ "${have_nvim}" ] || {
+  [ -x ${HOME}/bin/install-neovim ] && {
+    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
+  }
+}
+
+notify-send "Installing Neovide"
+[ "${have_neov}" ] || {
+  [ -x ${HOME}/bin/install-neovide ] && {
+    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
+  }
+}
+
+have_lazy=$(type -p install-lazyman)
+[ "${have_lazy}" ] && {
+  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
+}
+
+# We gave it our best shot
+rm -f /home/*/bin/install-lazyman
+rm -f /home/*/bin/install-neovim
+rm -f /home/*/bin/install-neovide
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Cloning Wing examples into ${HOME}/Wing/"
@@ -59,6 +88,13 @@ git clone https://github.com/winglang/terraform-backend.git \
   ${HOME}/Wing/terraform-backend > ${LOGDIR}/clone-terraform-backend.log 2>&1
 
 notify-send "Installing Desktop entries and fixing permissions"
+
+# Fix Lazyman permissions
+[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
+}
 
 [ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
   cp ${HOME}/.local/share/applications/kitty.desktop \
@@ -91,6 +127,7 @@ chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
 chmod 755 ${HOME}/bin
 chmod 755 ${HOME}/bin/*
+chmod 755 ${HOME}/.cargo
 chmod 755 ${HOME}/logs
 [ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
 chmod 755 ${HOME}/.cache
@@ -118,6 +155,6 @@ rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
 notify-send "Wing desktop initialization and configuration complete!"
-sleep 5
+sleep 8
 
 kill $(pgrep "notifyd")

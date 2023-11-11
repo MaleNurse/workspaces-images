@@ -1,9 +1,0 @@
-#!/bin/bash
-
-myip=`ip addr show | awk '$1 == "inet" && $3 == "brd" { sub (/\/.*/,""); print $2 }' | head -1`
-
-printf "\n\nThe Wing container is now accessible via a browser : https://${myip}:6901"
-printf "\n\tUser : kasm_user"
-printf "\n\tPassword: password\n"
-
-sudo docker run --rm  -it --shm-size=512m -p 3000:3000 -p 6901:6901 -e VNC_PW=password doctorwhen/kasm:wing-deluxe
