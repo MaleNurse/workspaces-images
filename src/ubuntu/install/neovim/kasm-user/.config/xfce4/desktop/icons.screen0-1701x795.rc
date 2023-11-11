@@ -9,8 +9,8 @@ col=0
 row=3
 col=0
 
-[/home/kasm-user/Desktop/com.obsproject.Studio.desktop]
-row=2
+[/home/kasm-user/Desktop/exo-file-manager.desktop]
+row=5
 col=1
 
 [/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
@@ -30,7 +30,7 @@ row=5
 col=0
 
 [/home/kasm-user/Desktop/gimp.desktop]
-row=3
+row=5
 col=2
 
 [/home/kasm-user/Desktop/Downloads]
@@ -41,17 +41,17 @@ col=0
 row=1
 col=2
 
+[/home/kasm-user/Desktop/thunderbird.desktop]
+row=3
+col=2
+
+[/home/kasm-user/Desktop/com.obsproject.Studio.desktop]
+row=2
+col=1
+
 [/home/kasm-user/Desktop/lazyman.desktop]
 row=4
 col=0
-
-[/home/kasm-user/Desktop/exo-terminal-emulator.desktop]
-row=5
-col=2
-
-[/home/kasm-user/Desktop/exo-file-manager.desktop]
-row=5
-col=1
 
 [/home/kasm-user/Desktop/sublime_text.desktop]
 row=4
@@ -65,13 +65,13 @@ col=1
 row=4
 col=1
 
-[/home/kasm-user/Desktop/telegram.desktop]
-row=0
-col=2
-
 [/home/kasm-user/Desktop/Uploads]
 row=1
 col=0
+
+[/home/kasm-user/Desktop/telegram.desktop]
+row=0
+col=2
 
 [/home/kasm-user/Desktop/nvims.desktop]
 row=6

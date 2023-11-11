@@ -83,6 +83,8 @@ notify-send "Installing Desktop entries and fixing permissions"
 
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
+     $HOME/Desktop/kitty.desktop
+  cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/.config/autostart/kitty.desktop
 }
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
