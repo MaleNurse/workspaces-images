@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "deploy": "wing compile -t tf-aws main.w"
-  },
-  "dependencies": {
-    "@cdktf/provider-aws": "^16.0.2"
-  }
-}
