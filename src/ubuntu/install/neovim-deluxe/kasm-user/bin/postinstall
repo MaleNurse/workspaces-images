@@ -12,6 +12,7 @@ umask 022
     [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
   }
 }
+[ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
 
 notify-send -u critical "One-time Neovim Desktop Initialization and Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and dependencies" \
@@ -81,8 +82,6 @@ notify-send "Installing Desktop entries and fixing permissions"
 }
 
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
-  cp $HOME/.local/share/applications/kitty.desktop \
-     $HOME/.config/autostart/kitty.desktop
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
 }

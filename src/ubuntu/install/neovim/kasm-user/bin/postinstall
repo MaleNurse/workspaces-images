@@ -12,7 +12,9 @@ umask 022
     [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
   }
 }
+[ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
 
+sleep 5
 notify-send -u critical "One-time Neovim Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
                         "This process can take several minutes, please be patient"
@@ -84,8 +86,6 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
-  cp $HOME/.local/share/applications/kitty.desktop \
-     $HOME/.config/autostart/kitty.desktop
 }
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
@@ -138,6 +138,6 @@ rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
 notify-send "Neovim desktop initialization and configuration complete!"
-sleep 8
+sleep 5
 
 kill $(pgrep "notifyd")
