@@ -45,19 +45,6 @@ have_kitty=$(type -p kitty)
   }
 }
 
-notify-send "Initializing Asciiville"
-[ -x $HOME/bin/init-asciiville ] && {
-  ${HOME}/bin/init-asciiville > ${LOGDIR}/init-asciiville.log 2>&1
-}
-
-rm -f $HOME/.config/autostart/postinstall.desktop
-
-notify-send "Installing Desktop entries and fixing permissions"
-
-[ -f $HOME/.local/share/applications/asciiville.desktop ] && {
-  cp $HOME/.local/share/applications/asciiville.desktop \
-     $HOME/Desktop/asciiville.desktop
-}
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
@@ -74,6 +61,20 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
      $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
 }
+
+notify-send "Initializing Asciiville"
+[ -x $HOME/bin/init-asciiville ] && {
+  ${HOME}/bin/init-asciiville -y > ${LOGDIR}/init-asciiville.log 2>&1
+}
+
+[ -f $HOME/.local/share/applications/asciiville.desktop ] && {
+  cp $HOME/.local/share/applications/asciiville.desktop \
+     $HOME/Desktop/asciiville.desktop
+}
+
+rm -f $HOME/.config/autostart/postinstall.desktop
+
+notify-send "Fixing permissions and cleaning up"
 
 # Correct permissions/ownership
 chmod 755 $HOME
