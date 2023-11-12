@@ -84,6 +84,10 @@ RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/t
 COPY ./src/ubuntu/install/telegram $INST_SCRIPTS/telegram/
 RUN bash $INST_SCRIPTS/telegram/install_telegram.sh  && rm -rf $INST_SCRIPTS/telegram/
 
+### Install Thunderbird
+COPY ./src/ubuntu/install/thunderbird $INST_SCRIPTS/thunderbird/
+RUN bash $INST_SCRIPTS/thunderbird/install_thunderbird.sh  && rm -rf $INST_SCRIPTS/thunderbird/
+
 ### Install Ubuntu Focal packages and user configuration
 COPY ./src/ubuntu/install/focal $INST_SCRIPTS/focal/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS
