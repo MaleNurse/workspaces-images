@@ -166,7 +166,7 @@ GenericName[ur_PK]=ٹرمنل ایمولیٹر
 GenericName[vi]=Trình giả lập Terminal
 GenericName[zh_CN]=终端模拟器
 GenericName[zh_TW]=終端機程式
-Exec=kitty --title="Asciiville" --start-as normal --override font_size=18 --override draw_minimal_borders=yes --override initial_window_width=90c --override initial_window_height=28c --override tab_bar_min_tabs=2 --override startup_session=none asciiville -i -k
+Exec=kitty --title="Asciiville" --start-as normal --override font_size=16 --override draw_minimal_borders=yes --override initial_window_width=94c --override initial_window_height=28c --override tab_bar_min_tabs=2 --override startup_session=none asciiville -i -k
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/asciiville.png
 Terminal=false
 Type=Application
