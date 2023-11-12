@@ -9,7 +9,6 @@ MUSEDIR="/usr/share/asciiville/music"
 CONFDIR="/usr/share/asciiville"
 USERCONF="${HOME}/.config"
 GHUC="https://raw.githubusercontent.com"
-OWNER=doctorfree
 BOLD=$(tput bold 2>/dev/null)
 NORM=$(tput sgr0 2>/dev/null)
 
