@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <channel name="xfce4-panel" version="1.0">
   <property name="configver" type="int" value="2"/>
   <property name="panels" type="array">
@@ -54,6 +55,10 @@
     <property name="plugin-14" type="string" value="directorymenu">
       <property name="base-directory" type="string" value="/root"/>
     </property>
-    <property name="plugin-2" type="string" value="systray"/>
+    <property name="plugin-2" type="string" value="systray">
+      <property name="names-ordered" type="array">
+        <value type="string" value="networkmanager applet"/>
+      </property>
+    </property>
   </property>
 </channel>

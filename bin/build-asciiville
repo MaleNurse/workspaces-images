@@ -19,9 +19,8 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/asciiville/kasm-user/bin/install-asciiville \
-       ${PATH_PRIVS}/asciiville/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/asciiville/install_tools_asciiville.sh \
+PRIVS="${PATH_PRIVS}/asciiville/kasm-user/bin/install-jetbrains \
+       ${PATH_PRIVS}/asciiville/kasm-user/bin/install-asciiville \
        ${PATH_PRIVS}/asciiville/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
@@ -37,10 +36,10 @@ done
 if [ "$1" == "kasmweb" ]
 then
   sudo docker build --pull --no-cache -t kasmweb/asciiville:dev \
-                    -f kasm-ubuntu-jammy-asciiville.Dockerfile .
+                    -f kasm-asciiville.Dockerfile .
 else
   sudo docker build --pull --no-cache -t doctorwhen/kasm:asciiville \
-                    -f kasm-ubuntu-jammy-asciiville.Dockerfile .
+                    -f kasm-asciiville.Dockerfile .
 fi
 
 for priv in ${PRIVS}
