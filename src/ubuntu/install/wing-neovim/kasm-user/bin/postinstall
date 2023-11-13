@@ -52,6 +52,11 @@ have_kitty=$(type -p kitty)
   }
 }
 
+notify-send "Installing Wing"
+
+have_npm=$(type -p npm)
+[ "${have_npm}" ] && npm install -g winglang
+
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)
@@ -79,15 +84,10 @@ have_lazy=$(type -p install-lazyman)
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
-rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
-#git clone https://github.com/winglang/github-aws-oidc.git \
-#  ${HOME}/Wing/github-aws-oidc > ${LOGDIR}/clone-aws-oidc.log 2>&1
-#git clone https://github.com/winglang/terraform-backend.git \
-#  ${HOME}/Wing/terraform-backend > ${LOGDIR}/clone-terraform-backend.log 2>&1
 
 notify-send "Installing Desktop entries and fixing permissions"
 
@@ -147,6 +147,8 @@ do
   [ -d "${nss}" ] && chmod 700 "${nss}"
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
+
+rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop

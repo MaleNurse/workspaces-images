@@ -53,6 +53,3 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 sudo apt-get update
 # Install Node.js from the new repository
 sudo apt-get install -y nodejs
-
-have_npm=$(type -p npm)
-[ "${have_npm}" ] && npm install -g winglang

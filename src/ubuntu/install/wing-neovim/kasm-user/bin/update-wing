@@ -1,0 +1,3 @@
+#!/bin/bash
+
+npm update -g @monadahq/wing
