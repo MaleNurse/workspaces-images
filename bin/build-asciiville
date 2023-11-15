@@ -1,5 +1,6 @@
 #!/bin/bash
 
+IMG_NAME="doctorwhen/kasm:asciiville"
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
 cd $(dirname "${SCRIPT_PATH}")
@@ -33,14 +34,12 @@ do
   }
 done
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache -t kasmweb/asciiville:dev \
-                    -f kasm-asciiville.Dockerfile .
-else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:asciiville \
-                    -f kasm-asciiville.Dockerfile .
-fi
+sudo docker image rm ${IMG_NAME} 2>/dev/null
+
+sudo docker build --pull \
+                  --no-cache \
+                  -t ${IMG_NAME} \
+                  -f kasm-asciiville.Dockerfile .
 
 for priv in ${PRIVS}
 do
