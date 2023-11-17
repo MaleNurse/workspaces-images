@@ -24,7 +24,6 @@ RUN \
   #   bash ${INST_DIR}${SCRIPT}; \
   # done && \
   bash ${INST_DIR}/archlinux/install/install_kasm_user.sh archlinux-dev && \
-  $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
