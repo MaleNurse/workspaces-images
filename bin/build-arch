@@ -32,8 +32,8 @@ do
   }
 done
 
-sudo docker build --pull --no-cache -t doctorwhen/kasm:archlinux-dev \
-                  -f kasm-archlinux-dev.Dockerfile .
+sudo docker build --pull --no-cache -t doctorwhen/kasm:archlinux \
+                  -f kasm-archlinux.Dockerfile .
 
 for priv in ${PRIVS}
 do
