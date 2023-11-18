@@ -4,7 +4,7 @@ FROM iterait/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
-ENV HOME /home/kasm-default-profile
+ENV HOME /home/kasm-user
 ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
@@ -35,5 +35,3 @@ RUN \
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
-
-CMD ["--tail-log"]
