@@ -1,5 +1,5 @@
 ARG BASE_TAG="latest"
-ARG BASE_IMAGE="archlinux-dev"
+ARG BASE_IMAGE="archlinux"
 FROM iterait/$BASE_IMAGE:$BASE_TAG
 
 USER root
@@ -10,8 +10,10 @@ WORKDIR $HOME
 
 ### Envrionment config
 ENV SKIP_CLEAN=true \
+    KASM_RX_HOME=$STARTUPDIR/kasmrx \
+    DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/archlinux/install/archlinux-dev/install_tools_archlinux.sh \
+    INST_SCRIPTS="/archlinux/install/archlinux/install_tools_archlinux.sh \
                   /archlinux/install/cleanup.sh"
 
 # Copy install scripts
@@ -33,3 +35,5 @@ RUN \
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
+
+CMD ["--tail-log"]
