@@ -34,5 +34,3 @@ RUN \
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
-
-CMD ["--tail-log"]
