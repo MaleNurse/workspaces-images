@@ -24,9 +24,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 COPY ./src/ $INST_DIR
 
 RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-COPY ./src/ubuntu/install/spiderfoot/custom_startup.sh $STARTUPDIR/custom_startup.sh
-RUN chmod +x $STARTUPDIR/custom_startup.sh
-RUN chmod 755 $STARTUPDIR/custom_startup.sh
+# COPY ./src/ubuntu/install/spiderfoot/custom_startup.sh $STARTUPDIR/custom_startup.sh
+# RUN chmod +x $STARTUPDIR/custom_startup.sh
+# RUN chmod 755 $STARTUPDIR/custom_startup.sh
 
 # Run installations
 RUN \
