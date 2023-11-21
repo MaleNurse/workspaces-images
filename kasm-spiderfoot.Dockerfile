@@ -33,6 +33,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  bash $INST_DIR/ubuntu/install/install_kasm_user.sh spiderfoot && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \

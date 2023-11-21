@@ -1,0 +1,119 @@
+#!/bin/bash
+
+export HOME="/home/kasm-user"
+export PATH="${HOME}/bin:${HOME}/.local/bin:$PATH"
+umask 022
+
+# Do we have a Github API token?
+[ "${GH_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
+  [ "${GH_TOKEN}" ] || {
+    [ -f ${HOME}/.private ] && source ${HOME}/.private
+    [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
+  }
+}
+[ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+
+sleep 4
+notify-send -u critical "One-time Spiderfoot Desktop Configuration"
+
+LOGDIR="${HOME}/logs"
+
+notify-send "Installing JetBrains Nerd Mono font"
+# Install JetBrains Mono font
+[ -x ${HOME}/bin/install-jetbrains ] && {
+  ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
+  FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
+              .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
+              .config/xfce4/terminal/terminalrc"
+  [ -f ${HOME}/.local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf ] && {
+    for font_file in ${FONT_FILES}
+    do
+      [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
+    done
+  }
+}
+
+notify-send "Installing Kitty terminal emulator"
+# Install Kitty terminal emulator
+have_kitty=$(type -p kitty)
+[ "${have_kitty}" ] || {
+  [ -x ${HOME}/bin/install-kitty ] && {
+    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
+  }
+}
+
+notify-send "Installing nvm node version manager"
+
+export NVM_DIR="/home/kasm-user/.nvm"
+export NODE_VERSION="20.9.0"
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+. ${NVM_DIR}/nvm.sh
+nvm install ${NODE_VERSION} > ${LOGDIR}/install-wing.log 2>&1
+nvm alias default ${NODE_VERSION}
+nvm use default
+
+export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
+export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
+
+notify-send "Installing Desktop entries and fixing permissions"
+
+[ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
+     ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
+}
+[ -f ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty-128.png
+}
+[ -f ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
+}
+[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/Desktop/kitty.desktop
+}
+
+# Correct permissions/ownership
+chmod 755 ${HOME}
+chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
+find ${HOME}/.config -type f | xargs chmod 644
+find ${HOME}/.config -type d | xargs chmod 755
+find ${HOME}/.local -type d | xargs chmod 755
+chmod 755 ${HOME}/Desktop
+chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/bin
+chmod 755 ${HOME}/bin/*
+chmod 755 ${HOME}/logs
+[ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
+chmod 755 ${HOME}/.cache
+[ -d ${HOME}/.cache/mozilla ] || mkdir ${HOME}/.cache/mozilla
+chmod 755 ${HOME}/.cache/mozilla
+[ -d ${HOME}/.mozilla ] || mkdir ${HOME}/.mozilla
+chmod 755 ${HOME}/.mozilla
+[ -d ${HOME}/.mozilla/firefox ] || mkdir ${HOME}/.mozilla/firefox
+chmod 755 ${HOME}/.mozilla/firefox
+[ -d ${HOME}/.pki ] || mkdir ${HOME}/.pki
+chmod 700 ${HOME}/.pki
+[ -d ${HOME}/.pki/nssdb ] || mkdir ${HOME}/.pki/nssdb
+chmod 700 ${HOME}/.pki/nssdb
+for nss in ${HOME}/.pki/nssdb/*
+do
+  [ "${nss}" == "${HOME}/.pki/nssdb/*" ] && continue
+  [ -d "${nss}" ] && chmod 700 "${nss}"
+  [ -f "${nss}" ] && chmod 600 "${nss}"
+done
+
+rm -f ${HOME}/.config/autostart/postinstall.desktop
+
+rm -f ${HOME}/Desktop/xfce4-terminal.desktop
+rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
+
+rm -rf /home/kasm-default-profile/*
+rm -rf /home/kasm-default-profile/.??*
+
+notify-send "Spiderfoot desktop initialization and configuration complete!"
+sleep 5
+
+kill $(pgrep "notifyd")
