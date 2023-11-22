@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
 START_COMMAND="firefox"
-PGREP="firefox"
 export MAXIMIZE="false"
 export MAXIMIZE_NAME="Mozilla Firefox"
 DEFAULT_FIREFOX_ARGS=""
@@ -21,7 +20,7 @@ echo "Entering process startup loop"
 set +x
 while true
 do
-    if ! pgrep -x $PGREP > /dev/null
+    if ! pgrep -f "python3 sf.py -l 127.0.0.1:5002" > /dev/null
     then
         /usr/bin/filter_ready
         /usr/bin/desktop_ready
