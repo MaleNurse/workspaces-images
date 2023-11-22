@@ -56,6 +56,9 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
+notify-send "Starting SpiderFoot"
+start-spiderfoot &
+
 notify-send "Installing Desktop entries and fixing permissions"
 
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
@@ -73,6 +76,12 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
   cp ${HOME}/.local/share/applications/kitty.desktop \
      ${HOME}/Desktop/kitty.desktop
+}
+[ -f ${HOME}/.local/share/applications/spiderfoot.desktop ] && {
+  cp ${HOME}/.local/share/applications/spiderfoot.desktop \
+     ${HOME}/Desktop/spiderfoot.desktop
+  cp ${HOME}/.local/share/applications/spiderfoot.desktop \
+     ${HOME}/.config/autostart/spiderfoot.desktop
 }
 
 # Correct permissions/ownership
