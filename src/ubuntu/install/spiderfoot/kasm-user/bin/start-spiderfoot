@@ -17,6 +17,7 @@ check_web_server() {
 
 have_kitty=$(type -p kitty)
 echo "Entering process startup loop"
+sleep 3
 set +x
 while true
 do
