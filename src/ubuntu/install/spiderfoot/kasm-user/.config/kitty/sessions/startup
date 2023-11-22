@@ -2,17 +2,12 @@
 #
 new_tab
 cd ~/spiderfoot
-launch bash -c python3 ./sfcli.py -s http://127.0.0.1:5002
+launch bash -c "python3 ./sfcli.py -s http://127.0.0.1:5002"
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 new_tab
 cd ~/spiderfoot
-launch bash
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
-new_tab
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
