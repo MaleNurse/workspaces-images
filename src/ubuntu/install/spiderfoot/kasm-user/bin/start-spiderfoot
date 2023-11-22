@@ -25,7 +25,7 @@ do
     then
         /usr/bin/filter_ready
         /usr/bin/desktop_ready
-        cd $HOME/spiderfoot/spiderfoot-4.0/
+        cd $HOME/spiderfoot/
         if [ "${have_kitty}" ]; then
           kitty --title="SpiderFoot" \
             --start-as normal \
