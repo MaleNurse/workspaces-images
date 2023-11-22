@@ -86,6 +86,7 @@ notify-send "Installing Desktop entries and fixing permissions"
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
+find ${HOME}/spiderfoot -type d | xargs chmod 755
 chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
 find ${HOME}/.config -type f | xargs chmod 644
 find ${HOME}/.config -type d | xargs chmod 755

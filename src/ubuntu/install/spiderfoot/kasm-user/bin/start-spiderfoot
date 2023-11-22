@@ -41,7 +41,7 @@ do
             sleep 1
         done
         [ "${have_kitty}" ] && {
-          kitty --title 'SpiderFoot Command Line' \
+          kitty --title 'SpiderFoot CLI' \
                 --override allow_remote_control=yes \
                 --listen-on unix:/tmp/sf_kitty_sock \
                 --session /home/kasm-user/.config/kitty/sessions/startup &
