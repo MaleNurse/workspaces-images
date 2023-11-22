@@ -26,7 +26,7 @@ do
         /usr/bin/desktop_ready
         cd $HOME/spiderfoot/
         if [ "${have_kitty}" ]; then
-          kitty --title="SpiderFoot" \
+          kitty --title="SpiderFoot Logs" \
             --start-as normal \
             --override draw_minimal_borders=yes \
             --override initial_window_width=90c \
@@ -40,6 +40,12 @@ do
         while ! check_web_server; do
             sleep 1
         done
+        [ "${have_kitty}" ] && {
+          kitty --title 'SpiderFoot Command Line' \
+                --override allow_remote_control=yes \
+                --listen-on unix:/tmp/sf_kitty_sock \
+                --session /home/kasm-user/.config/kitty/sessions/startup &
+        }
         set +e
         $START_COMMAND $FIREFOX_ARGS $LAUNCH_URL
         set -e
