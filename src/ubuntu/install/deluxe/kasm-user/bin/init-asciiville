@@ -975,6 +975,7 @@ have_aic=$(type -p ascii-image-converter)
 }
 
 have_mapscii=$(type -p mapscii)
+have_npm=$(type -p npm)
 [ "${have_mapscii}" ] || {
   [ "${have_npm}" ] && npm install -g mapscii >/dev/null 2>&1
 }

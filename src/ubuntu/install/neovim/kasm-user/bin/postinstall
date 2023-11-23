@@ -96,13 +96,16 @@ notify-send "Installing Desktop entries and fixing permissions"
   chmod 755 $HOME/.config/nvim-Lazyman/*.sh
 }
 
-[ -f $HOME/Desktop/nvims.desktop ] && {
-  cp $HOME/Desktop/nvims.desktop $HOME/.config/autostart/nvims.desktop
+[ -f $HOME/.local/share/applications/neovim.desktop ] && {
+  cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop
 }
-[ -f $HOME/.local/share/applications/kitty.desktop ] && {
-  cp $HOME/.local/share/applications/kitty.desktop \
-     $HOME/Desktop/kitty.desktop
-}
+for desk in kitty lazyman neovide nvims
+do
+  [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
+    cp $HOME/.local/share/applications/${desk}.desktop \
+       $HOME/Desktop/${desk}.desktop
+  }
+done
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
      $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -162,8 +165,9 @@ sleep 5
 kill $(pgrep "notifyd")
 
 have_lazyman=$(type -p lazyman)
-[ "${have_lazyman}" ] && {
-  have_kitty=$(type -p kitty)
+have_kitty=$(type -p kitty)
+have_nvim=$(type -p nvim)
+if [ "${have_lazyman}" ]; then
   if [ "${have_kitty}" ]; then
     kitty --title="Neovim" \
           --start-as normal \
@@ -172,4 +176,16 @@ have_lazyman=$(type -p lazyman)
   else
     xfce4-terminal -x lazyman open &
   fi
-}
+else
+  [ "${have_nvim}" ] && {
+    export NVIM_APPNAME="nvim-Lazyman"
+    if [ "${have_kitty}" ]; then
+      kitty --title="Neovim" \
+            --start-as normal \
+            --override startup_session=none \
+            nvim &
+    else
+      xfce4-terminal -x nvim &
+    fi
+  }
+fi

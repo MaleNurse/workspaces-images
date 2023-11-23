@@ -117,9 +117,6 @@ rm -f /home/*/bin/install-neovide
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-gsettings set org.gnome.desktop.background picture-uri-dark \
-              "file:///usr/share/backgrounds/gnome/wood-d.jpg"
-
 # Fix Lazyman permissions
 [ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
   chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
@@ -127,26 +124,6 @@ gsettings set org.gnome.desktop.background picture-uri-dark \
   chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
 }
 
-[ -f $HOME/.local/share/applications/asciiville.desktop ] && {
-  cp $HOME/.local/share/applications/asciiville.desktop \
-     $HOME/Desktop/asciiville.desktop
-}
-[ -f $HOME/.local/share/applications/lazyman.desktop ] && {
-  cp $HOME/.local/share/applications/lazyman.desktop \
-     $HOME/Desktop/lazyman.desktop
-}
-[ -f $HOME/.local/share/applications/neovide.desktop ] && {
-  cp $HOME/.local/share/applications/neovide.desktop \
-     $HOME/Desktop/neovide.desktop
-}
-[ -f $HOME/.local/share/applications/nvims.desktop ] && {
-  cp $HOME/.local/share/applications/nvims.desktop \
-     $HOME/Desktop/nvims.desktop
-}
-[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
-  cp ${HOME}/.local/share/applications/kitty.desktop \
-     ${HOME}/Desktop/kitty.desktop
-}
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
      ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -159,10 +136,19 @@ gsettings set org.gnome.desktop.background picture-uri-dark \
   cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
      ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
 }
-[ -f ${HOME}/.local/share/applications/spiderfoot.desktop ] && {
-  cp ${HOME}/.local/share/applications/spiderfoot.desktop \
-     ${HOME}/Desktop/spiderfoot.desktop
+
+[ -f ${HOME}/.local/share/applications/session.desktop ] && {
+  cp ${HOME}/.local/share/applications/session.desktop \
+     ${HOME}/.config/autostart/session.desktop
 }
+
+for desk in asciiville lazyman neovide nvims kitty spiderfoot
+do
+  [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
+    cp $HOME/.local/share/applications/${desk}.desktop \
+       $HOME/Desktop/${desk}.desktop
+  }
+done
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
