@@ -36,7 +36,8 @@ do
   }
 done
 
-sudo docker build --pull --no-cache -t doctorwhen/kasm:deluxe \
+sudo docker build --pull --no-cache \
+                  -t doctorwhen/kasm:deluxe \
                   -f kasm-deluxe.Dockerfile .
 
 for priv in ${PRIVS}

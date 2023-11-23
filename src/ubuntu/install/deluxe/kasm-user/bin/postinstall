@@ -128,9 +128,23 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp $HOME/.local/share/applications/asciiville.desktop \
      $HOME/Desktop/asciiville.desktop
 }
+[ -f $HOME/.local/share/applications/lazyman.desktop ] && {
+  cp $HOME/.local/share/applications/lazyman.desktop \
+     $HOME/Desktop/lazyman.desktop
+}
+[ -f $HOME/.local/share/applications/neovide.desktop ] && {
+  cp $HOME/.local/share/applications/neovide.desktop \
+     $HOME/Desktop/neovide.desktop
+}
+[ -f $HOME/.local/share/applications/nvims.desktop ] && {
+  cp $HOME/.local/share/applications/nvims.desktop \
+     $HOME/Desktop/nvims.desktop
+}
 [ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
   cp ${HOME}/.local/share/applications/kitty.desktop \
      ${HOME}/Desktop/kitty.desktop
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/.config/autostart/kitty.desktop
 }
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
@@ -190,7 +204,17 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
+notify-send "Updating system package repositories"
+sudo apt update
+
+have_kitty=$(type -p kitty)
+[ "${have_kitty}" ] && {
+  notify-send "Starting Kitty terminal emulator session"
+  kitty --session /home/kasm-user/.config/kitty/sessions/startup \
+        --title 'Kitty Terminal Emulator' &
+}
+
 notify-send "Deluxe desktop initialization and configuration complete!"
-sleep 8
+sleep 5
 
 kill $(pgrep "notifyd")

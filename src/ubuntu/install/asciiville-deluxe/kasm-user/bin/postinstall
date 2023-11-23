@@ -120,4 +120,6 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
+sudo apt update
+
 kill $(pgrep "notifyd")

@@ -105,6 +105,7 @@ apt-get install -y ccls
 apt-get install -y luarocks
 apt-get install -y ruby
 apt-get install -y ruby-dev
+apt-get install -y gnome-backgrounds
 
 install_asciiville
 
