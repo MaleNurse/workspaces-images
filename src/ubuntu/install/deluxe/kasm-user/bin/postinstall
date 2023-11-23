@@ -198,7 +198,7 @@ have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] && {
   notify-send "Starting Kitty terminal emulator session"
   kitty --session /home/kasm-user/.config/kitty/sessions/startup \
-        --title 'Kitty Terminal Emulator' &
+        --title 'Kitty Deluxe Session' &
 }
 
 notify-send "Deluxe desktop initialization and configuration complete!"
