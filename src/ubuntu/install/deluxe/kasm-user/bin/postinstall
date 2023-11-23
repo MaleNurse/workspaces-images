@@ -117,6 +117,9 @@ rm -f /home/*/bin/install-neovide
 
 notify-send "Installing Desktop entries and fixing permissions"
 
+gsettings set org.gnome.desktop.background picture-uri-dark \
+              "file:///usr/share/backgrounds/gnome/wood-d.jpg"
+
 # Fix Lazyman permissions
 [ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
   chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
@@ -143,8 +146,6 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
   cp ${HOME}/.local/share/applications/kitty.desktop \
      ${HOME}/Desktop/kitty.desktop
-  cp ${HOME}/.local/share/applications/kitty.desktop \
-     ${HOME}/.config/autostart/kitty.desktop
 }
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \

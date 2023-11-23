@@ -978,6 +978,10 @@ have_mapscii=$(type -p mapscii)
 [ "${have_mapscii}" ] || {
   [ "${have_npm}" ] && npm install -g mapscii >/dev/null 2>&1
 }
+have_mapscii=$(type -p mapscii)
+[ "${have_mapscii}" ] || {
+  [ "${have_npm}" ] && npm install mapscii >/dev/null 2>&1
+}
 
 have_tuir=$(type -p tuir)
 [ "${have_tuir}" ] || {

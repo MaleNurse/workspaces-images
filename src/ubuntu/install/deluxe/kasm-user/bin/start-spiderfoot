@@ -45,7 +45,7 @@ do
           kitty --title 'SpiderFoot CLI' \
                 --override allow_remote_control=yes \
                 --listen-on unix:/tmp/sf_kitty_sock \
-                --session /home/kasm-user/.config/kitty/sessions/startup &
+                --session /home/kasm-user/.config/kitty/sessions/spiderfoot &
         }
         set +e
         $START_COMMAND $FIREFOX_ARGS $LAUNCH_URL
