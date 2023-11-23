@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# install-tea - install the tea binary command line interface for Gitea
+#
+# Get the latest version from https://dl.gitea.com/tea/
+VER="0.9.2"
+DL_URL="https://dl.gitea.com/tea/${VER}/tea-${VER}-linux-amd64"
+BINDIR="${HOME}/.local/bin"
+
+have_wget=$(type -p wget)
+[ "${have_wget}" ] || {
+  printf "\n\nERROR: Requirements not met"
+  printf "\n\twget is required"
+  printf "\n\nExiting without installing\n\n"
+  exit 1
+}
+
+[ -d "${HOME}/.local" ] || mkdir -p "${HOME}/.local"
+[ -d "${HOME}/.local/bin" ] || mkdir -p "${HOME}/.local/bin"
+
+wget --quiet -O "${BINDIR}/tea" "${DL_URL}" >/dev/null 2>&1
+chmod 755 "${BINDIR}/tea"
+printf "\nTea release binary installed as ${BINDIR}/tea\n"
+${BINDIR}/tea --version

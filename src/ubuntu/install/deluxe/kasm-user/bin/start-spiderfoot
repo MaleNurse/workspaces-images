@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+START_COMMAND="firefox"
+export MAXIMIZE="false"
+export MAXIMIZE_NAME="Mozilla Firefox"
+DEFAULT_FIREFOX_ARGS=""
+FIREFOX_ARGS=${FIREFOX_APP_ARGS:-$DEFAULT_FIREFOX_ARGS}
+
+SPIDERFOOT_SERVER="127.0.0.1:5002"
+LAUNCH_URL="http://$SPIDERFOOT_SERVER"
+DEFAULT_SPIDERFOOT_ARGS="-l $SPIDERFOOT_SERVER"
+SPIDERFOOT_ARGS=${SPIDERFOOT_APP_ARGS:-$DEFAULT_SPIDERFOOT_ARGS}
+
+check_web_server() {
+    curl -s -o /dev/null $LAUNCH_URL && return 0 || return 1
+}
+
+have_kitty=$(type -p kitty)
+echo "Entering process startup loop"
+sleep 3
+set +x
+while true
+do
+    if ! pgrep -f "python3 sf.py -l 127.0.0.1:5002" > /dev/null
+    then
+        /usr/bin/filter_ready
+        /usr/bin/desktop_ready
+        cd $HOME/spiderfoot/
+        if [ "${have_kitty}" ]; then
+          kitty --title="SpiderFoot Logs" \
+            --start-as normal \
+            --override draw_minimal_borders=yes \
+            --override initial_window_width=90c \
+            --override initial_window_height=28c \
+            --override tab_bar_min_tabs=2 \
+            --override startup_session=none \
+            python3 sf.py $SPIDERFOOT_ARGS &
+        else
+            xfce4-terminal -x python3 sf.py $SPIDERFOOT_ARGS &
+        fi
+        while ! check_web_server; do
+            sleep 1
+        done
+        [ "${have_kitty}" ] && {
+          kitty --title 'SpiderFoot CLI' \
+                --override allow_remote_control=yes \
+                --listen-on unix:/tmp/sf_kitty_sock \
+                --session /home/kasm-user/.config/kitty/sessions/startup &
+        }
+        set +e
+        $START_COMMAND $FIREFOX_ARGS $LAUNCH_URL
+        set -e
+    fi
+    sleep 1
+done
+set -x
