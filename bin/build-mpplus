@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMG_NAME="doctorwhen/kasm:musicplayerplus"
+IMG_NAME="doctorwhen/kasm:mpplus"
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
 cd $(dirname "${SCRIPT_PATH}")
@@ -36,8 +36,7 @@ done
 
 sudo docker image rm ${IMG_NAME} 2>/dev/null
 
-sudo docker build --pull \
-                  --no-cache \
+sudo docker build --no-cache \
                   -t ${IMG_NAME} \
                   -f kasm-musicplayerplus.Dockerfile .
 

@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/musicplayerplus doctorwhen/kasm:musicplayerplus
-  sudo docker push doctorwhen/kasm:musicplayerplus
-else
-  sudo docker push doctorwhen/kasm:musicplayerplus
-fi
+sudo docker push doctorwhen/kasm:mpplus
