@@ -1,0 +1,2863 @@
+#!/bin/bash
+#
+# init-mpplus - initialize MusicPlayerPlus
+#
+# Copy and configure default configuration files in $HOME/.config/
+# Setup default tmux configuration for this user
+# Install required pip modules if not already installed
+# Optionally perform Beets initialization and metadata retrieval
+#
+
+MPPCDIR=/usr/share/musicplayerplus
+MPCONFDIR=/usr/share/mpcplus
+OPCONFDIR=${MPPCDIR}/mpcplus
+SCPTDIR=${MPPCDIR}/scripts
+MCPTDIR=${MPCONFDIR}/scripts
+CCPTDIR=${MPPCDIR}/calliope
+USERCONF=${HOME}/.config
+MPCDIR=${USERCONF}/mpcplus
+CAVDIR=${USERCONF}/mppcava
+NCMDIR=${USERCONF}/ncmpcpp
+MPDCONFDIR="${USERCONF}/mpd"
+MPDCONF="${MPDCONFDIR}/mpd.conf"
+MPPCONF="${USERCONF}/mpprc"
+PWCONFDIR="${USERCONF}/pipewire"
+TMUXPDIR="${USERCONF}/tmuxp"
+BEETSCONFDIR="${USERCONF}/beets"
+BEETSLOGDIR="${BEETSCONFDIR}/logs"
+BEETSCONF="${BEETSCONFDIR}/config.yaml"
+BEETSGENR="${BEETSCONFDIR}/genres"
+CALIPCONFDIR="${USERCONF}/calliope"
+CALIPCONF="${CALIPCONFDIR}/calliope.conf"
+KITTYCONFDIR="${USERCONF}/kitty"
+KITTYCONF="${KITTYCONFDIR}/mpplus.conf"
+MOPIDCONFDIR="${USERCONF}/mopidy"
+MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
+NAVIDCONFDIR="${USERCONF}/navidrome"
+NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
+YTDLPCONFDIR="${USERCONF}/yt-dlp"
+YTDLPCONF="${YTDLPCONFDIR}/config"
+CFGS="default_cover.png fzmp.conf"
+SCPS="album_cover.sh cover_obs.sh mppsplash-dual.sh"
+EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
+            Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
+
+BOLD=$(tput bold 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
+MPP_USER=$(id -un)
+
+mud="music_directory"
+pld="playlist_directory"
+senable=
+sactive=
+uenable=
+uactive=
+
+if [ -x "${SCPTDIR}/crudini.py" ]; then
+  CRUDINI="${SCPTDIR}/crudini.py"
+else
+  have_crudini=$(type -p crudini)
+  if [ "${have_crudini}" ]; then
+    CRUDINI=crudini
+  else
+    CRUDINI=
+  fi
+fi
+
+IP="<ip address>"
+mpd_music="~/Music"
+exp_music="${HOME}/Music"
+
+usage() {
+  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r]"
+  printf " [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
+  printf "mopidy|mpd|navidrome|soundcloud|sync|yams]"
+  printf "\nWhere:"
+  printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
+  printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
+  printf "\n\t'-d' install latest Beets development branch rather than"
+  printf "\n\t\tthe latest stable release (for testing purposes)"
+  printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (default)"
+  printf "\n\t'-l music_dir' specifies the location of the music library"
+  printf "\n\t'-n' indicates perform a dry run, don't do anything just tell me"
+  printf "\n\t'-o' indicates overwrite any pre-existing configuration"
+  printf "\n\t'-q' indicates quiet execution, no status messages"
+  printf "\n\t'-r' indicates remove service"
+  printf "\n\t\tsupported service removals: mopidy navidrome"
+  printf "\n\t'-U' indicates do not upgrade installed Python modules"
+  printf "\n\t'-y' indicates answer 'yes' to all and proceed"
+  printf "\n\t'-u' displays this usage message and exits\n"
+  printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
+  printf "\n\t'discogs' generates an Obsidian vault from your Discogs user collection"
+  printf "\n\t'discogs local' generates an Obsidian vault from your local music library"
+  printf "\n\t'discogs upload vault folder' adds the releases in 'vault' to"
+  printf "\n\tDiscogs user collection folder 'folder'"
+  printf "\n\t\t(DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)"
+  printf "\n\t'import' performs a Beets music library import"
+  printf "\n\t'kitty' installs the Kitty terminal emulator"
+  printf "\n\t'metadata' performs a library metadata update"
+  printf "\n\t'mopidy' installs and configures Mopidy extensible music server"
+  printf "\n\t\tNote: activating Mopidy deactivates MPD"
+  printf "\n\t'mpd' activates the MPD music server and deactivates Mopidy"
+  printf "\n\t'navidrome' installs and configures Navidrome music server"
+  printf "\n\t\tNote: 'mppinit navidrome <version>' can be used to specify"
+  printf "\n\t\tan alternate version of Navidrome to download and install"
+  printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
+  printf "\n\t'sync' synchronizes MusicPlayerPlus configuration across configs"
+  printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
+  printf "\n\n'mppinit' must be run as the MusicPlayerPlus user, not root."
+  printf "\n'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',"
+  printf "\n\t'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',"
+  printf "\n\t'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'\n\n"
+  exit 1
+}
+
+get_ip() {
+  have_ip=$(type -p ip)
+  if [ "${have_ip}" ]; then
+    IP=$(ip route get 1.2.3.4 | head -1 | awk '{print $7}')
+  else
+    have_hostname=$(type -p hostname)
+    if [ "${have_hostname}" ]; then
+      IP=$(hostname -I | awk '{print $1}')
+    else
+      IP="<ip address>"
+    fi
+  fi
+}
+
+create_new_profile() {
+  local proterm="$1"
+  local proname="$2"
+  local profont="$3"
+  if [ "${proterm}" == "gnome" ]; then
+    local profile_ids=($(dconf list $dconfdir/ | grep ^: \
+      | sed 's/\///g' | sed 's/://g'))
+  fi
+  if [ "${proterm}" == "tilix" ]; then
+    local profile_ids=($(dconf list $dconfdir/ | grep -v ^list \
+      | sed 's/\///g' | sed 's/://g'))
+  fi
+local profile_ids_old="$(dconf read "$dconfdir"/list | tr -d "]")"
+  local profile_id="$(uuidgen)"
+  [ "${debug}" ] && {
+    echo "profile_ids_old=${profile_ids_old}"
+    echo "profile_id=${profile_id}"
+  }
+
+  if [ -z "$profile_ids_old" ]; then
+    if [ ${#profile_ids[@]} -gt 0 ]; then
+      for id in "${!profile_ids[@]}"; do
+        profile_ids[${id}]="'profile_ids[${id}]',"
+      done
+      dconf write $dconfdir/list "[${profile_ids[*]} '$profile_id']" 2>/dev/null
+      [ "${debug}" ] && {
+        echo "A: dconf write $dconfdir/list [${profile_ids[*]} '$profile_id']"
+      }
+    else
+      dconf write $dconfdir/list "['$profile_id']" 2>/dev/null
+      [ "${debug}" ] && {
+        echo "B: dconf write $dconfdir/list ['$profile_id']"
+      }
+    fi
+  else
+    dconf write $dconfdir/list "${profile_ids_old}, '$profile_id']" 2>/dev/null
+    [ "${debug}" ] && {
+      echo "C: dconf write $dconfdir/list ${profile_ids_old}, '$profile_id']"
+    }
+  fi
+
+  if [ "${proterm}" == "gnome" ]; then
+    profile_path="$dconfdir/:$profile_id"
+  fi
+  if [ "${proterm}" == "tilix" ]; then
+    profile_path="$dconfdir/$profile_id"
+  fi
+  dconf write $profile_path/visible-name "'$proname'" 2>/dev/null
+
+  # MusicPlayerPlus profiles want a semi-transparent background
+  dconf write $profile_path/background-color "'rgb(0,0,0)'" 2>/dev/null
+  dconf write $profile_path/foreground-color "'rgb(255,255,255)'" 2>/dev/null
+  dconf write $profile_path/cursor-shape "'underline'" 2>/dev/null
+  dconf write $profile_path/cursor-blink-mode "'off'" 2>/dev/null
+  dconf write $profile_path/use-theme-colors "false" 2>/dev/null
+  if [ "${proterm}" == "gnome" ]; then
+    dconf write $profile_path/use-theme-transparency "false" 2>/dev/null
+    dconf write $profile_path/use-transparent-background "true" 2>/dev/null
+  fi
+  dconf write $profile_path/background-transparency-percent "50" 2>/dev/null
+  dconf write $profile_path/use-system-font "false" 2>/dev/null
+  dconf write $profile_path/font "'Monospace ${profont}'" 2>/dev/null
+}
+
+create_profiles() {
+  [ "${have_gnome}" ] || [ "${have_tilix}" ] && {
+    have_dconf=$(type -p dconf)
+    have_gsettings=$(type -p gsettings)
+    [ "${have_dconf}" ] && [ "${have_gsettings}" ] || {
+      printf "\n\nGnome and Tilix terminal emulators require profiles."
+      printf "\nIn order to create profiles for these terminal emulators,"
+      printf "\nthe 'dconf' and glib2' packages are required."
+      printf "\n\nTo use either the Gnome or Tilix terminal emulator,"
+      printf "\ninstall these packages with your package manager."
+      printf "\nAfter installing these dependencies, run 'mppinit profiles'."
+      printf "\nSkipping terminal profiles creation. MusicPlayerPlus will"
+      printf "\nuse the Kitty terminal emulator.\n"
+      return
+    }
+  }
+  # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
+  [ "${quiet}" ] || {
+    printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
+  }
+  declare -a profiles
+  [ "${have_gnome}" ] && {
+    dconfdir=/org/gnome/terminal/legacy/profiles:
+    profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
+
+    for profile_name in MusicPlayer Visualizer; do
+      profile_exists=
+      fontsize=8
+      [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+      if [ "$profiles" = "" ]; then
+        create_new_profile gnome ${profile_name} ${fontsize}
+      else
+        for i in ${!profiles[*]}; do
+          visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
+          [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+          [ "$profile_exists" ] && break
+        done
+      fi
+
+      [ "$profile_exists" ] || {
+        create_new_profile gnome ${profile_name} ${fontsize}
+      }
+    done
+  }
+
+  [ "${have_tilix}" ] && {
+    # Create Tilix profiles, similar to Gnome-terminal's
+    dconfdir=/com/gexperts/Tilix/profiles
+    profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
+
+    for profile_name in MusicPlayer Visualizer; do
+      profile_exists=
+      fontsize=8
+      [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+
+      if [ "$profiles" = "" ]; then
+        create_new_profile tilix ${profile_name} ${fontsize}
+      else
+        for i in ${!profiles[*]}; do
+          visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
+          [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+          [ "$profile_exists" ] && break
+        done
+      fi
+
+      [ "$profile_exists" ] || {
+        create_new_profile tilix ${profile_name} ${fontsize}
+      }
+    done
+  }
+}
+
+install_ueberzug() {
+  have_curl=$(type -p curl)
+  have_jq=$(type -p jq)
+  have_wget=$(type -p wget)
+  case "${mach}" in
+    arm*)
+      pyc="3"
+      ;;
+    *)
+      pyc=$(${PYTHON} -V | awk ' { print $2 } ' | awk -F '.' ' { print $1 $2 } ')
+      ;;
+  esac
+  DL_URL=
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_URL=$(curl --silent "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "cp${pyc}.*${mach}\.whl" | head -1)
+  }
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling ${PROJECT} ..."
+    [ "${have_wget}" ] && {
+      TEMP_WHL=$(basename ${DL_URL})
+      TEMP_WHL="/tmp/${TEMP_WHL}"
+      wget --quiet -O "${TEMP_WHL}" "${DL_URL}" >/dev/null 2>&1
+      chmod 644 "${TEMP_WHL}"
+      ${PYTHON} -m pip install --user --upgrade "${TEMP_WHL}" >/dev/null 2>&1
+      #     rm -f "${TEMP_WHL}"
+    }
+  }
+}
+
+pip_install() {
+  mod="$1"
+  if ${PIP} list 2>/dev/null | grep ${mod} >/dev/null; then
+    if [ "${upgrade}" ]; then
+      [ "${quiet}" ] || {
+        printf " upgrade ${mod},"
+      }
+      ${PYTHON} -m pip install --user --upgrade ${mod} >/dev/null 2>&1
+    else
+      [ "${quiet}" ] || {
+        printf " ${mod} installed,"
+      }
+    fi
+  else
+    [ "${quiet}" ] || {
+      printf " install ${mod},"
+    }
+    ${PYTHON} -m pip install --user ${mod} >/dev/null 2>&1
+  fi
+}
+
+set_have_navi() {
+  if [ -x /opt/navidrome/navidrome ]; then
+    have_navi=1
+  else
+    have_navi=
+  fi
+}
+
+init_mopidy() {
+  # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
+  ${PYTHON} -m pip install --user --upgrade mopidy >/dev/null 2>&1
+
+  for extension in ${EXT_MOPIDY}; do
+    pip_install "${extension}"
+  done
+
+  # Disable MPD services
+  systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && {
+    systemctl --user disable mpdstats.service
+  }
+  systemctl --user is-active mpdstats.service >/dev/null 2>&1 && {
+    systemctl --user stop mpdstats.service
+  }
+  systemctl --user is-enabled yams.service >/dev/null 2>&1 && {
+    systemctl --user disable yams.service
+  }
+  systemctl --user is-active yams.service >/dev/null 2>&1 && {
+    systemctl --user stop yams.service
+  }
+  systemctl --user is-enabled mpd.service >/dev/null 2>&1 && {
+    systemctl --user disable mpd.service
+  }
+  systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
+    systemctl --user disable mpd.socket
+  }
+  systemctl --user is-active mpd.service >/dev/null 2>&1 && {
+    systemctl --user stop mpd.service
+  }
+  systemctl --user is-active mpd.socket >/dev/null 2>&1 && {
+    systemctl --user stop mpd.socket
+  }
+
+  # Perform a local scan of the music library
+  have_mopidy=$(type -p mopidy)
+  [ "${have_mopidy}" ] && mopidy local scan >/dev/null 2>&1 &
+
+  # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
+  [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mopidy
+
+  # Enable and start user-level PulseAudio
+  systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 && {
+    systemctl --user disable pulseaudio.socket
+  }
+  systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 && {
+    systemctl --user stop pulseaudio.socket
+  }
+  systemctl --user is-active pulseaudio.service >/dev/null 2>&1 || {
+    systemctl --user start pulseaudio.service
+  }
+  systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 || {
+    systemctl --user enable pulseaudio.service
+  }
+  # Enable Mopidy services
+  systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
+    systemctl --user start webplugin.service
+  }
+  systemctl --user is-enabled webplugin.service >/dev/null 2>&1 || {
+    systemctl --user enable webplugin.service
+  }
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 || {
+    systemctl --user start mopidy.service
+  }
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 || {
+    systemctl --user enable mopidy.service
+  }
+}
+
+remove_mopidy() {
+  # Stop and Disable Navidrome service
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 && {
+    systemctl --user stop mopidy.service
+  }
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && {
+    systemctl --user disable mopidy.service
+  }
+
+  # Reconfigure mpcplus/mppcava with MPD visualizer data source
+  [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mpd
+
+  for extension in ${EXT_MOPIDY}; do
+    ${PYTHON} -m pip uninstall -y ${extension}
+  done
+
+  ${PYTHHON} -m pip uninstall -y Mopidy
+  have_mopidy=
+}
+
+save_mpp_conf() {
+  echo "## MusicPlayerPlus runtime configuration" >${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "#  After modifying any of the following settings, run the command:" >>${MPPCONF}
+  echo "#    mppinit sync" >>${MPPCONF}
+  echo "#  as your normal MusicPlayerPlus user" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "## Music library location" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "## MPD Client" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# Album cover art is only supported with 'mpcplus' and 'ncmpcpp'" >>${MPPCONF}
+  echo "MPD_CLIENT=\"${MPD_CLIENT}\"" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "## General settings" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# To enable any of these, set to 1" >>${MPPCONF}
+  echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# Has mppinit been run" >>${MPPCONF}
+  echo "MPPINIT=${MPPINIT}" >>${MPPCONF}
+  echo "# Play audio during asciimatics animations" >>${MPPCONF}
+  echo "AUDIO=${AUDIO}" >>${MPPCONF}
+  echo "# Display cover art in tmux sessions" >>${MPPCONF}
+  echo "COVER_ART=${COVER_ART}" >>${MPPCONF}
+  echo "# Display mpcplus and mppcava in a tmux session" >>${MPPCONF}
+  echo "USE_TMUX=${USE_TMUX}" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "## Terminal emulator preference" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "#  Can be one of: console, current, gnome, kitty, retro, simple, tilix" >>${MPPCONF}
+  echo "#  Where:" >>${MPPCONF}
+  echo "#    'console' will force a tmux session" >>${MPPCONF}
+  echo "#    'current' will force a tmux session in the current terminal window" >>${MPPCONF}
+  echo "#    'gnome' will use the gnome-terminal emulator if installed" >>${MPPCONF}
+  echo "#    'kitty' will use the Kitty terminal emulator if installed" >>${MPPCONF}
+  echo "#    'retro' will use cool-retro-term if installed" >>${MPPCONF}
+  echo "#    'simple' will use the ST terminal emulator if installed" >>${MPPCONF}
+  echo "#    'tilix' will use the Tilix terminal emulator if installed" >>${MPPCONF}
+  echo "#  Default fallback if none specified or not available is Kitty" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "#  Uncomment the preferred mode" >>${MPPCONF}
+  if [ "${CONSOLE_MODE}" ]; then
+    echo "MPP_MODE=console" >>${MPPCONF}
+    echo "#MPP_MODE=current" >>${MPPCONF}
+    echo "#MPP_MODE=gnome" >>${MPPCONF}
+    echo "#MPP_MODE=retro" >>${MPPCONF}
+    echo "#MPP_MODE=simple" >>${MPPCONF}
+    echo "#MPP_MODE=tilix" >>${MPPCONF}
+    echo "#MPP_MODE=kitty" >>${MPPCONF}
+  else
+    echo "#MPP_MODE=console" >>${MPPCONF}
+    if [ "${CURRENT}" ]; then
+      echo "MPP_MODE=current" >>${MPPCONF}
+      echo "#MPP_MODE=gnome" >>${MPPCONF}
+      echo "#MPP_MODE=retro" >>${MPPCONF}
+      echo "#MPP_MODE=simple" >>${MPPCONF}
+      echo "#MPP_MODE=tilix" >>${MPPCONF}
+      echo "#MPP_MODE=kitty" >>${MPPCONF}
+    else
+      echo "#MPP_MODE=current" >>${MPPCONF}
+      if [ "${GNOME}" ]; then
+        echo "MPP_MODE=gnome" >>${MPPCONF}
+        echo "#MPP_MODE=retro" >>${MPPCONF}
+        echo "#MPP_MODE=simple" >>${MPPCONF}
+        echo "#MPP_MODE=tilix" >>${MPPCONF}
+        echo "#MPP_MODE=kitty" >>${MPPCONF}
+      else
+        echo "#MPP_MODE=gnome" >>${MPPCONF}
+        if [ "${RETRO}" ]; then
+          echo "MPP_MODE=retro" >>${MPPCONF}
+          echo "#MPP_MODE=simple" >>${MPPCONF}
+          echo "#MPP_MODE=tilix" >>${MPPCONF}
+          echo "#MPP_MODE=kitty" >>${MPPCONF}
+        else
+          echo "#MPP_MODE=retro" >>${MPPCONF}
+          if [ "${SIMPLE}" ]; then
+            echo "MPP_MODE=simple" >>${MPPCONF}
+            echo "#MPP_MODE=tilix" >>${MPPCONF}
+            echo "#MPP_MODE=kitty" >>${MPPCONF}
+          else
+            echo "#MPP_MODE=simple" >>${MPPCONF}
+            if [ "${TILIX}" ]; then
+              echo "MPP_MODE=tilix" >>${MPPCONF}
+              echo "#MPP_MODE=kitty" >>${MPPCONF}
+            else
+              echo "#MPP_MODE=tilix" >>${MPPCONF}
+              if [ "${KITTY}" ]; then
+                echo "MPP_MODE=kitty" >>${MPPCONF}
+              else
+                echo "#MPP_MODE=kitty" >>${MPPCONF}
+              fi
+            fi
+          fi
+        fi
+      fi
+    fi
+  fi
+
+  echo "" >>${MPPCONF}
+  echo "## Service access" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >>${MPPCONF}
+  echo "# If you do not have a Bandcamp account, leave blank" >>${MPPCONF}
+  echo "BANDCAMP_USER=${BANDCAMP_USER}" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >>${MPPCONF}
+  echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >>${MPPCONF}
+  echo "# Your Discogs username is the last component of the profile URL." >>${MPPCONF}
+  echo "DISCOGS_USER=${DISCOGS_USER}" >>${MPPCONF}
+  echo "# The Discogs API token can be found by visiting" >>${MPPCONF}
+  echo "# https://www.discogs.com/settings/developers" >>${MPPCONF}
+  echo "DISCOGS_TOKEN=${DISCOGS_TOKEN}" >>${MPPCONF}
+  echo "# Location of the generated custom Discogs Obsidian vault" >>${MPPCONF}
+  echo "# Can be anywhere you have write permission" >>${MPPCONF}
+  echo "DISCOGS_DIR=\"${DISCOGS_DIR}\"" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "# Your Last.fm username, api key, and api secret" >>${MPPCONF}
+  echo "# If you do not have a Last.fm account, leave blank" >>${MPPCONF}
+  echo "LASTFM_USER=${LASTFM_USER}" >>${MPPCONF}
+  echo "LASTFM_APIKEY=${LASTFM_APIKEY}" >>${MPPCONF}
+  echo "LASTFM_SECRET=${LASTFM_SECRET}" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >>${MPPCONF}
+  echo "# click on the username at top right then 'Profile'. The user slug" >>${MPPCONF}
+  echo "# is the last component of the URL when viewing your Soundcloud Profile." >>${MPPCONF}
+  echo "# If you do not have a Soundcloud account, leave blank" >>${MPPCONF}
+  echo "SOUNDCLOUD_SLUG=${SOUNDCLOUD_SLUG}" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "# Your Spotify client id and client secret" >>${MPPCONF}
+  echo "# If you do not have a Spotify account, leave blank" >>${MPPCONF}
+  echo "SPOTIFY_CLIENT=${SPOTIFY_CLIENT}" >>${MPPCONF}
+  echo "SPOTIFY_SECRET=${SPOTIFY_SECRET}" >>${MPPCONF}
+  echo "" >>${MPPCONF}
+  echo "# Your YouTube api key" >>${MPPCONF}
+  echo "# If you do not have a YouTube account, leave blank" >>${MPPCONF}
+  echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >>${MPPCONF}
+
+  echo "" >>${MPPCONF}
+  echo "## Album cover art position" >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# Album cover art is positioned within the preferred terminal window with" >>${MPPCONF}
+  echo "# padding values hard coded in the cover art display script. These padding" >>${MPPCONF}
+  echo "# values are customized for each of the supported terminal emulators. The" >>${MPPCONF}
+  echo "# default padding values should suffice but they can be overriden here. To" >>${MPPCONF}
+  echo "# override the padding values, set OVERRIDE_PADDING=1 and set any or all of" >>${MPPCONF}
+  echo "# the 'padding_override_*' values to adjust album cover art placement. See" >>${MPPCONF}
+  echo "# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values." >>${MPPCONF}
+  echo "#" >>${MPPCONF}
+  echo "# Set to 1 to override default padding, leave unset to use custom defaults" >>${MPPCONF}
+  echo "OVERRIDE_PADDING=${OVERRIDE_PADDING}" >>${MPPCONF}
+  echo "# Uncomment any or all and set preferred padding value(s)" >>${MPPCONF}
+  if [ "${padding_override_top}" ]; then
+    echo "padding_override_top=${padding_override_top}" >>${MPPCONF}
+  else
+    echo "# padding_override_top=3" >>${MPPCONF}
+  fi
+  if [ "${padding_override_bottom}" ]; then
+    echo "padding_override_bottom=${padding_override_bottom}" >>${MPPCONF}
+  else
+    echo "# padding_override_bottom=1" >>${MPPCONF}
+  fi
+  if [ "${padding_override_left}" ]; then
+    echo "padding_override_left=${padding_override_left}" >>${MPPCONF}
+  else
+    echo "# padding_override_left=1" >>${MPPCONF}
+  fi
+  if [ "${padding_override_right}" ]; then
+    echo "padding_override_right=${padding_override_right}" >>${MPPCONF}
+  else
+    echo "# padding_override_right=0" >>${MPPCONF}
+  fi
+  echo "#" >>${MPPCONF}
+  echo "# The font size in pixels is set to 22x45 for album cover art display." >>${MPPCONF}
+  echo "# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or" >>${MPPCONF}
+  echo "# font height in pixels to match your system." >>${MPPCONF}
+  echo "OVERRIDE_FONT_SIZE=${OVERRIDE_FONT_SIZE}" >>${MPPCONF}
+  echo "# Uncomment either or both and set font width and/or font height value(s)" >>${MPPCONF}
+  if [ "${font_override_width}" ]; then
+    echo "font_override_width=${font_override_width}" >>${MPPCONF}
+  else
+    echo "# font_override_width=22" >>${MPPCONF}
+  fi
+  if [ "${font_override_height}" ]; then
+    echo "font_override_height=${font_override_height}" >>${MPPCONF}
+  else
+    echo "# font_override_height=45" >>${MPPCONF}
+  fi
+  chmod 600 ${MPPCONF}
+}
+
+init_mpp_conf() {
+  if [ -f ${MPPCDIR}/mpprc ]; then
+    cp ${MPPCDIR}/mpprc ${MPPCONF}
+  else
+    echo "## MusicPlayerPlus runtime configuration" >${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "#  After modifying any of the following settings, run the command:" >>${MPPCONF}
+    echo "#    mppinit sync" >>${MPPCONF}
+    echo "#  as your normal MusicPlayerPlus user" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## Music library location" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "MUSIC_DIR=\"~/Music\"" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## MPD Client" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# Album cover art is only supported with 'mpcplus' and 'ncmpcpp'" >>${MPPCONF}
+    echo "MPD_CLIENT=\"mpcplus\"" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## General settings" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# To enable any of these, set to 1" >>${MPPCONF}
+    echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# Has mppinit been run" >>${MPPCONF}
+    echo "MPPINIT=1" >>${MPPCONF}
+    echo "# Play audio during asciimatics animations" >>${MPPCONF}
+    echo "AUDIO=1" >>${MPPCONF}
+    echo "# Display cover art in tmux sessions" >>${MPPCONF}
+    echo "COVER_ART=1" >>${MPPCONF}
+    echo "# Display mpcplus and mppcava in a tmux session" >>${MPPCONF}
+    echo "USE_TMUX=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## Terminal emulator preference" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "#  Can be one of: console, current, gnome, kitty, retro, simple, tilix" >>${MPPCONF}
+    echo "#  Where:" >>${MPPCONF}
+    echo "#    'console' will force a tmux session" >>${MPPCONF}
+    echo "#    'current' will force a tmux session in the current terminal window" >>${MPPCONF}
+    echo "#    'gnome' will use the gnome-terminal emulator if installed" >>${MPPCONF}
+    echo "#    'kitty' will use the Kitty terminal emulator if installed" >>${MPPCONF}
+    echo "#    'retro' will use cool-retro-term if installed" >>${MPPCONF}
+    echo "#    'simple' will use the ST terminal emulator if installed" >>${MPPCONF}
+    echo "#    'tilix' will use the Tilix terminal emulator if installed" >>${MPPCONF}
+    echo "#  Default fallback if none specified or not available is Kitty" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "#  Uncomment the preferred mode" >>${MPPCONF}
+    echo "#MPP_MODE=console" >>${MPPCONF}
+    echo "#MPP_MODE=current" >>${MPPCONF}
+    echo "#MPP_MODE=gnome" >>${MPPCONF}
+    echo "#MPP_MODE=kitty" >>${MPPCONF}
+    echo "#MPP_MODE=retro" >>${MPPCONF}
+    echo "#MPP_MODE=simple" >>${MPPCONF}
+    echo "#MPP_MODE=tilix" >>${MPPCONF}
+    echo "MPP_MODE=${DEFAULT_MODE}" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## Service access" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >>${MPPCONF}
+    echo "# If you do not have a Bandcamp account, leave blank" >>${MPPCONF}
+    echo "BANDCAMP_USER=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >>${MPPCONF}
+    echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >>${MPPCONF}
+    echo "# Your Discogs username is the last component of the profile URL." >>${MPPCONF}
+    echo "DISCOGS_USER=" >>${MPPCONF}
+    echo "# The Discogs API token can be found by visiting" >>${MPPCONF}
+    echo "# https://www.discogs.com/settings/developers" >>${MPPCONF}
+    echo "DISCOGS_TOKEN=" >>${MPPCONF}
+    echo "# Location of the generated custom Discogs Obsidian vault" >>${MPPCONF}
+    echo "# Can be anywhere you have write permission" >>${MPPCONF}
+    echo "DISCOGS_DIR=\"~/Documents/Obsidian/Discogs\"" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "# Your Last.fm username, api key, and api secret" >>${MPPCONF}
+    echo "# If you do not have a Last.fm account, leave blank" >>${MPPCONF}
+    echo "LASTFM_USER=" >>${MPPCONF}
+    echo "LASTFM_APIKEY=" >>${MPPCONF}
+    echo "LASTFM_SECRET=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >>${MPPCONF}
+    echo "# click on the username at top right then 'Profile'. The user slug" >>${MPPCONF}
+    echo "# is the last component of the URL when viewing your Soundcloud Profile." >>${MPPCONF}
+    echo "# If you do not have a Soundcloud account, leave blank" >>${MPPCONF}
+    echo "SOUNDCLOUD_SLUG=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "# Your Spotify client id and client secret" >>${MPPCONF}
+    echo "# If you do not have a Spotify account, leave blank" >>${MPPCONF}
+    echo "SPOTIFY_CLIENT=" >>${MPPCONF}
+    echo "SPOTIFY_SECRET=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "# Your YouTube api key" >>${MPPCONF}
+    echo "# If you do not have a YouTube account, leave blank" >>${MPPCONF}
+    echo "YOUTUBE_APIKEY=" >>${MPPCONF}
+    echo "" >>${MPPCONF}
+    echo "## Album cover art position" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# Album cover art is positioned within the preferred terminal window with" >>${MPPCONF}
+    echo "# padding values hard coded in the cover art display script. These padding" >>${MPPCONF}
+    echo "# values are customized for each of the supported terminal emulators. The" >>${MPPCONF}
+    echo "# default padding values should suffice but they can be overriden here. To" >>${MPPCONF}
+    echo "# override the padding values, set OVERRIDE_PADDING=1 and set any or all of" >>${MPPCONF}
+    echo "# the 'padding_override_*' values to adjust album cover art placement. See" >>${MPPCONF}
+    echo "# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values." >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# Set to 1 to override default padding, leave unset to use custom defaults" >>${MPPCONF}
+    echo "OVERRIDE_PADDING=" >>${MPPCONF}
+    echo "# Uncomment any or all and set preferred padding value(s)" >>${MPPCONF}
+    echo "# padding_override_top=3" >>${MPPCONF}
+    echo "# padding_override_bottom=1" >>${MPPCONF}
+    echo "# padding_override_right=0" >>${MPPCONF}
+    echo "# padding_override_left=1" >>${MPPCONF}
+    echo "#" >>${MPPCONF}
+    echo "# The font size in pixels is set to 22x45 for album cover art display." >>${MPPCONF}
+    echo "# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or" >>${MPPCONF}
+    echo "# font height in pixels to match your system." >>${MPPCONF}
+    echo "OVERRIDE_FONT_SIZE=" >>${MPPCONF}
+    echo "# Uncomment either or both and set font width and/or font height value(s)" >>${MPPCONF}
+    echo "# font_override_width=22" >>${MPPCONF}
+    echo "# font_override_height=45" >>${MPPCONF}
+  fi
+  chmod 600 ${MPPCONF}
+}
+
+check_mpp_conf() {
+  cat "${MPPCONF}" | sed -e "s%\ *=\ *%=%g" >/tmp/mpprc$$
+  cp /tmp/mpprc$$ "${MPPCONF}"
+  chmod 600 ${MPPCONF}
+  rm -f /tmp/mpprc$$
+}
+
+set_music_dir() {
+  mpd_music=
+  set_mpd_conf=
+  set_mpp_conf=
+  # Use $HOME/.config/mpprc as source of truth
+  [ -f "${MPPCONF}" ] && {
+    check_mpp_conf
+    mpd_music=$(grep ^MUSIC_DIR ${MPPCONF})
+    mpd_music=$(echo ${mpd_music} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g")
+    # Need to expand the tilda to $HOME
+    exp_music="${mpd_music/#\~/$HOME}"
+    set_mpd_conf=1
+  }
+  [ "${mpd_music}" ] || {
+    # If not set in $MPPCONF then look in MPD config
+    [ -f "${MPDCONF}" ] && {
+      mpd_music=$(grep ^${mud} ${MPDCONF})
+      [ "${mpd_music}" ] || mpd_music=$(grep \#${mud} ${MPDCONF})
+      mpd_music=$(echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g")
+      # Need to expand the tilda to $HOME
+      exp_music="${mpd_music/#\~/$HOME}"
+      set_mpp_conf=1
+    }
+  }
+  # Why wasn't it set in either config?
+  [ "${mpd_music}" ] || {
+    mpd_music="~/Music"
+    exp_music="${HOME}/Music"
+    set_mpp_conf=1
+    set_mpd_conf=1
+  }
+}
+
+# TODO: Preserve all user customizations to system /etc/mpd.conf
+#
+# Currently only preserving customized 'music_directory' configuration
+# option until a more comprehensive method is devised
+#
+sync_sys_mpd_conf() {
+  [ -f /etc/mpd.conf ] && {
+    grep -v ^# /etc/mpd.conf | grep -v -e '^[[:space:]]*$' >/tmp/mpdconf$$
+    mpdconf=$(grep ${mud} /tmp/mpdconf$$)
+    [ "${mpdconf}" ] && {
+      oval=$(echo "${mpdconf}" | awk ' { print $2 } ' | tr -d '"')
+      oval=$(echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      [ "${oval}" ] && {
+        mval=$(grep "^${mud}" "${MPDCONF}" | awk ' { print $2 } ')
+        mval=$(echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        mval=$(echo ${mval} | tr -d '"')
+        [ "${mval}" == "${oval}" ] || {
+          # Use the previously configured value for this option
+          # Force the playlist directory to be in $music_directory/Playlists
+          playdir="${oval}/Playlists"
+          cat "${MPDCONF}" \
+            | sed -e "s%^${mud}.*%${mud}                     \"${oval}\"%" \
+              -e "s%^${pld}.*%${pld}                  \"${playdir}\"%" \
+              >/tmp/mpd$$
+          cp /tmp/mpd$$ "${MPDCONF}"
+          rm -f /tmp/mpd$$
+          [ -f "${MPPCONF}" ] || init_mpp_conf
+          # Sync music_directory in $HOME/.config/mpprc
+          exp_music="${oval/#\~/$HOME}"
+          mpp_currm=$(grep ^MUSIC_DIR ${MPPCONF})
+          mpp_currm=$(echo ${mpp_currm} \
+            | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g")
+          [ "${exp_music}" == "${mpp_currm}" ] || {
+            cat ${MPPCONF} \
+              | sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" >/tmp/mpp$$
+            cp /tmp/mpp$$ ${MPPCONF}
+            chmod 600 ${MPPCONF}
+            rm -f /tmp/mpp$$
+          }
+        }
+      }
+    }
+    # Copy pre-existing MPD playlists to new playlist directory
+    mpdconf=$(grep ${pld} /tmp/mpdconf$$)
+    [ "${mpdconf}" ] && {
+      oval=$(echo "${mpdconf}" | awk ' { print $2 } ' | tr -d '"')
+      oval=$(echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      [ "${oval}" ] && {
+        mval=$(grep "^${pld}" "${MPDCONF}" | awk ' { print $2 } ')
+        mval=$(echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        mval=$(echo ${mval} | tr -d '"')
+        mval="${mval/#\~/$HOME}"
+        oval="${oval/#\~/$HOME}"
+        [ "${mval}" == "${oval}" ] || {
+          [ -d "${mval}" ] || mkdir -p "${mval}"
+          for playlist in "${oval}"/*; do
+            [ "${playlist}" == "${oval}/*" ] && continue
+            playbase=$(basename "${playlist}")
+            if [ -d "${playlist}" ]; then
+              [ -d "${mval}/${playbase}" ] || {
+                cp -a "${playlist}" "${mval}/${playbase}"
+              }
+            else
+              [ -f "${mval}/${playbase}" ] || {
+                cp "${playlist}" "${mval}/${playbase}"
+              }
+            fi
+          done
+        }
+      }
+    }
+    rm -f /tmp/mpdconf$$
+  }
+}
+
+sync_music_dir() {
+  set_music_dir
+  if [ "${mpd_music}" ]; then
+    # Create mpd_music directory if it does not exist
+    [ -d "${exp_music}" ] || mkdir -p ${exp_music}
+    # Create playlists directory if it does not exist
+    [ -d "${exp_music}/Playlists" ] || mkdir -p "${exp_music}/Playlists"
+    # Sync playlist_directory in mpd.conf
+    mpd_play=$(grep ^${pld} ${MPDCONF})
+    mpd_play=$(echo ${mpd_play} | awk ' { print $2 } ' | sed -e "s/\"//g")
+    [ "${mpd_music}/Playlists" == "${mpd_play}" ] || {
+      playdir="${mpd_music}/Playlists"
+      cat ${MPDCONF} \
+        | sed -e "s%^${pld} .*%${pld}                  \"${playdir}\"%" \
+          >/tmp/mpd$$
+      cp /tmp/mpd$$ ${MPDCONF}
+      rm -f /tmp/mpd$$
+    }
+    [ "${set_mpd_conf}" ] && {
+      [ -f "${MPDCONF}" ] && {
+        # Sync music_directory in mpd.conf
+        mpd_currm=$(grep ^${mud} ${MPDCONF})
+        [ "${mpd_currm}" ] || mpd_currm=$(grep \#${mud} ${MPDCONF})
+        mpd_currm=$(echo ${mpd_currm} | awk ' { print $2 } ' | sed -e "s/\"//g")
+        [ "${mpd_music}" == "${mpd_currm}" ] || {
+          cat ${MPDCONF} \
+            | sed -e "s%^${mud} .*%${mud}                     \"${mpd_music}\"%" \
+              >/tmp/mpd$$
+          cp /tmp/mpd$$ ${MPDCONF}
+          rm -f /tmp/mpd$$
+        }
+      }
+    }
+    [ "${set_mpp_conf}" ] && {
+      if [ -f "${MPPCONF}" ]; then
+        # Sync music_directory in $HOME/.config/mpprc
+        mpp_currm=$(grep ^MUSIC_DIR ${MPPCONF})
+        mpp_currm=$(echo ${mpp_currm} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g")
+        [ "${exp_music}" == "${mpp_currm}" ] || {
+          cat ${MPPCONF} \
+            | sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" \
+              >/tmp/mpp$$
+          cp /tmp/mpp$$ ${MPPCONF}
+          chmod 600 ${MPPCONF}
+          rm -f /tmp/mpp$$
+        }
+      else
+        init_mpp_conf
+      fi
+    }
+    mpc_custom=1
+    mpc_music=$(grep ^mpd_music_dir ${MPCDIR}/config)
+    [ "${mpc_music}" ] || {
+      mpc_music=$(grep \#mpd_music_dir ${MPCDIR}/config)
+      mpc_custom=
+    }
+    mpc_music=$(echo ${mpc_music} | awk ' { print $3 } ')
+    [ "${mpd_music}" == "${mpc_music}" ] || {
+      if [ "${mpc_custom}" ]; then
+        cat ${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" >/tmp/mpc$$
+      else
+        cat ${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" >/tmp/mpc$$
+      fi
+      cp /tmp/mpc$$ ${MPCDIR}/config
+      rm -f /tmp/mpc$$
+      cat ${MPCDIR}/ueberzug/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" >/tmp/ueb$$
+      cp /tmp/ueb$$ ${MPCDIR}/ueberzug/config
+      rm -f /tmp/ueb$$
+      cat ${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" >/tmp/art$$
+      cp /tmp/art$$ ${MPCDIR}/config-art.conf
+      rm -f /tmp/art$$
+    }
+    [ -f ${NCMDIR}/config ] && {
+      ncm_music=$(grep ^mpd_music_dir ${NCMDIR}/config)
+      ncm_music=$(echo ${ncm_music} | awk ' { print $3 } ')
+      [ "${mpd_music}" == "${ncm_music}" ] || {
+        cat ${NCMDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" >/tmp/ncm$$
+        cp /tmp/ncm$$ ${NCMDIR}/config
+        rm -f /tmp/ncm$$
+      }
+    }
+    bts_custom=1
+    bts_music=$(grep ^directory: ${BEETSCONF})
+    [ "${bts_music}" ] || {
+      bts_music=$(grep \#directory: ${BEETSCONF})
+      bts_custom=
+    }
+    bts_music=$(echo ${bts_music} | awk ' { print $2 } ')
+    [ "${mpd_music}" == "${bts_music}" ] || {
+      if [ "${bts_custom}" ]; then
+        cat ${BEETSCONF} \
+          | sed -e "s%^directory:.*%directory: ${mpd_music}%" \
+            -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
+            -e "s%relative_to:.*%relative_to: ${mpd_music}%" >/tmp/bts$$
+      else
+        cat ${BEETSCONF} \
+          | sed -e "s%#directory:.*%directory: ${mpd_music}%" \
+            -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
+            -e "s%relative_to:.*%relative_to: ${mpd_music}%" >/tmp/bts$$
+      fi
+      cp /tmp/bts$$ ${BEETSCONF}
+      rm -f /tmp/bts$$
+    }
+    # Sync music dir in mopidy.conf
+    mop_music=$(grep ^base_dir ${MOPIDCONF})
+    mop_music=$(echo ${mop_music} | awk ' { print $3 } ')
+    [ "${mpd_music}" == "${mop_music}" ] || {
+      cat ${MOPIDCONF} \
+        | sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
+          -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
+          -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
+          -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" \
+          -e "s%^media_dir = .*%media_dir = ${mpd_music}%" >/tmp/mop$$
+      cp /tmp/mop$$ ${MOPIDCONF}
+      rm -f /tmp/mop$$
+    }
+    # Sync music dir in navidrome.toml
+    [ -f "${NAVIDCONF}" ] && {
+      nav_music=$(grep ^MusicFolder ${NAVIDCONF})
+      nav_music=$(echo ${nav_music} | awk ' { print $3 } ')
+      nav_music=$(echo ${nav_music} | awk ' { print $3 } ' | sed -e "s/\"//g")
+      [ "${exp_music}" == "${nav_music}" ] || {
+        cat ${NAVIDCONF} \
+          | sed -e "s%^MusicFolder = .*%MusicFolder = \"${exp_music}\"%" >/tmp/nav$$
+        cp /tmp/nav$$ ${NAVIDCONF}
+        rm -f /tmp/nav$$
+      }
+    }
+    # Sync music dir in yt-dlp.conf
+    ytd_music=$(grep ^-o ${YTDLPCONF} | grep /Downloads/)
+    ytd_music=$(echo ${ytd_music} \
+      | awk ' { print $2 } ' \
+      | sed -e "s%/Downloads/.*$%%")
+    [ "${mpd_music}" == "${ytd_music}" ] || {
+      cat ${YTDLPCONF} \
+        | sed -e "s%^-o .*/Downloads/%-o ${mpd_music}/Downloads/%" >/tmp/ytd$$
+      cp /tmp/ytd$$ ${YTDLPCONF}
+      rm -f /tmp/ytd$$
+    }
+
+    # Sync Calliope config
+    [ "${CRUDINI}" ] && {
+      [ -f "${CALIPCONF}" ] && {
+        [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+        CRUDINI="${SCPTDIR}/crudini.py"
+        [ "${BANDCAMP_USER}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} bandcamp user ${BANDCAMP_USER}
+        }
+        [ "${LASTFM_USER}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm user ${LASTFM_USER}
+        }
+        [ "${LASTFM_APIKEY}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm client-id ${LASTFM_APIKEY}
+        }
+        [ "${LASTFM_SECRET}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm client-secret ${LASTFM_SECRET}
+        }
+        [ "${SPOTIFY_CLIENT}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} spotify client-id ${SPOTIFY_CLIENT}
+        }
+        [ "${SPOTIFY_SECRET}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} spotify client-secret ${SPOTIFY_SECRET}
+        }
+        [ "${YOUTUBE_APIKEY}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} youtube api-key ${YOUTUBE_APIKEY}
+        }
+      }
+    }
+
+    systemctl --user daemon-reload --quiet
+    # Enable and activate the MPD user service
+    systemctl --user is-active --quiet mpd.service
+    if [ $? -eq 0 ]; then
+      systemctl --user restart --quiet mpd.service
+    else
+      systemctl --user start --quiet mpd.service
+    fi
+    systemctl --user is-enabled --quiet mpd.service
+    [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
+    have_mpc=$(type -p mpc)
+    [ "${have_mpc}" ] && mpc update --quiet &
+
+    # Enable and activate the MPDstats user service
+    systemctl --user is-active --quiet mpdstats.service
+    [ $? -eq 0 ] || systemctl --user start --quiet mpdstats.service
+    systemctl --user is-enabled --quiet mpdstats.service
+    [ $? -eq 0 ] || systemctl --user enable --quiet mpdstats.service
+
+    # Enable and activate the Beets web plugin user service
+    systemctl --user is-active --quiet webplugin.service
+    [ $? -eq 0 ] || systemctl --user start --quiet webplugin.service
+    systemctl --user is-enabled --quiet webplugin.service
+    [ $? -eq 0 ] || systemctl --user enable --quiet webplugin.service
+  else
+    echo "WARNING:"
+    echo "Could not detect any music_directory setting in ${MPDCONF}"
+    echo "Manual configuration of ${MPPCONF} or ${MPDCONF} required"
+  fi
+}
+
+get_mpd_status() {
+  # First check system-wide MPD service
+  systemctl is-enabled --quiet mpd.service >/dev/null 2>&1
+  [ $? -eq 0 ] && senable=1
+  systemctl is-enabled --quiet mpd.socket >/dev/null 2>&1
+  [ $? -eq 0 ] && senable=1
+  systemctl is-active --quiet mpd.service >/dev/null 2>&1
+  [ $? -eq 0 ] && sactive=1
+  systemctl is-active --quiet mpd.socket >/dev/null 2>&1
+  [ $? -eq 0 ] && sactive=1
+  # Next check user MPD service
+  systemctl --user is-enabled --quiet mpd.service >/dev/null 2>&1
+  [ $? -eq 0 ] && uenable=1
+  systemctl --user is-enabled --quiet mpd.socket >/dev/null 2>&1
+  [ $? -eq 0 ] && uenable=1
+  systemctl --user is-active --quiet mpd.service >/dev/null 2>&1
+  [ $? -eq 0 ] && uactive=1
+  systemctl --user is-active --quiet mpd.socket >/dev/null 2>&1
+  [ $? -eq 0 ] && uactive=1
+  [ "${uactive}" ] || [ "${uenable}" ] && use_usr_mpd=1
+}
+
+init_warn() {
+  printf "\nMusicPlayerPlus is not yet initialized."
+  printf "\nInitialize with ${BOLD}mppinit${NORM} prior to running "
+  printf "${BOLD}mppinit $1${NORM}\n"
+  printf "\nExiting."
+  usage
+}
+
+visit_wiki() {
+  printf "\nVisit the MusicPlayerPlus Wiki at:"
+  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+  printf "\nBuy Doctorfree a cup of coffee at:"
+  printf "\n\t${BOLD}https://github.com/sponsors/doctorfree${NORM}\n"
+}
+
+# Clear the Bash cache so we know for sure if something is installed
+hash -r
+
+acbrainz=
+essentia=1
+have_navi=
+overwrite=
+proceed=
+remove=
+upgrade=1
+quiet=
+beetsdev=
+
+have_bliss=$(type -p blissify)
+have_git=$(type -p git)
+have_gnome=$(type -p gnome-terminal)
+have_kitty=$(type -p kitty)
+have_tilix=$(type -p tilix)
+have_retro=$(type -p cool-retro-term)
+have_simple=$(type -p st)
+have_apt=$(type -p apt)
+have_aptget=$(type -p apt-get)
+have_curl=$(type -p curl)
+have_jq=$(type -p jq)
+have_wget=$(type -p wget)
+have_dnf=$(type -p dnf)
+have_yum=$(type -p yum)
+
+# If a supported terminal emulators is already present, use it as default
+DEFAULT_MODE=kitty
+[ "${have_kitty}" ] || {
+  if [ "${have_simple}" ]; then
+    DEFAULT_MODE=simple
+  else
+    if [ "${have_tilix}" ]; then
+      DEFAULT_MODE=tilix
+    else
+      [ "${have_gnome}" ] && DEFAULT_MODE=gnome
+    fi
+  fi
+}
+
+have_mopidy=$(type -p mopidy)
+set_have_navi
+
+arch=
+centos=
+debian=
+fedora=
+needpower=
+mach=$(uname -m)
+APT=
+DNF=
+if [ -f /etc/os-release ]; then
+  . /etc/os-release
+  [ "${ID}" == "debian" ] || [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "arch" ] || [ "${ID_LIKE}" == "arch" ] && arch=1
+  [ "${ID}" == "centos" ] && centos=1
+  [ "${ID}" == "fedora" ] && fedora=1
+  [ "${arch}" ] || [ "${debian}" ] || [ "${fedora}" ] || [ "${centos}" ] || {
+    echo "${ID_LIKE}" | grep debian >/dev/null && debian=1
+  }
+else
+  if [ -f /etc/arch-release ]; then
+    arch=1
+  else
+    case "${mach}" in
+      arm*)
+        debian=1
+        ;;
+      x86*)
+        if [ "${have_apt}" ]; then
+          debian=1
+        else
+          if [ -f /etc/fedora-release ]; then
+            fedora=1
+          else
+            if [ -f /etc/centos-release ]; then
+              centos=1
+            else
+              if [ "${have_dnf}" ] || [ "${have_yum}" ]; then
+                # Use Fedora RPM for all other rpm based systems
+                fedora=1
+              else
+                echo "Unknown operating system distribution"
+              fi
+            fi
+          fi
+        fi
+        ;;
+      *)
+        echo "Unknown machine architecture"
+        ;;
+    esac
+  fi
+fi
+
+[ "${debian}" ] && {
+  if [ "${have_apt}" ]; then
+    APT="apt -q -y"
+  else
+    if [ "${have_aptget}" ]; then
+      APT="apt-get -q -y"
+    else
+      echo "Could not locate apt or apt-get."
+    fi
+  fi
+}
+[ "${centos}" ] && {
+  # CentOS is a Mess
+  [ "${VERSION_ID}" == "8" ] && {
+    if [ "${NAME}" == "CentOS Stream" ]; then
+      needpower="powertools"
+    else
+      needpower="PowerTools"
+    fi
+  }
+  [ "${VERSION_ID}" == "9" ] && needpower="crb"
+  if [ "${NAME}" == "CentOS Stream" ]; then
+    EPEL="epel-release epel-next-release"
+  else
+    EPEL="epel-release"
+  fi
+}
+
+[ "${centos}" ] || [ "${fedora}" ] && {
+  if [ "${have_dnf}" ]; then
+    DNF="dnf --assumeyes --quiet"
+  else
+    if [ "${have_yum}" ]; then
+      DNF="yum --assumeyes --quiet"
+    else
+      echo "Could not locate dnf or yum."
+    fi
+  fi
+}
+
+MUSIC_DIRECTORY=
+dryrun=
+while getopts "abdel:noqrUyu" flag; do
+  case $flag in
+    a)
+      acbrainz=1
+      essentia=
+      ;;
+    b)
+      if [ "${have_bliss}" ]; then
+        essentia=
+        acbrainz=
+      else
+        echo "Blissify unavailable. Using Essentia."
+        essentia=1
+        acbrainz=
+      fi
+      ;;
+    d)
+      beetsdev=1
+      ;;
+    e)
+      essentia=1
+      acbrainz=
+      ;;
+    l)
+      MUSIC_DIRECTORY="${OPTARG}"
+      ;;
+    o)
+      overwrite=1
+      ;;
+    n)
+      dryrun="-n"
+      ;;
+    q)
+      quiet=1
+      ;;
+    r)
+      remove=1
+      ;;
+    U)
+      upgrade=
+      ;;
+    y)
+      proceed=1
+      ;;
+    u)
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+argument=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+[ "${argument}" == "discogs" ] && {
+  [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+  [ "${DISCOGS_USER}" ] && [ "${DISCOGS_TOKEN}" ] || {
+    echo "DISCOGS_USER and DISCOGS_TOKEN must be set in ${MPPCONF}"
+    echo "Exiting"
+    exit 1
+  }
+  use_local=$(echo "$2" | tr '[:upper:]' '[:lower:]')
+  localarg=
+  if [ "${use_local}" == "local" ]; then
+    localarg="-l"
+    printf "\nGenerating an Obsidian vault from your local music library\n"
+  else
+    if [ "${use_local}" == "upload" ]; then
+      [ "$3" ] || {
+        echo "Usage: 'mppinit discogs upload' requires a vault folder argument."
+        echo "For example: 'mppinit discogs upload Music_Library'"
+        echo "Exiting"
+        exit 1
+      }
+      folderarg=
+      [ "$4" ] && folderarg="-f $4"
+      localarg="-a -v $3 ${folderarg}"
+      printf "\nUploading releases in vault to Discogs collection folder\n"
+    else
+      printf "\nGenerating an Obsidian vault from your Discogs user collection\n"
+    fi
+  fi
+  if [ -x ${SCPTDIR}/discogs2markdown.sh ]; then
+    ${SCPTDIR}/discogs2markdown.sh ${dryrun} ${localarg}
+  else
+    printf "\nDiscogs to Markdown script "
+    printf "${SCPTDIR}/discogs2markdown.sh"
+    printf "\nis not found or not executable. No markdown generated.\n"
+    exit 1
+  fi
+  exit 0
+}
+
+[ "${essentia}" ] && [ "${acbrainz}" ] && {
+  printf "\nOnly one of '-a' and '-e' can be specified."
+  printf "\nExiting."
+  usage
+}
+
+PYTHON="python3"
+
+# User should not be root. Prompt to proceed if root user
+iamroot=
+if [ "${EUID}" ]; then
+  [ ${EUID} -eq 0 ] && iamroot=1
+else
+  uid=$(id -u)
+  [ ${uid} -eq 0 ] && iamroot=1
+fi
+
+[ "${iamroot}" ] && {
+  printf "\nThe ${BOLD}mppinit${NORM} command should be run as a normal user."
+  printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
+  while true; do
+    read -p "Do you intend to use MusicPlayerPlus as the 'root' user ? (y/n) " yn
+    case $yn in
+      [Yy]*)
+        break
+        ;;
+      [Nn]*)
+        printf "\nRe-run this command as a normal user."
+        printf "\nExiting.\n\n"
+        exit 0
+        ;;
+      *)
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+}
+
+get_mpd_status
+set_music_dir
+
+[ -d ${USERCONF} ] || mkdir ${USERCONF}
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+if [ "${MPPINIT}" ]; then
+  initialized=1
+else
+  initialized=
+fi
+
+[ "${argument}" == "sync" ] && {
+  if [ "${initialized}" ]; then
+    printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
+    sync_music_dir
+    printf "\n\nMusicPlayerPlus music directory synchronized.\n"
+  else
+    init_warn sync
+  fi
+  exit 0
+}
+
+[ "${argument}" == "bandcamp" ] && {
+  if [ "${initialized}" ]; then
+    printf "\nDownloading albums in your Bandcamp collections"
+    [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+    [ "${CRUDINI}" ] && {
+      [ -f "${CALIPCONF}" ] && {
+        [ "${BANDCAMP_USER}" ] && {
+          CALLIOPE_USER=$(${CRUDINI} --get ${CALIPCONF} bandcamp user)
+          [ "${BANDCAMP_USER}" == "${CALLIOPE_USER}" ] && proceed=1
+        }
+      }
+    }
+    [ "${proceed}" ] || {
+      printf "\nA Bandcamp username must be configured in:"
+      printf "\n\t${CALIPCONF}\n\n"
+      while true; do
+        read -p "My Bandcamp username is configured, proceed with download ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nBandcamp collections download can be performed with:"
+            printf "\n\t${CCPTDIR}/bandcamp-download"
+            printf "\n\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    if [ -x ${CCPTDIR}/bandcamp-download ]; then
+      printf "\n\tInvoking Bandcamp collections download script\n"
+      ${CCPTDIR}/bandcamp-download
+    else
+      printf "\nBandcamp collections download script "
+      printf "${CCPTDIR}/bandcamp-download"
+      printf "\nis not found or not executable. No download performed.\n"
+    fi
+    printf "\nImport the music library into the Beets media management system:"
+    printf "\n\t${BOLD}mppinit import${NORM}"
+    printf "\nAfter the import has completed, perform an update of the Beets"
+    printf "\nlibrary metadata, genres, and album cover art:"
+    printf "\n\t${BOLD}mppinit metadata${NORM}"
+    have_mopidy=$(type -p mopidy)
+    [ "${have_mopidy}" ] || {
+      printf "\nActivate the Mopidy music server:"
+      printf "\n\t${BOLD}mppinit mopidy${NORM}"
+    }
+    set_have_navi
+    [ "${have_navi}" ] || {
+      printf "\nActivate the Navidrome streaming music server:"
+      printf "\n\t${BOLD}mppinit navidrome${NORM}"
+    }
+    printf "\nActivate the YAMS Last.fm scrobbler:"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
+    visit_wiki
+  else
+    init_warn bandcamp
+  fi
+  exit 0
+}
+
+[ "${argument}" == "soundcloud" ] && {
+  if [ "${initialized}" ]; then
+    printf "\nDownloading favorites in your Soundcloud account\n"
+    if [ -x ${SCPTDIR}/soundcloud-download ]; then
+      ${SCPTDIR}/soundcloud-download
+    else
+      printf "\nSoundcloud favorites download script "
+      printf "${SCPTDIR}/soundcloud-download"
+      printf "\nis not found or not executable. No download performed.\n"
+    fi
+    printf "\nImport the music library into the Beets media management system:"
+    printf "\n\t${BOLD}mppinit import${NORM}"
+    printf "\nAfter the import has completed, perform an update of the Beets"
+    printf "\nlibrary metadata, genres, and album cover art:"
+    printf "\n\t${BOLD}mppinit metadata${NORM}"
+    have_mopidy=$(type -p mopidy)
+    [ "${have_mopidy}" ] || {
+      printf "\nActivate the Mopidy music server:"
+      printf "\n\t${BOLD}mppinit mopidy${NORM}"
+    }
+    set_have_navi
+    [ "${have_navi}" ] || {
+      printf "\nActivate the Navidrome streaming music server:"
+      printf "\n\t${BOLD}mppinit navidrome${NORM}"
+    }
+    printf "\nActivate the YAMS Last.fm scrobbler:"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
+    visit_wiki
+  else
+    init_warn soundcloud
+  fi
+  exit 0
+}
+
+[ "${argument}" == "import" ] && {
+  if [ "${initialized}" ]; then
+    set_music_dir
+    follow=
+    [ -d "${exp_music}" ] && [ -L "${exp_music}" ] && follow="-L"
+    num_wav=$(find ${follow} "${exp_music}" -type f -name \*\.wav | wc -l)
+    num_m4a=$(find ${follow} "${exp_music}" -type f -name \*\.m4a | wc -l)
+    num_all=$(find ${follow} "${exp_music}" -type f | wc -l)
+    [ ${num_wav} -gt 0 ] && {
+      printf "\nConverting WAV format media to MP3 format\n\tand"
+    }
+    printf "\nPerforming Beets media library management import"
+    printf "\n\nThis process may take hours depending on the library size.\n"
+    [ ${num_wav} -gt 0 ] && {
+      printf "\n\t- Identified ${num_wav} WAV format files in library"
+    }
+    [ ${num_m4a} -gt 0 ] && {
+      printf "\n\t- Identified ${num_m4a} M4A format files in library"
+    }
+    printf "\n\t- Identified ${num_all} total files in library\n\n"
+    [ "${proceed}" ] || {
+      while true; do
+        read -p "Proceed with this potentially long process ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nImport initialization steps can be performed individually:"
+            printf "\n\tmpplus -F    # Convert WAV format media to MP3"
+            printf "\n\tmpplus -G    # Convert M4A format media to MP3"
+            printf "\n\tmpplus -I    # Import media library into Beets"
+            printf "\n\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
+      printf "\n\tConverting WAV format media to MP3 format media\n"
+      mpplus -F >/dev/null 2>&1
+    }
+    printf "\n\tImporting music library into Beets media management system\n"
+    mpplus -I
+    printf "\nAfter the Beets Import is complete, update metadata and perform"
+    printf "\nacoustic analysis and extraction with Essentia by executing:"
+    printf "\n\t${BOLD}mppinit metadata${NORM}\n"
+    printf "\nAlternatively, to use AcousticBrainz for metadata retrieval:"
+    printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
+    [ "${have_bliss}" ] && {
+      printf "\nTo use Blissify for acoustic metadata analysis:"
+      printf "\n\t${BOLD}mppinit -b metadata${NORM}\n"
+    }
+    have_mopidy=$(type -p mopidy)
+    [ "${have_mopidy}" ] || {
+      printf "\nActivate the Mopidy music server:"
+      printf "\n\t${BOLD}mppinit mopidy${NORM}"
+    }
+    set_have_navi
+    [ "${have_navi}" ] || {
+      printf "\nActivate the Navidrome streaming music server:"
+      printf "\n\t${BOLD}mppinit navidrome${NORM}"
+    }
+    printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
+    visit_wiki
+  else
+    init_warn import
+  fi
+  exit 0
+}
+
+[ "${argument}" == "metadata" ] && {
+  if [ "${initialized}" ]; then
+    printf "\nPerforming Beets Media Library Metadata Retrieval"
+    printf "\n\nThis process may take hours depending on the library size."
+    printf "\nNotifications of each step will be provided."
+    printf "\nThe steps performed include:"
+    printf "\n\t- Identify and delete duplicate tracks"
+    printf "\n\t- Retrieve album genres"
+    printf "\n\t- Download album cover art"
+    if [ "${essentia}" ]; then
+      printf "\n\t- Analyze and extract acoustic information with Essentia\n\n"
+    else
+      if [ "${acbrainz}" ]; then
+        printf "\n\t- Retrieve acoustic information with AcousticBrainz\n\n"
+      else
+        printf "\n\t- Analyze acoustic information with Blissify\n\n"
+      fi
+    fi
+    [ "${proceed}" ] || {
+      while true; do
+        read -p "Proceed with this potentially long process ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nMetadata initialization steps can be performed individually:"
+            printf "\n\tbeet duplicates -d"
+            printf "\n\tbeet move"
+            printf "\n\tbeet lastgenre"
+            printf "\n\tmpplus -D art"
+            if [ "${essentia}" ]; then
+              printf "\n\tmpplus -X all"
+            else
+              if [ "${acbrainz}" ]; then
+                printf "\n\tmpplus -x all"
+              else
+                printf "\n\tmpplus -B"
+              fi
+            fi
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    [ -d ${BEETSLOGDIR} ] || mkdir -p ${BEETSLOGDIR}
+    DUP_LOG="${BEETSLOGDIR}/duplicates.log"
+    printf "\n\tRemoving duplicate tracks in music library"
+    printf "\n\tMonitor this potentially long process with:"
+    printf "\n\t\ttail -f ${DUP_LOG}\n"
+    echo "# Starting duplicate track identification and removal" >>"${DUP_LOG}"
+    START_SECONDS=$(date +%s)
+    beet -v duplicates -d >>"${DUP_LOG}" 2>&1
+    echo "# Completed duplicate track identification and removal" >>"${DUP_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$((FINISH_SECONDS - START_SECONDS))
+    ELAPSED=$(eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')")
+    printf "\n# Duplicates ${ELAPSED}\n" >>"${DUP_LOG}"
+
+    MOV_LOG="${BEETSLOGDIR}/move.log"
+    printf "\n\tRenaming tracks that were duplicates"
+    printf "\n\tMonitor this process with:"
+    printf "\n\t\ttail -f ${MOV_LOG}\n"
+    echo "# Starting track renaming" >>"${MOV_LOG}"
+    START_SECONDS=$(date +%s)
+    beet -v move >>"${MOV_LOG}" 2>&1
+    echo "# Completed track renaming" >>"${MOV_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$((FINISH_SECONDS - START_SECONDS))
+    ELAPSED=$(eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')")
+    printf "\n# Renaming ${ELAPSED}\n" >>"${MOV_LOG}"
+
+    GEN_LOG="${BEETSLOGDIR}/lastgenre.log"
+    printf "\n\tRetrieving genre from Last.fm"
+    printf "\n\tMonitor this process with:"
+    printf "\n\t\ttail -f ${GEN_LOG}\n"
+    echo "# Starting genre retrieval" >>"${GEN_LOG}"
+    START_SECONDS=$(date +%s)
+    beet -v lastgenre >>"${GEN_LOG}" 2>&1
+    echo "# Completed genre retrieval" >>"${GEN_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$((FINISH_SECONDS - START_SECONDS))
+    ELAPSED=$(eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')")
+    printf "\n# Genre retrieval ${ELAPSED}\n" >>"${GEN_LOG}"
+
+    printf "\n\tDownloading album cover art\n\n"
+    mpplus -D art >/dev/null 2>&1
+    [ "${proceed}" ] || {
+      if [ "${essentia}" ]; then
+        WITH="with Beets Xtractor plugin"
+      else
+        if [ "${acbrainz}" ]; then
+          WITH="with AcousticBrainz plugin"
+        else
+          WITH="with Blissify"
+        fi
+      fi
+      while true; do
+        printf "\nAcoustic information retrieval can be a very long process.\n"
+        read -p "Retrieve acoustic information for all tracks ${WITH} ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nAcoustic information not analyzed or retrieved."
+            printf "\nAcoustic information can be retrieved with the command:\n"
+            if [ "${essentia}" ]; then
+              printf "\n\tmpplus -X all"
+            else
+              if [ "${acbrainz}" ]; then
+                printf "\n\tmpplus -x all"
+              else
+                printf "\n\tmpplus -B"
+              fi
+            fi
+            printf "\n\nMusicPlayerPlus Metadata Retrieval Complete.\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    if [ "${essentia}" ]; then
+      printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
+      mpplus -X all
+    else
+      if [ "${acbrainz}" ]; then
+        printf "\n\tRetrieving acoustic information with AcousticBrainz plugin\n"
+        mpplus -x all
+      else
+        printf "\n\tRetrieving acoustic information with Blissify\n"
+        mpplus -B
+      fi
+    fi
+    printf "\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
+    have_mopidy=$(type -p mopidy)
+    [ "${have_mopidy}" ] || {
+      printf "\nActivate the Mopidy music server:"
+      printf "\n\t${BOLD}mppinit mopidy${NORM}"
+    }
+    set_have_navi
+    [ "${have_navi}" ] || {
+      printf "\nActivate the Navidrome streaming music server:"
+      printf "\n\t${BOLD}mppinit navidrome${NORM}"
+    }
+    printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+    printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+    visit_wiki
+  else
+    init_warn metadata
+  fi
+  exit 0
+}
+
+init_navidrome() {
+  [ -x /opt/navidrome/navidrome ] && {
+    have_navi=1
+    BINDIR="${HOME}/.local/bin"
+    [ -x "${BINDIR}/navidrome" ] || {
+      ln -s /opt/navidrome/navidrome "${BINDIR}/navidrome"
+    }
+  }
+
+  [ -f "${NAVIDCONF}" ] || {
+    [ -f "${MPPCDIR}/navidrome/navidrome.toml" ] && {
+      cat "${MPPCDIR}/navidrome/navidrome.toml" \
+        | sed -e "s%__HOME__%${HOME}%" >"${NAVIDCONF}"
+    }
+  }
+
+  # Enable Navidrome service
+  systemctl --user is-active navidrome.service >/dev/null 2>&1 || {
+    systemctl --user start navidrome.service
+  }
+  systemctl --user is-enabled navidrome.service >/dev/null 2>&1 || {
+    systemctl --user enable navidrome.service
+  }
+}
+
+remove_navidrome() {
+  mppuser="${MPP_USER}"
+  varuser=$(stat -c '%U' /var/lib/navidrome)
+  optuser=$(stat -c '%U' /opt/navidrome)
+
+  [ "${mppuser}" == "${varuser}" ] || {
+    echo "The mppinit user: ${mppuser} does not own /var/lib/navidrome"
+    echo "Navidrome removal can only be performed by user: ${varuser}"
+    echo "Re-run 'mppinit -r navidrome' as user ${varuser}"
+    echo "Exiting without removal"
+    exit 1
+  }
+  [ "${mppuser}" == "${optuser}" ] || {
+    echo "The mppinit user: ${mppuser} does now own /opt/navidrome"
+    echo "Navidrome removal can only be performed by user: ${optuser}"
+    echo "However, /var/lib/navidrome and /opt/navidrome are owned by"
+    echo "different users indicating Navidrome installation was performed"
+    echo "by something other than MusicPlayerPlus. Manually remove"
+    echo "Navidrome, removal with mppinit is not supported."
+    echo "Exiting without removal"
+    exit 1
+  }
+  # Stop and Disable Navidrome service
+  systemctl --user is-active navidrome.service >/dev/null 2>&1 && {
+    systemctl --user stop navidrome.service
+  }
+  systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && {
+    systemctl --user disable navidrome.service
+  }
+
+  BINDIR="${HOME}/.local/bin"
+  rm -f "${BINDIR}/navidrome"
+  have_navi=
+}
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+install_kitty() {
+  have_stow=$(type -p stow)
+  if [ "${have_stow}" ]; then
+    LOCAL=".local/stow/kitty.app"
+  else
+    LOCAL=".local/kitty.app"
+  fi
+  [ "${have_kitty}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Kitty terminal emulator ..."
+    }
+    [ "${have_curl}" ] || {
+      have_curl=$(type -p curl)
+    }
+    [ "${have_curl}" ] && {
+      curl --silent --location \
+        https://sw.kovidgoyal.net/kitty/installer.sh >/tmp/kitty-$$.sh
+    }
+    if [ -s /tmp/kitty-$$.sh ]; then
+      if [ "${have_stow}" ]; then
+        sh /tmp/kitty-$$.sh launch=n dest=~/.local/stow >/dev/null 2>&1
+        cd ~/.local/stow
+        stow kitty.app
+      else
+        sh /tmp/kitty-$$.sh launch=n >/dev/null 2>&1
+      fi
+      rm -f /tmp/kitty-$$.sh
+      # Create a symbolic link to add kitty to PATH
+      # (assuming ~/.local/bin is in your system-wide PATH)
+      [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
+      [ -x ~/.local/bin/kitty ] || {
+        ln -s ~/${LOCAL}/bin/kitty ~/.local/bin/
+      }
+      # Link the kitty man pages somewhere it can be found by the man command
+      [ -d ~/.local/share/man/man1 ] || mkdir -p ~/.local/share/man/man1
+      [ -f ~/.local/share/man/man1/kitty.1 ] || {
+        [ -d ${HOME}/.local/share/man/man1 ] \
+          || mkdir -p ${HOME}/.local/share/man/man1
+        ln -s ~/${LOCAL}/share/man/man1/kitty.1 \
+          ~/.local/share/man/man1/
+      }
+      [ -d ~/.local/share/man/man5 ] || mkdir -p ~/.local/share/man/man5
+      [ -f ~/.local/share/man/man5/kitty.conf.5 ] || {
+        [ -d ${HOME}/.local/share/man/man5 ] \
+          || mkdir -p ${HOME}/.local/share/man/man5
+        ln -s ~/${LOCAL}/share/man/man5/kitty.conf.5 \
+          ~/.local/share/man/man5/
+      }
+      # Place the kitty.desktop file somewhere it can be found by the OS
+      [ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
+      [ -f ~/.local/share/applications/kitty.desktop ] || {
+        cp ~/${LOCAL}/share/applications/kitty.desktop \
+          ~/.local/share/applications/
+      }
+      # If you want to open text files and images in kitty via your file manager
+      # also add the kitty-open.desktop file
+      [ -f ~/.local/share/applications/kitty-open.desktop ] || {
+        cp ~/${LOCAL}/share/applications/kitty-open.desktop \
+          ~/.local/share/applications/
+      }
+      # Update the paths to the kitty and its icon in the kitty.desktop file(s)
+      sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/${LOCAL}/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+      sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/${LOCAL}/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+      [ "${quiet}" ] || printf " done!\n"
+    else
+      printf "\n${BOLD}ERROR:${NORM} Download of Kitty installation script failed"
+      printf "\nSee https://sw.kovidgoyal.net/kitty/binary/#manually-installing"
+      printf "\nto manually install the Kitty terminal emulator\n"
+    fi
+  }
+  # Install the Kitty terminfo entry
+  KITERM="${HOME}/.terminfo/x/xterm-kitty"
+  [ -f "${KITERM}" ] || {
+    [ -d ${HOME}/.terminfo ] || mkdir -p ${HOME}/.terminfo
+    [ -d ${HOME}/.terminfo/x ] || mkdir -p ${HOME}/.terminfo/x
+    have_tic=$(type -p tic)
+    [ "${have_tic}" ] && {
+      [ -f "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" ] && {
+        tic -x -o ${HOME}/.terminfo \
+          "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" >/dev/null 2>&1
+      }
+    }
+    [ -f "${KITERM}" ] || {
+      if [ -f "${HOME}/${LOCAL}/lib/kitty/terminfo/x/xterm-kitty" ]; then
+        cp "${HOME}/${LOCAL}/lib/kitty/terminfo/x/xterm-kitty" "${KITERM}"
+      else
+        if [ -f "${HOME}/${LOCAL}/share/terminfo/x/xterm-kitty" ]; then
+          cp "${HOME}/${LOCAL}/share/terminfo/x/xterm-kitty" "${KITERM}"
+        else
+          [ "${quiet}" ] || printf "\nUnable to create Kitty terminfo entry ${KITERM}\n"
+        fi
+      fi
+    }
+  }
+
+  JETB_URL="${GHUC}/JetBrains/JetBrainsMono/master/install_manual.sh"
+  curl -fsSL "${JETB_URL}" >/tmp/jetb-$$.sh
+  [ $? -eq 0 ] || {
+    rm -f /tmp/jetb-$$.sh
+    curl -kfsSL "${JETB_URL}" >/tmp/jetb-$$.sh
+  }
+  [ -f /tmp/jetb-$$.sh ] && {
+    chmod 755 /tmp/jetb-$$.sh
+    [ "${quiet}" ] || printf "\n\tInstalling JetBrains Mono font ... "
+    /bin/bash -c "/tmp/jetb-$$.sh" >/dev/null 2>&1
+    rm -f /tmp/jetb-$$.sh
+    [ "${quiet}" ] || printf "done"
+  }
+}
+
+remove_kitty() {
+  rm -rf ~/.local/kitty.app
+  rm -f ~/.local/bin/kitty
+  rm -f ~/.local/share/applications/kitty.desktop
+  rm -f ~/.local/share/applications/kitty-open.desktop
+  rm -f ~/.local/share/man/man1/kitty.1
+  rm -f ~/.local/share/man/man5/kitty.conf.5
+  have_kitty=
+}
+
+[ "${argument}" == "kitty" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Kitty terminal emulator.\n\n"
+    while true; do
+      read -p "Do you wish to continue with Kitty removal ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nKitty removal aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+    remove_kitty
+    printf "\n${BOLD}Kitty removed${NORM}"
+    printf "\nTo re-install Kitty run ${BOLD}'mppinit kitty'${NORM}\n\n"
+    exit 0
+  }
+  if [ "${initialized}" ]; then
+    [ "${quiet}" ] || {
+      printf "\nInstalling Kitty terminal emulator\n"
+    }
+    [ "${proceed}" ] || {
+      while true; do
+        read -p "Do you wish to continue with Kitty installation ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nKitty installation aborted."
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    install_kitty
+  else
+    init_warn kitty
+  fi
+  exit 0
+}
+
+[ "${argument}" == "navidrome" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Navidrome service.\n\n"
+    while true; do
+      read -p "Do you wish to continue with Navidrome removal ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nNavidrome removal aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+    remove_navidrome
+    printf "\n${BOLD}Navidrome service removed${NORM}"
+    printf "\nTo re-install Navidrome run ${BOLD}'mppinit navidrome'${NORM}\n\n"
+    exit 0
+  }
+  if [ "${initialized}" ]; then
+    if [ "$2" ]; then
+      navi_version="$2"
+    else
+      navi_version="0.47.5"
+    fi
+    printf "\nInstalling and configuring Navidrome version ${navi_version}.\n\n"
+    while true; do
+      read -p "Do you wish to continue with Navidrome activation ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nNavidrome activation aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+    init_navidrome
+  else
+    init_warn navidrome
+  fi
+  printf "\n\n${BOLD}Navidrome service enabled and activated${NORM}"
+  printf "\n${BOLD}Visit http://localhost:4533 to get started${NORM}\n"
+  exit 0
+}
+
+[ "${argument}" == "mopidy" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Mopidy service.\n\n"
+    while true; do
+      read -p "Do you wish to continue with Mopidy removal ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nMopidy removal aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+    remove_mopidy
+    printf "\n${BOLD}Mopidy service removed${NORM}"
+    printf "\nTo re-install Mopidy run ${BOLD}'mppinit mopidy'${NORM}\n\n"
+    exit 0
+  }
+  if [ "${initialized}" ]; then
+    printf "\nInstalling, configuring, and activating Mopidy music server."
+    printf "\nThis will deactivate the Music Player Daemon (MPD). However,"
+    printf "\nconfigured Mopidy extensions will continue to support"
+    printf "\nMusicPlayerPlus MPD clients, Beets, and local music library"
+    printf "\nsearch, organization, and playback.\n\n"
+    while true; do
+      read -p "Do you wish to continue with Mopidy activation ? (y/n) " yn
+      case $yn in
+        [Yy]*)
+          break
+          ;;
+        [Nn]*)
+          printf "\nMopidy activation aborted."
+          printf "\nExiting.\n\n"
+          exit 0
+          ;;
+        *)
+          echo "Please answer yes or no."
+          ;;
+      esac
+    done
+    init_mopidy
+  else
+    init_warn mopidy
+  fi
+  get_ip
+  printf "\n\n${BOLD}Mopidy services enabled and activated${NORM}"
+  printf "\n${BOLD}MPD services deactivated${NORM}"
+  printf "\n${BOLD}Visit http://${IP}:6680 to get started${NORM}\n"
+  exit 0
+}
+
+[ "${argument}" == "mpd" ] && {
+  if [ "${initialized}" ]; then
+    m_enabled=
+    m_active=
+    systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && m_enabled=1
+    systemctl --user is-active mopidy.service >/dev/null 2>&1 && m_active=1
+    printf "\nActivating the Music Player Daemon (MPD) music server."
+    [ "${m_enabled}" ] || [ "${m_active}" ] && {
+      printf "\nThis will deactivate Mopidy and Mopidy extensions.\n\n"
+      while true; do
+        read -p "Do you wish to continue with MPD activation ? (y/n) " yn
+        case $yn in
+          [Yy]*)
+            break
+            ;;
+          [Nn]*)
+            printf "\nMPD activation aborted."
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          *)
+            echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    [ "${m_enabled}" ] && {
+      systemctl --user disable mopidy.service
+    }
+    [ "${m_active}" ] && {
+      systemctl --user stop mopidy.service
+    }
+
+    # Reconfigure mpcplus/mppcava with MPD visualizer data source
+    [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mpd
+
+    systemctl --user is-active mpd.service >/dev/null 2>&1 || {
+      systemctl --user start mpd.service
+    }
+    systemctl --user is-enabled mpd.service >/dev/null 2>&1 || {
+      systemctl --user enable mpd.service
+    }
+    [ -f ${HOME}/.config/systemd/user/mpdstats.service ] && {
+      systemctl --user is-active mpdstats.service >/dev/null 2>&1 || {
+        systemctl --user start mpdstats.service
+      }
+      systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 || {
+        systemctl --user enable mpdstats.service
+      }
+    }
+    [ -f ${HOME}/.config/systemd/user/yams.service ] && {
+      systemctl --user is-active yams.service >/dev/null 2>&1 || {
+        systemctl --user start yams.service
+      }
+      systemctl --user is-enabled yams.service >/dev/null 2>&1 || {
+        systemctl --user enable yams.service
+      }
+    }
+  else
+    init_warn mpd
+  fi
+  if [ "${m_enabled}" ] || [ "${m_active}" ]; then
+    printf "\n\n${BOLD}Mopidy deactivated, MPD services enabled and activated${NORM}\n"
+  else
+    printf "\n\n${BOLD}MPD services enabled and activated${NORM}\n"
+  fi
+  exit 0
+}
+
+[ "${argument}" == "profiles" ] && {
+  create_profiles
+  exit 0
+}
+
+[ "${argument}" == "yams" ] && {
+  if [ "${initialized}" ]; then
+    mpplus -Y
+    visit_wiki
+  else
+    init_warn yams
+  fi
+  exit 0
+}
+
+save_mpp_conf
+
+printf "\nInitializing MusicPlayerPlus, please wait ..."
+
+[ "${MUSIC_DIRECTORY}" ] || {
+  if [ -d ${HOME}/Music ]; then
+    MUSIC_DIRECTORY="${HOME}/Music"
+  else
+    if [ -d ${HOME}/music ]; then
+      MUSIC_DIRECTORY="${HOME}/music"
+    else
+      MUSIC_DIRECTORY="${HOME}/Music"
+    fi
+  fi
+}
+
+upd_mpprc=
+[ "${MUSIC_DIRECTORY}" == "${HOME}/Music" ] || upd_mpprc=1
+
+install_kitty
+
+pathadd "${HOME}/.fzf/bin"
+have_fzf=$(type -p fzf)
+[ "${have_fzf}" ] || {
+  [ -d ${HOME}/.fzf ] && rm -rf ${HOME}/.fzf
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all
+}
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling configuration files in $USERCONF ..."
+}
+
+[ -d ${MPCDIR} ] || mkdir -p ${MPCDIR}
+if [ -f ${MPCDIR}/config ]; then
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/config ${MPCDIR}/config
+else
+  cp ${MPCONFDIR}/config ${MPCDIR}/config
+fi
+if [ -f ${MPCDIR}/bindings ]; then
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
+else
+  cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
+fi
+
+[ -f ${NCMDIR}/config ] && {
+  grep ^visualizer_data_source ${NCMDIR}/config >/dev/null || {
+    echo "#
+# The default:
+visualizer_data_source = ~/.config/mpd/mpd.fifo
+# For use with Mopidy:
+#visualizer_data_source = localhost:5555" >>${NCMDIR}/config
+  }
+}
+
+for cfg in ${CFGS}; do
+  if [ -f ${MPCDIR}/${cfg} ]; then
+    [ "${overwrite}" ] && cp ${OPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
+  else
+    cp ${OPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
+  fi
+  chmod 644 ${MPCDIR}/${cfg}
+done
+for scp in ${SCPS}; do
+  if [ -f ${MPCDIR}/${scp} ]; then
+    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
+  else
+    cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
+  fi
+  chmod 755 ${MPCDIR}/${scp}
+done
+if [ -d "${MPCDIR}/ueberzug" ]; then
+  for ueb in ${OPCONFDIR}/ueberzug/*; do
+    [ "${ueb}" == "${OPCONFDIR}/ueberzug/*" ] && continue
+    b=$(basename "${ueb}")
+    if [ -d "${ueb}" ]; then
+      if [ -d ${MPCDIR}/ueberzug/${b} ]; then
+        for img in "${ueb}"/*; do
+          [ "${img}" == "${ueb}/*" ] && continue
+          i=$(basename "${img}")
+          if [ -f ${MPCDIR}/ueberzug/${b}/${i} ]; then
+            [ "${overwrite}" ] && cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
+          else
+            cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
+          fi
+        done
+      else
+        cp -a "${ueb}" ${MPCDIR}/ueberzug/${b}
+      fi
+    else
+      if [ -f ${MPCDIR}/ueberzug/${b} ]; then
+        [ "${overwrite}" ] && cp ${ueb} ${MPCDIR}/ueberzug/${b}
+      else
+        cp ${ueb} ${MPCDIR}/ueberzug/${b}
+      fi
+    fi
+  done
+else
+  cp -a ${OPCONFDIR}/ueberzug ${MPCDIR}/ueberzug
+fi
+
+[ -d ${CAVDIR} ] || mkdir -p ${CAVDIR}
+if [ -f ${CAVDIR}/config ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${CAVDIR}/config
+else
+  cp ${MPPCDIR}/mppcava/config ${CAVDIR}/config
+fi
+
+if [ -d ${TMUXPDIR} ]; then
+  for tmc in ${MPPCDIR}/tmuxp/*; do
+    tmcbase=$(basename "${tmc}")
+    if [ -d "${tmc}" ]; then
+      [ -d "${TMUXPDIR}/${tmcbase}" ] || {
+        cp -a "${tmc}" "${TMUXPDIR}/${tmcbase}"
+      }
+    else
+      if [ -f "${TMUXPDIR}/${tmcbase}" ]; then
+        [ "${overwrite}" ] && cp "${tmc}" "${TMUXPDIR}/${tmcbase}"
+      else
+        cp "${tmc}" "${TMUXPDIR}/${tmcbase}"
+      fi
+    fi
+  done
+else
+  cp -a ${MPPCDIR}/tmuxp ${TMUXPDIR}
+fi
+
+create_profiles
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling MPD configuration in ${MPDCONFDIR} ..."
+}
+# If there is no user MPD config
+# then copy the MusicPlayerPlus MPD config folder
+# into the user's home and setup user MPD service
+if [ -f ${MPDCONF} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
+else
+  if [ -d ${MPDCONFDIR} ]; then
+    cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
+  else
+    cp -a ${MPPCDIR}/mpd ${MPDCONFDIR}
+  fi
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling ncmpcpp configuration in ${NCMDIR} ..."
+}
+if [ -d ${NCMDIR} ]; then
+  if [ "${overwrite}" ]; then
+    cp -a ${MPPCDIR}/ncmpcpp ${USERCONF}
+  else
+    cp -an ${MPPCDIR}/ncmpcpp ${USERCONF}
+  fi
+else
+  cp -a ${MPPCDIR}/ncmpcpp ${NCMDIR}
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling PipeWire configuration in ${PWCONFDIR} ..."
+}
+if [ -d ${PWCONFDIR} ]; then
+  if [ "${overwrite}" ]; then
+    cp -a ${MPPCDIR}/pipewire ${USERCONF}
+  else
+    cp -an ${MPPCDIR}/pipewire ${USERCONF}
+  fi
+else
+  cp -a ${MPPCDIR}/pipewire ${PWCONFDIR}
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Beets configuration in ${BEETSCONFDIR} ..."
+}
+# If there is no user beets config.yaml and genres folder then
+# copy the MusicPlayerPlus beets config.yaml and genres folder
+# into the user's home and setup user mpdstats service
+if [ -f ${BEETSCONF} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
+else
+  [ -d ${BEETSCONFDIR} ] || mkdir -p ${BEETSCONFDIR}
+  cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
+fi
+if [ -d ${BEETSGENR} ]; then
+  for genconf in genres-tree.yaml genres.txt; do
+    if [ -f ${BEETSGENR}/${genconf} ]; then
+      [ "${overwrite}" ] && {
+        cp ${MPPCDIR}/beets/genres/${genconf} ${BEETSGENR}/${genconf}
+      }
+    else
+      cp ${MPPCDIR}/beets/genres/${genconf} ${BEETSGENR}/${genconf}
+    fi
+  done
+else
+  cp -a ${MPPCDIR}/beets/genres ${BEETSGENR}
+fi
+
+[ -d ${BEETSCONFDIR}/xtraction_data ] || mkdir -p ${BEETSCONFDIR}/xtraction_data
+[ -d ${BEETSLOGDIR} ] || mkdir -p ${BEETSLOGDIR}
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Calliope configuration in ${CALIPCONFDIR} ..."
+}
+# If there is no user calliope config folder then copy the
+# MusicPlayerPlus calliope config folder into the user's home
+if [ -f ${CALIPCONF} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
+else
+  if [ -d ${CALIPCONFDIR} ]; then
+    cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
+  else
+    cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
+  fi
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Kitty configuration in ${KITTYCONFDIR} ..."
+}
+# If there is no user kitty config folder then copy the
+# MusicPlayerPlus kitty config folder into the user's home
+if [ -d ${KITTYCONFDIR} ]; then
+  if [ "${overwrite}" ]; then
+    cp -a ${MPPCDIR}/kitty ${USERCONF}
+  else
+    cp -an ${MPPCDIR}/kitty ${USERCONF}
+  fi
+else
+  cp -a ${MPPCDIR}/kitty ${KITTYCONFDIR}
+fi
+[ -f ${KITTYCONF} ] && {
+  if [ "${BROWSER}" ]; then
+    # If the user has set the BROWSER environment variable then use it
+    browser_app=$(echo "${BROWSER}" | awk ' { print $1 } ')
+    browser_app=$(basename ${browser_app})
+    have_browser=$(type -p ${browser_app})
+    [ "${have_browser}" ] || BROWSER=default
+  else
+    BROWSER=default
+    have_browser=1
+  fi
+  cat "${KITTYCONF}" | sed -e "s%__SET__BROWSER__%${BROWSER}%" >/tmp/browser$$
+  cp /tmp/browser$$ "${KITTYCONF}"
+  rm -f /tmp/browser$$
+}
+[ -f ${KITTYCONFDIR}/kitty.conf ] || cp ${KITTYCONF} ${KITTYCONFDIR}/kitty.conf
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Mopidy configuration in ${MOPIDCONFDIR} ..."
+}
+# If there is no user Mopidy config folder then copy the
+# MusicPlayerPlus Mopidy config folder into the user's home
+if [ -f ${MOPIDCONF} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
+else
+  [ -d ${MOPIDCONFDIR} ] || mkdir -p ${MOPIDCONFDIR}
+  cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
+fi
+[ -d ${MOPIDCONFDIR}/cache ] || mkdir -p ${MOPIDCONFDIR}/cache
+[ -d ${MOPIDCONFDIR}/data ] || mkdir -p ${MOPIDCONFDIR}/data
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Navidrome configuration in ${NAVIDCONFDIR} ..."
+}
+# If there is no user Navidrome config folder then copy the
+# MusicPlayerPlus Navidrome config folder into the user's home
+if [ -f "${NAVIDCONF}" ]; then
+  [ "${overwrite}" ] && {
+    cat "${MPPCDIR}/navidrome/navidrome.toml" \
+      | sed -e "s%__HOME__%${HOME}%" >"${NAVIDCONF}"
+  }
+else
+  [ -d ${NAVIDCONFDIR} ] || mkdir -p ${NAVIDCONFDIR}
+  cat "${MPPCDIR}/navidrome/navidrome.toml" \
+    | sed -e "s%__HOME__%${HOME}%" >"${NAVIDCONF}"
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling yt-dlp configuration in ${YTDLPCONFDIR} ..."
+}
+# If there is no user yt-dlp config folder then copy the
+# MusicPlayerPlus yt-dlp config folder into the user's home
+if [ -f ${YTDLPCONF} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/yt-dlp/config ${YTDLPCONFDIR}
+else
+  if [ -d ${YTDLPCONFDIR} ]; then
+    cp ${MPPCDIR}/yt-dlp/config ${YTDLPCONFDIR}
+  else
+    cp -a ${MPPCDIR}/yt-dlp ${YTDLPCONFDIR}
+  fi
+fi
+
+SYSTEMDIR="${USERCONF}/systemd/user"
+MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
+MOPSTATSD="${SYSTEMDIR}/mopidy.service"
+NAVSTATSD="${SYSTEMDIR}/navidrome.service"
+WEBPLUGSD="${SYSTEMDIR}/webplugin.service"
+YAMSTATSD="${SYSTEMDIR}/yams.service"
+[ "${quiet}" ] || {
+  printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
+}
+if [ -f ${MPDSTATSD} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+fi
+if [ -f ${WEBPLUGSD} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/webplugin.service ${WEBPLUGSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/beets/webplugin.service ${WEBPLUGSD}
+fi
+if [ -f ${MOPSTATSD} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.service ${MOPSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/mopidy/mopidy.service ${MOPSTATSD}
+fi
+if [ -f ${NAVSTATSD} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/navidrome/navidrome.service ${NAVSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/navidrome/navidrome.service ${NAVSTATSD}
+fi
+if [ -f ${YAMSTATSD} ]; then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mpd/yams.service ${YAMSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/mpd/yams.service ${YAMSTATSD}
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tSetting HOME in configuration files ..."
+}
+FIFS="mppcava/config-tmux mppcava/config pms/rc"
+for cnf in ${FIFS}; do
+  [ -f ${USERCONF}/${cnf} ] && {
+    cat ${USERCONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" >/tmp/cnf$$
+    cp /tmp/cnf$$ ${USERCONF}/${cnf}
+    rm -f /tmp/cnf$$
+  }
+done
+
+[ "${quiet}" ] || {
+  printf "\n\tSetting up default tmux configuration ..."
+}
+# Setup default tmux configuration for this user
+[ -f ${MPPCDIR}/tmux.conf ] && {
+  if [ -f ${HOME}/.tmux.conf ]; then
+    diff -u -B <(grep -vE '^\s*(#|$)' ${MPPCDIR}/tmux.conf) <(grep -vE '^\s*(#|$)' ${HOME}/.tmux.conf) >/dev/null || {
+      echo ""
+      echo "MusicPlayerPlus includes extensive configuration for tmux."
+      echo "An existing $HOME/.tmux.conf has been detected."
+      echo "In order to enable many MusicPlayerPlus tmux features,"
+      echo "it is necessary to install a customized $HOME/.tmux.conf."
+      echo ""
+      if [ "${proceed}" ]; then
+        if [ "${overwrite}" ]; then
+          cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was copied to $HOME/.tmux.conf"
+        else
+          cat ${MPPCDIR}/tmux.conf >>${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was appended to $HOME/.tmux.conf"
+          echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
+          echo "Please review these changes and customize as needed"
+        fi
+      else
+        if [ "${overwrite}" ]; then
+          cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was copied to $HOME/.tmux.conf"
+        else
+          echo "Please answer if you would like to:"
+          printf "\n\t[A]ppend customization"
+          printf "\n\t[B]ackup and customize"
+          printf "\n\t[O]verwrite existing"
+          printf "\n\t[S]kip customization\n"
+          echo "Answer 'a', 'b', 'o', or 's'"
+          echo ""
+          while true; do
+            read -p "Append/Backup/Overwrite/Skip tmux configuration? (a/b/o/s) " customize
+            case $customize in
+              [Aa]*)
+                cat ${MPPCDIR}/tmux.conf >>${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was appended to $HOME/.tmux.conf"
+                echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
+                echo "Please review these changes and customize as needed"
+                break
+                ;;
+              [Bb]*)
+                cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.bak$$
+                cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was copied to $HOME/.tmux.conf"
+                echo "A backup of the previous file was created at $HOME/.tmux.conf.bak$$"
+                break
+                ;;
+              [Oo]*)
+                cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was copied to $HOME/.tmux.conf"
+                break
+                ;;
+              [Ss]*)
+                echo ""
+                echo "MusicPlayerPlus tmux configurations have not been applied"
+                echo "The file $HOME/.tmux.conf remains unmodified"
+                echo "Some MusicPlayerPlus features will not work properly with tmux"
+                echo ""
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "contains the MusicPlayerPlus tmux customizations."
+                echo "To fully enable MusicPlayerPlus tmux features, merge"
+                echo "${MPPCDIR}/tmux.conf with $HOME/.tmux.conf"
+                break
+                ;;
+              *)
+                echo "Please answer 'a', 'b', 'o', or 's'"
+                ;;
+            esac
+          done
+        fi
+      fi
+    }
+  else
+    cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+  fi
+}
+
+TPM="${HOME}/.tmux/plugins/tpm"
+[ -d ${TPM} ] || {
+  [ "${have_git}" ] && {
+    git clone https://github.com/tmux-plugins/tpm ${TPM} >/dev/null 2>&1
+  }
+}
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling tmux plugins ..."
+}
+[ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins >/dev/null 2>&1
+
+# If there is no user beets plugin folder
+# then copy the MusicPlayerPlus beets plugin folder
+# into the user's home and install these plugins
+[ "${quiet}" ] || {
+  printf "\n\tInstalling custom Beets plugins ..."
+}
+for plugin in ${MPPCDIR}/beets/plugins/*; do
+  [ "${plugin}" == "${MPPCDIR}/beets/plugins/*" ] && continue
+  [ -d "${plugin}" ] && {
+    plugbase=$(basename "${plugin}")
+    [ -d "${BEETSCONFDIR}/plugins/${plugbase}" ] || {
+      # Inside the loop so it does not get created unless needed
+      [ -d ${BEETSCONFDIR}/plugins ] || mkdir -p ${BEETSCONFDIR}/plugins
+      cp -a "${plugin}" "${BEETSCONFDIR}/plugins/${plugbase}"
+    }
+  }
+done
+
+for plugin in ${BEETSCONFDIR}/plugins/*; do
+  [ "${plugin}" == "${BEETSCONFDIR}/plugins/*" ] && continue
+  [ -x "${plugin}/setup.py" ] && {
+    cd "${plugin}"
+    ./setup.py install --user >/dev/null 2>&1
+  }
+done
+
+# Pick your Pip
+PIP=
+have_pip=$(type -p pip)
+if [ "${have_pip}" ]; then
+  have_pip3=$(type -p pip3)
+  if [ "${have_pip3}" ]; then
+    PIP=pip3
+  else
+    PIP=pip
+  fi
+else
+  have_pip3=$(type -p pip3)
+  [ "${have_pip3}" ] && PIP=pip3
+fi
+
+if [ "${PIP}" ]; then
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling Python modules and Beets plugins ..."
+  }
+  if [ "${beetsdev}" ]; then
+    # To install latest Beets source tarball:
+    #    - Uninstall Beets (python -m pip uninstall beets)
+    #    - pip install https://github.com/beetbox/beets/tarball/master
+    ${PYTHON} -m pip uninstall beets >/dev/null 2>&1
+    ${PYTHON} -m pip install --user \
+      https://github.com/beetbox/beets/tarball/master >/dev/null 2>&1
+    BEETS=
+  else
+    BEETS=beets
+  fi
+
+  # If yt-dlp is already installed then do not install it with Pip
+  have_ytdlp=$(type -p yt-dlp)
+  if [ "${have_ytdlp}" ]; then
+    YT_DLP=
+  else
+    YT_DLP="yt-dlp"
+  fi
+
+  # YAMScrobbler must be installed prior to beetcamp plus
+  # PyPi is confused about the latest release version
+  YMIN="0.7"
+  SCRB="YAMScrobbler"
+  [ "${quiet}" ] || {
+    printf "\n\tEnsure YAMScrobbler module is current version ..."
+  }
+  if ${PIP} list 2>/dev/null | grep ${SCRB} >/dev/null; then
+    # Ensure YAMScrobbler is version ${YMIN} or greater
+    [ -x ${SCPTDIR}/vercomp.sh ] && {
+      YSCV=$(${PYTHON} -m pip show ${SCRB} | grep Version: | awk ' { print $2 } ')
+      # Only check first two digits of version as they screwed up
+      YSCV=${YSCV:0:3}
+      ${SCPTDIR}/vercomp.sh "${YSCV}" "${YMIN}" >/dev/null
+      [ $? -eq 2 ] && {
+        ${PYTHON} -m pip install --user ${SCRB}==0.7.3 >/dev/null 2>&1
+      }
+    }
+  else
+    ${PYTHON} -m pip install --user ${SCRB}==0.7.3 >/dev/null 2>&1
+  fi
+  [ "${quiet}" ] || printf "\n\tModules:"
+  for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
+    pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
+    python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
+    calliope-music bandcamp-downloader scdl flask-cors iniparse; do
+    pip_install "${pkg}"
+  done
+  # Install fixed cpe script
+  [ -f ${CCPTDIR}/cpe ] && {
+    cp ${CCPTDIR}/cpe ${HOME}/.local/bin/cpe
+    chmod 755 ${HOME}/.local/bin/cpe
+  }
+  OWNER="doctorfree"
+  PROJECT="ueberzug-mpplus"
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  install_ueberzug
+  [ "${quiet}" ] || printf " done!\n"
+
+  [ "${quiet}" ] || {
+    printf "\n\tVerifying minimum version of PyYAML module is installed ..."
+  }
+  # Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
+  VMIN="5.4.1"
+  # Ensure PyYAML is version ${VMIN} or greater
+  YAMV=$(${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } ')
+  [ -x ${SCPTDIR}/vercomp.sh ] && {
+    ${SCPTDIR}/vercomp.sh "${YAMV}" "${VMIN}" >/dev/null
+    [ $? -eq 2 ] && {
+      # Update Python PyYAML to get support for safe_load of lastgenre
+      # Beets plugin when used with Python 3.10
+      # Specify version ${VMIN} to avoid updating to version 6
+      ${PYTHON} -m pip install PyYAML==${VMIN} >/dev/null 2>&1
+    }
+  }
+else
+  echo ""
+  echo "WARNING: Python pip module not found."
+  echo "Pip is required to install several MusicPlayerPlus components."
+  echo ""
+  echo "Install the Python pip module with:"
+  echo ""
+  printf "\n\tsudo apt install python3-pip\n"
+  echo ""
+  echo "After verifying that pip is installed,"
+  echo "rerun the 'mppinit' MusicPlayer initialization."
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tPatching Beets plugins ..."
+}
+
+# Patch beets-web plugin
+have_web=
+SITE=$(${PYTHON} -m site --user-site)
+WEBP="${SITE}/beetsplug/web/__init__.py"
+if [ -f "${WEBP}" ]; then
+  have_web="${WEBP}"
+else
+  SITE=$(${PYTHON} -m pip show beets | grep Location: | awk ' { print $2 } ')
+  WEBP="${SITE}/beetsplug/beetsplug/web/__init__.py"
+  [ -f "${WEBP}" ] && have_web="${WEBP}"
+fi
+
+[ "${have_web}" ] && {
+  grep attachment_filename "${have_web}" >/dev/null && {
+    cat "${have_web}" \
+      | sed -e "s/attachment_filename/download_name/" >/tmp/web$$
+    cp /tmp/web$$ "${have_web}"
+    rm -f /tmp/web$$
+  }
+  grep "','.join(\[v" "${have_web}" >/dev/null && {
+    cat "${have_web}" | sed -e "s%','.join(\[v%'/'.join(\[v%" >/tmp/web$$
+    cp /tmp/web$$ "${have_web}"
+    rm -f /tmp/web$$
+  }
+}
+
+# Patch xtractor plugin
+have_xtractor=
+SITE=$(${PYTHON} -m site --user-site)
+XTRA="${SITE}/beetsplug/xtractor/command.py"
+if [ -f "${XTRA}" ]; then
+  have_xtractor="${XTRA}"
+else
+  SITE=$(${PYTHON} -m pip show beets-xtractor | grep Location: | awk ' { print $2 } ')
+  XTRA="${SITE}/beetsplug/xtractor/command.py"
+  [ -f "${XTRA}" ] && have_xtractor="${XTRA}"
+fi
+
+[ "${have_xtractor}" ] && {
+  grep self._run_write_to_item "${have_xtractor}" >/dev/null && {
+    cat "${have_xtractor}" \
+      | sed -e "s/# self._run_write_to_item/self._run_write_to_item/" \
+        -e "s%if not identifier:%if (not identifier or identifier.find('/') != -1):%" >/tmp/ext$$
+    cp /tmp/ext$$ "${have_xtractor}"
+    rm -f /tmp/ext$$
+  }
+}
+
+[ -f ${MPPCONF} ] || {
+  set_music_dir
+  init_mpp_conf
+}
+[ "${upd_mpprc}" ] && [ "${MUSIC_DIRECTORY}" ] && {
+  cat ${MPPCONF} \
+    | sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${MUSIC_DIRECTORY}\"%" >/tmp/mpp$$
+  cp /tmp/mpp$$ ${MPPCONF}
+  chmod 600 ${MPPCONF}
+  rm -f /tmp/mpp$$
+}
+
+# Integrate previously set ncmpcpp user preferences into mpcplus/config
+[ -x ${MCPTDIR}/set_prev_ncmpcpp.sh ] && ${MCPTDIR}/set_prev_ncmpcpp.sh
+
+# Integrate previously set cava user preferences into mppcava/config
+[ -x ${SCPTDIR}/set_prev_cava.sh ] && ${SCPTDIR}/set_prev_cava.sh
+
+cp ${MPCDIR}/config ${MPCDIR}/config-art.conf
+echo '##### album cover art display #####
+header_visibility = no
+statusbar_visibility = no
+execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
+  >>${MPCDIR}/config-art.conf
+
+cp ${CAVDIR}/config ${CAVDIR}/config-tmux
+cat ${CAVDIR}/config-tmux \
+  | sed -e "s/^gradient/; gradient/" >/tmp/cav$$
+cp /tmp/cav$$ ${CAVDIR}/config-tmux
+rm -f /tmp/cav$$
+
+[ "${quiet}" ] || {
+  printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."
+}
+sync_music_dir
+
+printf " done.\n"
+
+[ -f "${MPPCONF}" ] && {
+  append=
+  grep MPPINIT "${MPPCONF}" >/dev/null || append=1
+  if [ "${append}" ]; then
+    echo "MPPINIT=1" >>"${MPPCONF}"
+  else
+    cat "${MPPCONF}" | sed -e "s/^MPPINIT=.*/MPPINIT=1/" >/tmp/mpp$$
+    cp /tmp/mpp$$ "${MPPCONF}"
+    rm -f /tmp/mpp$$
+  fi
+}
+
+printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}"
+[ "${empty_music}" ] && {
+  printf "\n\t${BOLD}Note:${NORM} Configured music library location is empty"
+}
+printf "\n\nMusic library location set to ${BOLD}${mpd_music}${NORM} in:"
+printf "\n\t${MPPCONF}"
+printf "\nModify ${MPPCONF} 'MUSIC_DIR' to change this."
+printf "\nIf 'MUSIC_DIR' is modified, run '${BOLD}mppinit sync${NORM}'\n"
+printf "\nDownload albums in your Bandcamp collections with:"
+printf "\n\t${BOLD}mppinit bandcamp${NORM}"
+printf "\nDownload favorites in your Soundcloud account with:"
+printf "\n\t${BOLD}mppinit soundcloud${NORM}"
+printf "\nImport the music library into the Beets media management system:"
+printf "\n\t${BOLD}mppinit import${NORM}"
+printf "\nAfter the import has completed, perform an update of the Beets"
+printf "\nlibrary metadata, genres, and album cover art:"
+printf "\n\t${BOLD}mppinit metadata${NORM}"
+have_mopidy=$(type -p mopidy)
+[ "${have_mopidy}" ] || {
+  printf "\nActivate the Mopidy music server:"
+  printf "\n\t${BOLD}mppinit mopidy${NORM}"
+}
+[ "${have_navi}" ] || {
+  printf "\nActivate the Navidrome streaming music server:"
+  printf "\n\t${BOLD}mppinit navidrome${NORM}"
+}
+printf "\nActivate the YAMS Last.fm scrobbler:"
+printf "\n\t${BOLD}mppinit yams${NORM}\n"
+visit_wiki
