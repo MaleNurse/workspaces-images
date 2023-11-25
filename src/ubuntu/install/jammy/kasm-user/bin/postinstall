@@ -120,7 +120,7 @@ rm -rf /home/kasm-default-profile/.??*
 notify-send "Updating system package repositories"
 sudo apt update
 
-notify-send "Ubuntu Jammy desktop initialization and configuration complete!"
+notify-send "Ubuntu Jammy desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")

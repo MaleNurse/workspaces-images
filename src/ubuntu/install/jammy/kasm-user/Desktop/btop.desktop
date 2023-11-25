@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=BTop
+Name=Monitor
 GenericName=System monitor
 Comment=Fast, feature-rich, system monitor
 Exec=/home/kasm-user/.local/kitty.app/bin/kitty --session none --title 'BTop System Monitor' --override allow_remote_control=yes --listen-on unix:/tmp/btop_kitty btop
