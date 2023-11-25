@@ -83,6 +83,8 @@ notify-send "Initializing MusicPlayerPlus"
 [ -f $HOME/.local/share/applications/musicplayerplus.desktop ] && {
   cp $HOME/.local/share/applications/musicplayerplus.desktop \
      $HOME/Desktop/musicplayerplus.desktop
+  cp $HOME/.local/share/applications/musicplayerplus.desktop \
+     $HOME/.config/autostart/musicplayerplus.desktop
 }
 
 rm -f $HOME/.config/autostart/postinstall.desktop

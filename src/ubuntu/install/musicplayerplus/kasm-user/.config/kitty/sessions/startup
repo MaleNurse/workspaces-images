@@ -1,5 +1,12 @@
 # Kitty tabbed startup session
 #
+# Kitty tab with MusicPlayerPlus interactive menu system
+new_tab
+cd ~
+launch bash -c 'mpplus -i'
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+#
 # Kitty HOME tab
 new_tab
 launch bash
@@ -35,13 +42,6 @@ layout tall
 # new_tab
 # cd ~/src/MusicPlayerPlus
 # launch bash
-# enabled_layouts tall:bias=50;full_size=1
-# layout tall
-
-# Kitty tab with MusicPlayerPlus interactive menu system
-# new_tab
-# cd ~
-# launch bash -c 'mpplus -i'
 # enabled_layouts tall:bias=50;full_size=1
 # layout tall
 
