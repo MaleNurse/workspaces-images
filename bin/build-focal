@@ -20,6 +20,7 @@ cd $(dirname "${SCRIPT_PATH}")
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
 PRIVS="${PATH_PRIVS}/focal/kasm-user/bin/install-jetbrains \
+       ${PATH_PRIVS}/jammy/install_tools_focal.sh \
        ${PATH_PRIVS}/focal/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
@@ -32,14 +33,9 @@ do
   }
 done
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache -t kasmweb/ubuntu-focal:dev \
-                    -f kasm-focal.Dockerfile .
-else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:ubuntu-focal \
-                    -f kasm-focal.Dockerfile .
-fi
+sudo docker build --no-cache \
+                  -t doctorwhen/kasm:ubuntu-focal \
+                  -f kasm-focal.Dockerfile .
 
 for priv in ${PRIVS}
 do
