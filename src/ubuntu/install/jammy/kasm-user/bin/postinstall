@@ -60,6 +60,10 @@ rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
 
+[ -f $HOME/.local/share/applications/btop.desktop ] && {
+  cp $HOME/.local/share/applications/btop.desktop \
+     $HOME/Desktop/btop.desktop
+}
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
