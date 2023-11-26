@@ -39,6 +39,24 @@ install_external_package() {
   }
 }
 
+install_lsd() {
+  API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "lsd_" | grep "_amd64\.deb")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling LSD ..."
+    TEMP_DEB="$(mktemp --suffix=.deb)"
+    wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+    chmod 644 "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
+    rm -f "${TEMP_DEB}"
+    printf " done"
+  }
+}
+
 # GH_TOKEN, a GitHub token must be set in the environment
 export GH_TOKEN="__GITHUB_API_TOKEN__"
 
@@ -56,7 +74,6 @@ apt-get install -y fzf
 apt-get install -y g++
 apt-get install -y ripgrep
 apt-get install -y bat
-apt-get install -y lsd
 apt-get install -y figlet
 apt-get install -y lolcat
 apt-get install -y libnotify-bin
@@ -64,7 +81,6 @@ apt-get install -y xclip
 apt-get install -y xsel
 apt-get install -y wl-clipboard
 apt-get install -y python3
-apt-get install -y python3-pip
 apt-get install -y python3-venv
 apt-get install -y uuid-runtime
 apt-get install -y libaa-bin
@@ -106,7 +122,8 @@ apt-get install -y luarocks
 apt-get install -y ruby
 apt-get install -y ruby-dev
 apt-get install -y ubuntu-desktop
-apt-get install -y mate-backgrounds
+
+install_lsd
 
 install_asciiville
 

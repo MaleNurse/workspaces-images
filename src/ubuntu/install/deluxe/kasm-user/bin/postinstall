@@ -142,7 +142,7 @@ notify-send "Installing Desktop entries and fixing permissions"
      ${HOME}/.config/autostart/session.desktop
 }
 
-for desk in asciiville lazyman neovide nvims kitty spiderfoot
+for desk in asciiville btop lazyman neovide nvims kitty spiderfoot
 do
   [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
     cp $HOME/.local/share/applications/${desk}.desktop \
@@ -158,6 +158,8 @@ find ${HOME}/.config -type d | xargs chmod 755
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
+chmod 755 $HOME/.local/share/applications/*
+chmod 644 $HOME/.local/share/backgrounds/*
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
 chmod 755 ${HOME}/bin

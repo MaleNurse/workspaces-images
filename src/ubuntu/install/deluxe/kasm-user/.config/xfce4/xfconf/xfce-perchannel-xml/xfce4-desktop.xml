@@ -14,7 +14,7 @@
         <property name="workspace0" type="empty">
           <property name="color-style" type="int" value="2"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="last-image" type="string" value="/usr/share/backgrounds/mate/desktop/Ubuntu-Mate-Cold-no-logo.png"/>
+          <property name="last-image" type="string" value="/home/kasm-user/.local/share/backgrounds/Nature.png"/>
         </property>
         <property name="workspace1" type="empty">
           <property name="color-style" type="int" value="0"/>

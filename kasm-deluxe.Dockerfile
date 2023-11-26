@@ -52,6 +52,9 @@ RUN \
   chown -R 1000:0 /home/kasm-user && \
   rm -Rf ${INST_DIR}
 
+# Set kasm-user login shell to Bash
+RUN chsh -s /bin/bash kasm-user
+
 # Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME

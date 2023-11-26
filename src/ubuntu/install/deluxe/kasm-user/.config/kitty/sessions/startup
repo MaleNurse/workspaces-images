@@ -1,32 +1,32 @@
 # Kitty tabbed startup session
 #
 # Kitty tab for Neovim
-new_tab
+new_tab Neovim
 launch bash -c 'lazyman open'
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Asciiville
-new_tab
+new_tab Asciiville
 launch bash -c asciiville
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Lazyman
-new_tab
+new_tab Lazyman
 launch bash -c lazyman
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Spiderfoot
-new_tab
+new_tab SpiderFoot
 cd ~/spiderfoot
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Wing development
-new_tab
+new_tab Wing
 cd ~/Wing
 launch bash
 enabled_layouts tall:bias=50;full_size=1
