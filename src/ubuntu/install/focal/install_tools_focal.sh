@@ -94,6 +94,7 @@ apt-get install -y neomutt
 apt-get install -y newsboat
 apt-get install -y neofetch
 apt-get install -y ca-certificates
+apt-get install -y xfce4-goodies
 apt-get install -y ubuntu-desktop
 
 install_lsd
