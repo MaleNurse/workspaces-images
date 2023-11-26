@@ -93,6 +93,7 @@ COPY ./src/ubuntu/install/focal $INST_SCRIPTS/focal/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS
 RUN bash $INST_SCRIPTS/focal/install_tools_focal.sh && \
     bash $INST_SCRIPTS/install_kasm_user.sh focal && \
+    rm -f /etc/xdg/autostart/update-notifier.desktop && \
     rm -rf $INST_SCRIPTS/focal/ && \
     rm -f $INST_SCRIPTS/install_kasm_user.sh
 
