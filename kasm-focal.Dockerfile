@@ -19,6 +19,10 @@ RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_
 RUN cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png
 RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
 
+# Do not prompt for upgrade
+RUN sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades
+#RUN chmod -x /usr/lib/ubuntu-release-upgrader/release-upgrade-motd
+
 ### Install Tools
 COPY ./src/ubuntu/install/tools $INST_SCRIPTS/tools/
 RUN bash $INST_SCRIPTS/tools/install_tools_deluxe.sh  && rm -rf $INST_SCRIPTS/tools/
@@ -93,7 +97,6 @@ COPY ./src/ubuntu/install/focal $INST_SCRIPTS/focal/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS
 RUN bash $INST_SCRIPTS/focal/install_tools_focal.sh && \
     bash $INST_SCRIPTS/install_kasm_user.sh focal && \
-    rm -f /etc/xdg/autostart/update-notifier.desktop && \
     rm -rf $INST_SCRIPTS/focal/ && \
     rm -f $INST_SCRIPTS/install_kasm_user.sh
 
