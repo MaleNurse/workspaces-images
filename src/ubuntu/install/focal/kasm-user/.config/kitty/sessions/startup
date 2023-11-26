@@ -11,14 +11,14 @@ enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Ranger
-new_tab
+new_tab Ranger
 cd ~
 launch bash -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Btop++
-new_tab
+new_tab Btop
 launch bash -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall

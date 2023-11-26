@@ -99,6 +99,9 @@ RUN bash $INST_SCRIPTS/focal/install_tools_focal.sh && \
 # Do not prompt for upgrade
 RUN sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades
 
+# Set kasm-user login shell to Bash
+RUN chsh -s /bin/bash kasm-user
+
 #ADD ./src/common/scripts $STARTUPDIR
 RUN $STARTUPDIR/set_user_permission.sh $HOME
 
