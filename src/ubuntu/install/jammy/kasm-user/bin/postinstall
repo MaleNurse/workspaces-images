@@ -89,6 +89,8 @@ find $HOME/.config -type d | xargs chmod 755
 find $HOME/.local -type d | xargs chmod 755
 chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
+chmod 755 $HOME/Pictures
+chmod 644 $HOME/Pictures/*
 chmod 755 $HOME/bin
 chmod 755 $HOME/bin/*
 chmod 755 $HOME/logs
