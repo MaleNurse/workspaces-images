@@ -94,6 +94,10 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp $HOME/.local/share/applications/btop.desktop \
      $HOME/Desktop/btop.desktop
 }
+[ -f $HOME/.local/share/applications/ranger.desktop ] && {
+  cp $HOME/.local/share/applications/ranger.desktop \
+     $HOME/Desktop/ranger.desktop
+}
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
