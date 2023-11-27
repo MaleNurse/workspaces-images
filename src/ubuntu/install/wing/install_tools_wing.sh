@@ -71,10 +71,13 @@ apt-get install -y ruby-dev
 apt-get install -y wl-clipboard
 apt-get install -y git
 apt-get install -y dialog
+apt-get install -y neofetch
+apt-get install -y catdoc
+apt-get install -y pandoc
 apt-get install -y ranger
 apt-get install -y tmux
 apt-get install -y zip
-apt-get install -y neofetch
+apt-get install -y zoxide
 
 install_lsd
 
