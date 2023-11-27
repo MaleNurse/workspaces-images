@@ -35,14 +35,8 @@ do
   }
 done
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache -t kasmweb/wing-neovim:dev \
-                    -f kasm-wing-neovim.Dockerfile .
-else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:wing-neovim \
-                    -f kasm-wing-neovim.Dockerfile .
-fi
+sudo docker build --no-cache -t doctorwhen/kasm:wing-neovim \
+                  -f kasm-wing-neovim.Dockerfile .
 
 for priv in ${PRIVS}
 do
