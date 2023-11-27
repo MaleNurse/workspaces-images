@@ -72,6 +72,12 @@ notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
 
+notify-send "Installing Python Pillow"
+python3 -m pip install --user Pillow > ${LOGDIR}/install-pillow.log 2>&1
+
+notify-send "Installing Glow markdown previewer"
+go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
+
 notify-send "Installing Desktop entries and fixing permissions"
 
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
@@ -107,6 +113,7 @@ find ${HOME}/.config -type d | xargs chmod 755
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
+chmod 755 $HOME/.config/ranger/*.sh
 chmod 755 $HOME/.local/share/applications/*
 chmod 644 $HOME/.local/share/backgrounds/*
 chmod 755 ${HOME}/Desktop

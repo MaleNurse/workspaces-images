@@ -56,6 +56,7 @@ apt-get install -y gnupg
 apt-get install -y jq
 apt-get install -y fzf
 apt-get install -y g++
+apt-get install -y golang
 apt-get install -y ripgrep
 apt-get install -y bat
 apt-get install -y figlet
