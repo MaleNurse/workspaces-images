@@ -48,11 +48,13 @@ else
   AUTH_HEADER=
 fi
 
+add-apt-repository universe
 add-apt-repository ppa:appimagelauncher-team/stable
 apt-get update
 apt-get install -y apt-utils
 apt-get install -y curl
 apt-get install -y jq
+apt-get install -y libfuse2
 apt-get install -y appimagelauncher
 apt-get install -y fzf
 apt-get install -y g++
@@ -85,6 +87,11 @@ apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y dialog
 apt-get install -y ranger
+apt-get install -y exuberant-ctags
+apt-get install -y highlight
+apt-get install -y catdoc
+apt-get install -y pandoc
+apt-get install -y zoxide
 apt-get install -y tmux
 apt-get install -y w3m
 apt-get install -y asciinema
@@ -100,8 +107,6 @@ apt-get install -y ubuntu-desktop
 
 install_lsd
 
-PROJECT=asciigames
-install_external_package
 PROJECT=btop
 install_external_package
 PROJECT=cbftp
