@@ -17,7 +17,6 @@ umask 022
 sleep 4
 notify-send -u critical "One-time Wing Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
-                        "This process can take several minutes, please be patient"
 
 LOGDIR="${HOME}/logs"
 
@@ -68,7 +67,18 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing Wing"
 
 have_npm=$(type -p npm)
-[ "${have_npm}" ] && npm install -g winglang >> ${LOGDIR}/install-wing.log 2>&1
+[ "${have_npm}" ] && npm -g install winglang >> ${LOGDIR}/install-wing.log 2>&1
+
+notify-send "Cloning Wing examples into ${HOME}/Wing/"
+git clone https://github.com/winglang/examples.git \
+  ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
+
+notify-send "Installing Pillow and Pygments"
+python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
+python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
+
+notify-send "Installing Glow markdown previewer"
+go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
 
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
@@ -98,23 +108,8 @@ rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 
-notify-send "Cloning Wing examples into ${HOME}/Wing/"
-git clone https://github.com/winglang/examples.git \
-  ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
-
 notify-send "Installing Desktop entries and fixing permissions"
 
-# Fix Lazyman permissions
-[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
-  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
-  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
-  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
-}
-
-[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
-  cp ${HOME}/.local/share/applications/kitty.desktop \
-     ${HOME}/Desktop/kitty.desktop
-}
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
      ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -127,6 +122,25 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
      ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
 }
+[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/Desktop/kitty.desktop
+}
+[ -f $HOME/.local/share/applications/btop.desktop ] && {
+  cp $HOME/.local/share/applications/btop.desktop \
+     $HOME/Desktop/btop.desktop
+}
+[ -f $HOME/.local/share/applications/ranger.desktop ] && {
+  cp $HOME/.local/share/applications/ranger.desktop \
+     $HOME/Desktop/ranger.desktop
+}
+
+# Fix Lazyman permissions
+[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
+}
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
@@ -136,12 +150,15 @@ find ${HOME}/.config -type d | xargs chmod 755
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
+chmod 755 $HOME/.config/ranger/*.sh
+chmod 755 $HOME/.local/share/applications/*
+chmod 644 $HOME/.local/share/backgrounds/*
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
 chmod 755 ${HOME}/bin
 chmod 755 ${HOME}/bin/*
-chmod 755 ${HOME}/.cargo
 chmod 755 ${HOME}/logs
+chmod 755 ${HOME}/.cargo
 [ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
 chmod 755 ${HOME}/.cache
 [ -d ${HOME}/.cache/mozilla ] || mkdir ${HOME}/.cache/mozilla
@@ -165,14 +182,12 @@ rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
+rm -f ${HOME}/Desktop/.placeholder
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Updating system package repositories"
-sudo apt update
-
 notify-send "Wing desktop initialization and configuration complete!"
-sleep 8
+sleep 5
 
 kill $(pgrep "notifyd")
