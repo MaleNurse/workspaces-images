@@ -72,7 +72,7 @@ notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
 
-notify-send "Installing Python Pillow and Pygments"
+notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
 python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
 
@@ -145,12 +145,10 @@ rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
+rm -f ${HOME}/Desktop/.placeholder
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Updating system package repositories"
-sudo apt update
 
 notify-send "Wing desktop initialization and configuration complete!"
 sleep 5

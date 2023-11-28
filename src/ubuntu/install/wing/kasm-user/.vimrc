@@ -279,11 +279,6 @@ endif " has("autocmd")
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
-if has("gui_running")
-  colorscheme ingretu
-else
-" colorscheme darkspectrum
-  colorscheme darktango
-endif
+colorscheme default
 set guifont=Inconsolata:h18
 let g:syntastic_html_checkers = []

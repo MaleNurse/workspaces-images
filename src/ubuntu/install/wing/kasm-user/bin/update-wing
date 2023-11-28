@@ -1,3 +1,11 @@
 #!/bin/bash
 
-npm update -g @monadahq/wing
+have_npm=$(type -p npm)
+if [ "${have_npm}" ]; then
+  npm -g update winglang
+else
+  printf "\nERROR: cannot locate npm"
+  printf "\nConfirm node/npm is installed and npm is in your PATH"
+  printf "\nExiting without updating Wing.\n"
+  exit 1
+fi
