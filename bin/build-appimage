@@ -1,0 +1,44 @@
+#!/bin/bash
+
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd $(dirname "${SCRIPT_PATH}")
+
+[ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
+[ "${GH_TOKEN}" ] || {
+  [ -f $HOME/.private ] && source $HOME/.private
+  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
+}
+
+[ "${GH_TOKEN}" ] || {
+  printf "\nNo Github token set in the environment"
+  printf "\nSet GH_TOKEN in $HOME/.private"
+  printf "\nExiting\n"
+  exit 1
+}
+
+PATH_PRIVS=$(dirname ${SCRIPT_PATH})
+PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
+PRIVS="${PATH_PRIVS}/appimage/kasm-user/bin/install-jetbrains \
+       ${PATH_PRIVS}/appimage/install_tools_appimage.sh \
+       ${PATH_PRIVS}/appimage/kasm-user/.config/autostart/postinstall.desktop"
+for priv in ${PRIVS}
+do
+  [ -f ${priv} ] && {
+    bpriv=$(basename ${priv})
+    cp ${priv} /tmp/${bpriv}-$$
+    cat ${priv} | sed -e "s/__GITHUB_API_TOKEN__/${GH_TOKEN}/" > /tmp/gh$$
+    cp /tmp/gh$$ ${priv}
+    rm -f /tmp/gh$$
+  }
+done
+
+sudo docker build --no-cache \
+                  -t doctorwhen/kasm:appimage \
+                  -f kasm-appimage.Dockerfile .
+
+for priv in ${PRIVS}
+do
+  bpriv=$(basename ${priv})
+  [ -f /tmp/${bpriv}-$$ ] && mv /tmp/${bpriv}-$$ ${priv}
+done
