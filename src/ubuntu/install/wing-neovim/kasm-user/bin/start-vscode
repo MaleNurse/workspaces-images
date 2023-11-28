@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export NVM_DIR="/home/kasm-user/.nvm"
+export NODE_VERSION="20.9.0"
+. ${NVM_DIR}/nvm.sh
+export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
+
+/usr/share/code/code $*

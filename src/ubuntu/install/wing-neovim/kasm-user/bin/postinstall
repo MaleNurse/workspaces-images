@@ -122,6 +122,10 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
      ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
 }
+[ -f $HOME/.local/share/applications/code.desktop ] && {
+  cp $HOME/.local/share/applications/code.desktop \
+     $HOME/Desktop/code.desktop
+}
 [ -f $HOME/.local/share/applications/lazyman.desktop ] && {
   cp $HOME/.local/share/applications/lazyman.desktop \
      $HOME/Desktop/lazyman.desktop
