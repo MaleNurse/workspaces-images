@@ -64,11 +64,6 @@ handle_extension() {
             7z l -p -- "${FILE_PATH}" && exit 5
             exit 1;;
 
-        ## Winglang
-        w)
-            wing it -- "${FILE_PATH}" && exit 5
-            exit 1;;
-
         ## Markdown
         md)
             glow -s dark -- "${FILE_PATH}" && exit 5
@@ -313,6 +308,7 @@ handle_mime() {
                 local highlight_format='ansi'
             fi
             env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+                --style="zenburn" \
                 --out-format="${highlight_format}" \
                 --force -- "${FILE_PATH}" && exit 5
             env COLORTERM=8bit bat --color=always --style="plain" \

@@ -71,6 +71,7 @@ apt-get install -y ruby-dev
 apt-get install -y wl-clipboard
 apt-get install -y git
 apt-get install -y dialog
+apt-get install -y highlight
 apt-get install -y neofetch
 apt-get install -y catdoc
 apt-get install -y pandoc

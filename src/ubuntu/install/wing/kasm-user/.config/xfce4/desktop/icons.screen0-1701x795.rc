@@ -9,10 +9,6 @@ col=0
 row=2
 col=1
 
-[/home/kasm-user/Desktop/kitty.desktop]
-row=5
-col=1
-
 [/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
 row=3
 col=1
@@ -57,17 +53,21 @@ col=2
 row=0
 col=1
 
+[/home/kasm-user/Desktop/kitty.desktop]
+row=5
+col=1
+
 [/home/kasm-user/Desktop/org.remmina.Remmina.desktop]
 row=4
 col=1
 
-[/home/kasm-user/Desktop/telegram.desktop]
-row=0
-col=2
-
 [/home/kasm-user/Desktop/thunderbird.desktop]
 row=4
 col=0
+
+[/home/kasm-user/Desktop/telegram.desktop]
+row=0
+col=2
 
 [/home/kasm-user/Desktop/Uploads]
 row=1
