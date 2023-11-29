@@ -28,4 +28,11 @@ selectedApp=
   fi
 }
 
-[ -f "${selectedApp}" ] && AppImageLauncher "${selectedApp}"
+if [ -f "${selectedApp}" ]; then
+  AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${selectedApp}".log 2>&1
+  printf "\n${selectedApp} AppImage installed\n"
+else
+  printf "\nERROR: ${selectedApp} not found or not a plain file\n"
+fi
+
+sleep 10
