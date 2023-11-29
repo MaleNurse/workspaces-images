@@ -44,7 +44,7 @@ do
   basetop=$(basename "${desktop}")
   [ -f ${HOME}/Desktop/${basetop} ] || {
     notify-send "Adding AppImage Launcher integration Desktop entry" 2>/dev/null
-    cp ${desktop} ${HOME}/Desktop/${basetop}
+    cat ${desktop} | sed -e "s/ (1)//" > ${HOME}/Desktop/${basetop}
     chmod 755 ${HOME}/Desktop/${basetop}
   }
 done
