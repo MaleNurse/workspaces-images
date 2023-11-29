@@ -35,4 +35,14 @@ else
   printf "\nERROR: ${selectedApp} not found or not a plain file\n"
 fi
 
+echo "${selectedApp}" | grep LM | grep Studio > /dev/null && {
+  [ -f ${HOME}/Desktop/lmstudio.desktop ] || {
+    [ -f ${HOME}/.local/share/applications/lmstudio.desktop ] && {
+      cp ${HOME}/.local/share/applications/lmstudio.desktop \
+         ${HOME}/Desktop/lmstudio.desktop
+      chmod 755 ${HOME}/Desktop/lmstudio.desktop
+    }
+  }
+}
+
 sleep 10
