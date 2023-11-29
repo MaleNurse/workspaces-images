@@ -157,8 +157,13 @@ notify-send "Installing Desktop entries and fixing permissions"
 # Correct permissions/ownership
 chmod 755 ${HOME}
 chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
-find ${HOME}/.config -type f | xargs chmod 644
-find ${HOME}/.config -type d | xargs chmod 755
+for fdir in config launchpadlib vim
+do
+  [ -d ${HOME}/.${fdir} ] && {
+    find ${HOME}/.${fdir} -type f | xargs chmod 644
+    find ${HOME}/.${fdir} -type d | xargs chmod 755
+  }
+done
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
@@ -203,3 +208,8 @@ notify-send "Wing desktop initialization and configuration complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
+
+have_open=$(type -p exo-open)
+[ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
+  [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
+}

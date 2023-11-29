@@ -193,9 +193,6 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Updating system package repositories"
-sudo apt update
-
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] && {
   notify-send "Starting Kitty terminal emulator session"
@@ -207,3 +204,8 @@ notify-send "Deluxe desktop initialization and configuration complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
+
+have_open=$(type -p exo-open)
+[ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
+  [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
+}

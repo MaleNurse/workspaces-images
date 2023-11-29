@@ -135,10 +135,12 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Updating system package repositories"
-sudo apt update
-
 notify-send "Neovim initialization and configuration complete!"
 sleep 8
 
 kill $(pgrep "notifyd")
+
+have_open=$(type -p exo-open)
+[ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
+  [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
+}

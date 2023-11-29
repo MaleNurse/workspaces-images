@@ -25,9 +25,9 @@ col=2
 row=2
 col=1
 
-[/home/kasm-user/Desktop/ranger.desktop]
-row=4
-col=2
+[/home/kasm-user/Desktop/Downloads]
+row=0
+col=0
 
 [/home/kasm-user/Desktop/gimp.desktop]
 row=4
@@ -37,43 +37,39 @@ col=1
 row=2
 col=2
 
-[/home/kasm-user/Desktop/Downloads]
-row=0
-col=0
-
-[/home/kasm-user/Desktop/Zoom.desktop]
-row=0
+[/home/kasm-user/Desktop/ranger.desktop]
+row=5
 col=2
+
+[/home/kasm-user/Desktop/kitty.desktop]
+row=5
+col=1
 
 [/home/kasm-user/Desktop/appimagelauncher.desktop]
 row=5
 col=0
 
 [/home/kasm-user/Desktop/btop.desktop]
-row=5
+row=4
 col=2
 
-[/home/kasm-user/Desktop/lmstudio.desktop]
-row=6
-col=0
-
-[/home/kasm-user/Desktop/kitty.desktop]
-row=5
-col=1
+[/home/kasm-user/Desktop/Zoom.desktop]
+row=0
+col=2
 
 [/home/kasm-user/Desktop/org.remmina.Remmina.desktop]
 row=3
 col=1
 
-[/home/kasm-user/Desktop/Uploads]
-row=1
+[/home/kasm-user/Desktop/thunderbird.desktop]
+row=4
 col=0
 
 [/home/kasm-user/Desktop/telegram.desktop]
 row=1
 col=2
 
-[/home/kasm-user/Desktop/thunderbird.desktop]
-row=4
+[/home/kasm-user/Desktop/Uploads]
+row=1
 col=0
 

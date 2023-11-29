@@ -1,5 +1,6 @@
 #!/bin/bash
 
+LOGDIR="${HOME}/logs"
 have_ranger=$(type -p ranger)
 
 choose_image() {
@@ -29,20 +30,32 @@ selectedApp=
 }
 
 if [ -f "${selectedApp}" ]; then
-  AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${selectedApp}".log 2>&1
-  printf "\n${selectedApp} AppImage installed\n"
+  logfile=$(basename "${selectedApp}")
+  AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${logfile}".log 2>&1
+  notify-send "${selectedApp} AppImage installed"
 else
-  printf "\nERROR: ${selectedApp} not found or not a plain file\n"
+  notify-send "ERROR: ${selectedApp} not found or not a plain file"
 fi
 
-echo "${selectedApp}" | grep LM | grep Studio > /dev/null && {
-  [ -f ${HOME}/Desktop/lmstudio.desktop ] || {
-    [ -f ${HOME}/.local/share/applications/lmstudio.desktop ] && {
-      cp ${HOME}/.local/share/applications/lmstudio.desktop \
-         ${HOME}/Desktop/lmstudio.desktop
-      chmod 755 ${HOME}/Desktop/lmstudio.desktop
-    }
+for desktop in ${HOME}/.local/share/applications/appimagekit*.desktop
+do
+  [ "${desktop}" == "${HOME}/.local/share/applications/appimagekit*.desktop" ] && continue
+  basetop=$(basename "${desktop}")
+  [ -f ${HOME}/Desktop/${basetoop} ] || {
+    notify-send "Adding AppImage Launcher integration Desktop entry" 2>/dev/null
+    cp ${desktop} ${HOME}/Desktop/${basetop}
+    chmod 755 ${HOME}/Desktop/${basetop}
   }
-}
+done
+# Remove newly removed desktop files from $HOME/Desktop
+for desktop in ${HOME}/Desktop/appimagekit*.desktop
+do
+  [ "${desktop}" == "${HOME}/Desktop/appimagekit*.desktop" ] && continue
+  basetop=$(basename "${desktop}")
+  [ -f ${HOME}/.local/share/applications/${basetoop} ] || {
+    notify-send "Removing AppImage Launcher integration Desktop entry" 2>/dev/null
+    rm -f ${desktop}
+  }
+done
 
-sleep 10
+notify-send "AppImage Launcher integration of ${selectedApp} complete!" 2>/dev/null
