@@ -58,10 +58,23 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
 LMS="LM_Studio.AppImage"
 [ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
-[ -f /share/${LMS} ] && {
+if [ -f /share/${LMS} ]; then
   notify-send "Installing LM Studio"
-  cp /share/${LMS} ${HOME}/Applications
-}
+  if [ -x ${HOME}/bin/appimage-launcher ]; then
+    ${HOME}/bin/appimage-launcher /share/${LMS}
+  else
+    cp /share/${LMS} ${HOME}/Applications
+  fi
+else
+  [ -x ${HOME}/.local/kitty.app/bin/kitty ] && {
+    [ -x ${HOME}/bin/appimage-launcher ] && {
+      ${HOME}/.local/kitty.app/bin/kitty \
+          --session none \
+          --title 'AppImage Launcher Select' \
+          ${HOME}/bin/appimage-launcher
+    }
+  }
+fi
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
@@ -87,10 +100,6 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp ${HOME}/.local/share/applications/kitty.desktop \
      ${HOME}/Desktop/kitty.desktop
 }
-[ -f ${HOME}/.local/share/applications/lmstudio.desktop ] && {
-  cp ${HOME}/.local/share/applications/lmstudio.desktop \
-     ${HOME}/Desktop/lmstudio.desktop
-}
 [ -f ${HOME}/.local/share/applications/ranger.desktop ] && {
   cp ${HOME}/.local/share/applications/ranger.desktop \
      ${HOME}/Desktop/ranger.desktop
@@ -107,9 +116,10 @@ do
   }
 done
 find ${HOME}/.local -type d | xargs chmod 755
-chmod 755 $HOME/.config/ranger/*.sh
+chmod 755 ${HOME}/.config/ranger/*.sh
 chmod 755 ${HOME}/.local/share/applications/*
 chmod 644 ${HOME}/.local/share/backgrounds/*
+[ -d ${HOME}/Applications ] || mkdir -p ${HOME}/Applications
 chmod 755 ${HOME}/Applications
 chmod 755 ${HOME}/Applications/*
 chmod 755 ${HOME}/Desktop
