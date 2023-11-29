@@ -37,11 +37,12 @@ else
   notify-send "ERROR: ${selectedApp} not found or not a plain file"
 fi
 
+# Copy newly created desktop files to $HOME/Desktop
 for desktop in ${HOME}/.local/share/applications/appimagekit*.desktop
 do
   [ "${desktop}" == "${HOME}/.local/share/applications/appimagekit*.desktop" ] && continue
   basetop=$(basename "${desktop}")
-  [ -f ${HOME}/Desktop/${basetoop} ] || {
+  [ -f ${HOME}/Desktop/${basetop} ] || {
     notify-send "Adding AppImage Launcher integration Desktop entry" 2>/dev/null
     cp ${desktop} ${HOME}/Desktop/${basetop}
     chmod 755 ${HOME}/Desktop/${basetop}
@@ -52,7 +53,7 @@ for desktop in ${HOME}/Desktop/appimagekit*.desktop
 do
   [ "${desktop}" == "${HOME}/Desktop/appimagekit*.desktop" ] && continue
   basetop=$(basename "${desktop}")
-  [ -f ${HOME}/.local/share/applications/${basetoop} ] || {
+  [ -f ${HOME}/.local/share/applications/${basetop} ] || {
     notify-send "Removing AppImage Launcher integration Desktop entry" 2>/dev/null
     rm -f ${desktop}
   }
