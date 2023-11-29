@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=LM Studio
+Exec=/home/kasm-user/Applications/LM_Studio.AppImage
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/lmstudio.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Network;Application;
+Name[en_US]=LM Studio

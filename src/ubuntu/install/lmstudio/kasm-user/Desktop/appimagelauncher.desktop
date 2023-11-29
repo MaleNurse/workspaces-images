@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=/home/kasm-user/.local/kitty.app/bin/kitty --session none --title 'AppImage Launcher Select' /home/kasm-user/bin/appimage-launcher %f
+Name=AppImageLauncher
+Icon=AppImageLauncher
+Terminal=false
+Categories=Utility;
+MimeType=application/x-iso9660-appimage;application/x-appimage;application/vnd.appimage;
+NoDisplay=true
+X-AppImage-Integrate=false
+StartupWMClass=AppImageLauncher

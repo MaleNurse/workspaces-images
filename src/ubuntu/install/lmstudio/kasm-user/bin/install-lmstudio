@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# install-lmstudio - install LM Studio
+#
+APP_IMAGE="LM_Studio.AppImage"
+DL_URL="https://github.com/doctorfree/lmstudio/blob/main/${APP_IMAGE}"
+DOWN_DIR="${HOME}/Applications"
+
+[ -d "${DOWN_DIR}" ] || mkdir -p "${DOWN_DIR}"
+cd "${DOWN_DIR}"
+
+curl -fsLO ${DL_URL}
+chmod 755 ${APP_IMAGE}

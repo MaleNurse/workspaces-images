@@ -1,0 +1,2 @@
+tagbar.vmb: call delete('/Users/rrecord/.vim/autoload/tagbar.vim')|call delete('/Users/rrecord/.vim/doc/tagbar.txt')|call delete('/Users/rrecord/.vim/plugin/tagbar.vim')|call delete('/Users/rrecord/.vim/syntax/tagbar.vim')
+ruby-sinatra-0.2.0.vba: call delete('/Users/rrecord/.vim/ftdetect/ruby-sinatra.vim')|call delete('/Users/rrecord/.vim/snippets/ruby-sinatra.snippets')|call delete('/Users/rrecord/.vim/syntax/ruby-sinatra.vim')

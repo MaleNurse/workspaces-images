@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Postinstall
+Comment=Post Installation
+Exec=env GH_TOKEN="__GITHUB_API_TOKEN__" /home/kasm-user/bin/postinstall
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
+Categories=System;

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+have_ranger=$(type -p ranger)
+
+choose_image() {
+  TMP="$(mktemp)"
+  ranger --choosefile="${TMP}" "/share" 1>&2
+  cat ${TMP}
+  rm -f ${TMP}
+}
+
+selectedApp=
+[ "$1" ] && {
+  [ -f "$1" ] && {
+    file "$1" | grep executable > /dev/null && {
+      selectedApp="$1"
+    }
+  }
+}
+
+[ "${selectedApp}" ] || {
+  if [ "${have_ranger}" ]; then
+    selectedApp="$(choose_image)"
+  else
+    selectedApp=$(dialog --stdout \
+                         --title "Please select an AppImage file" \
+                         --fselect /share/ 14 48)
+  fi
+}
+
+if [ -f "${selectedApp}" ]; then
+  AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${selectedApp}".log 2>&1
+  printf "\n${selectedApp} AppImage installed\n"
+else
+  printf "\nERROR: ${selectedApp} not found or not a plain file\n"
+fi
+
+echo "${selectedApp}" | grep LM | grep Studio > /dev/null && {
+  [ -f ${HOME}/Desktop/lmstudio.desktop ] || {
+    [ -f ${HOME}/.local/share/applications/lmstudio.desktop ] && {
+      cp ${HOME}/.local/share/applications/lmstudio.desktop \
+         ${HOME}/Desktop/lmstudio.desktop
+      chmod 755 ${HOME}/Desktop/lmstudio.desktop
+    }
+  }
+}
+
+sleep 10

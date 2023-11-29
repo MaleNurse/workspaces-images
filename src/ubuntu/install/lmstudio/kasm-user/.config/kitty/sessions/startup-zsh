@@ -1,0 +1,24 @@
+# Kitty tabbed startup session
+#
+new_tab
+launch zsh
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+new_tab
+launch zsh
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Ranger
+new_tab Ranger
+cd ~
+launch zsh -c ranger
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Btop++
+new_tab Btop
+launch zsh -c btop
+enabled_layouts tall:bias=50;full_size=1
+layout tall
