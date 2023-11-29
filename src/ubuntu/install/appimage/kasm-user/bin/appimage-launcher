@@ -29,6 +29,8 @@ selectedApp=
   fi
 }
 
+[ "${selectedApp}" ] || exit 1
+
 if [ -f "${selectedApp}" ]; then
   logfile=$(basename "${selectedApp}")
   AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${logfile}".log 2>&1
