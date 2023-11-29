@@ -15,7 +15,7 @@ umask 022
 [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
 
 sleep 5
-notify-send -u critical "One-time Ubuntu Jammy Desktop Configuration"
+notify-send -u critical "One-time LM Studio Desktop Initialization"
 
 LOGDIR="${HOME}/logs"
 
@@ -136,10 +136,7 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Updating system package repositories"
-sudo apt update
-
-notify-send "Ubuntu Jammy desktop initialization complete!"
+notify-send "LM Studio desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
