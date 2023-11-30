@@ -33,6 +33,10 @@ selectedApp=
 
 if [ -f "${selectedApp}" ]; then
   logfile=$(basename "${selectedApp}")
+  appdir=$(dirname "${selectedApp}")
+  [ "${appdir}" == "/share" ] && {
+    cp "${selectedApp}" "${selectedApp}"$$
+  }
   AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${logfile}".log 2>&1
   notify-send "${selectedApp} AppImage installed"
 else
@@ -60,5 +64,7 @@ do
     rm -f ${desktop}
   }
 done
+
+[ -f "${selectedApp}"$$ ] && cp "${selectedApp}"$$ "${selectedApp}"
 
 notify-send "AppImage Launcher integration of ${selectedApp} complete!" 2>/dev/null
