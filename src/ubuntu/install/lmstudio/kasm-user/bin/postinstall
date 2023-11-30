@@ -54,6 +54,10 @@ have_kitty=$(type -p kitty)
   cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
      ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
 }
+[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/Desktop/kitty.desktop
+}
 
 notify-send "Installing nvm node version manager"
 
@@ -104,10 +108,6 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f ${HOME}/.local/share/applications/btop.desktop ] && {
   cp ${HOME}/.local/share/applications/btop.desktop \
      ${HOME}/Desktop/btop.desktop
-}
-[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
-  cp ${HOME}/.local/share/applications/kitty.desktop \
-     ${HOME}/Desktop/kitty.desktop
 }
 [ -f ${HOME}/.local/share/applications/ranger.desktop ] && {
   cp ${HOME}/.local/share/applications/ranger.desktop \

@@ -29,18 +29,25 @@ selectedApp=
   fi
 }
 
-[ "${selectedApp}" ] || exit 1
+[ "${selectedApp}" ] || {
+  notify-send "No AppImage selected. Exiting from AppImage Selector."
+  exit 1
+}
 
 if [ -f "${selectedApp}" ]; then
   logfile=$(basename "${selectedApp}")
   appdir=$(dirname "${selectedApp}")
+  printf "\nAppImageLauncher will attempt to install ${selectedApp} ..."
+  notify-send "Installing ${selectedApp}"
   [ "${appdir}" == "/share" ] && {
     cp "${selectedApp}" "${selectedApp}"$$
   }
   AppImageLauncher "${selectedApp}" > ${LOGDIR}/"${logfile}".log 2>&1
+  printf " done\n"
   notify-send "${selectedApp} AppImage installed"
 else
   notify-send "ERROR: ${selectedApp} not found or not a plain file"
+  exit 1
 fi
 
 # Copy newly created desktop files to $HOME/Desktop
