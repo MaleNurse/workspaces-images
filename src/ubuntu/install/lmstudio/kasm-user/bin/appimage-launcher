@@ -65,6 +65,6 @@ do
   }
 done
 
-[ -f "${selectedApp}"$$ ] && cp "${selectedApp}"$$ "${selectedApp}"
+[ -f "${selectedApp}"$$ ] && mv "${selectedApp}"$$ "${selectedApp}"
 
 notify-send "AppImage Launcher integration of ${selectedApp} complete!" 2>/dev/null
