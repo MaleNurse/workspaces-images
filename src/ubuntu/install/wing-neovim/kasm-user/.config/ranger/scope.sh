@@ -69,6 +69,11 @@ handle_extension() {
             glow -s dark -- "${FILE_PATH}" && exit 5
             exit 1;;
 
+        ## Winglang
+        w)
+            /usr/share/code/code --no-sandbox -- "${FILE_PATH}" && exit 5
+            exit 1;;
+
         ## PDF
         pdf)
             ## Preview as text conversion
