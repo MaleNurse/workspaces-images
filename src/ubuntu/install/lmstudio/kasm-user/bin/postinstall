@@ -72,6 +72,13 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
+notify-send "Installing LLM command line utility"
+python3 -m pip install --user llm > ${LOGDIR}/install-llm.log 2>&1
+notify-send "Using LLM to install gpt4all plugin"
+llm install llm-gpt4all >> ${LOGDIR}/install-llm.log 2>&1
+llm models default orca-mini-3b-gguf2-q4_0 >> ${LOGDIR}/install-llm.log 2>&1
+llm aliases set orca-mini orca-mini-3b-gguf2-q4_0 >> ${LOGDIR}/install-llm.log 2>&1
+
 LMS="LM_Studio.AppImage"
 [ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
 if [ -f /share/${LMS} ]; then
