@@ -79,7 +79,6 @@ apt-get install -y lolcat
 apt-get install -y libnotify-bin
 apt-get install -y xclip
 apt-get install -y xsel
-apt-get install -y wl-clipboard
 apt-get install -y python3
 apt-get install -y python3-venv
 apt-get install -y uuid-runtime
@@ -101,6 +100,13 @@ apt-get install -y bsdgames
 apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y dialog
+apt-get install -y ruby
+apt-get install -y ruby-dev
+apt-get install -y exuberant-ctags
+apt-get install -y highlight
+apt-get install -y neofetch
+apt-get install -y catdoc
+apt-get install -y pandoc
 apt-get install -y ranger
 apt-get install -y tmux
 apt-get install -y w3m
@@ -112,15 +118,14 @@ apt-get install -y cmatrix
 apt-get install -y neomutt
 apt-get install -y newsboat
 apt-get install -y speedtest-cli
-apt-get install -y neofetch
 apt-get install -y ca-certificates
 apt-get install -y julia
 apt-get install -y php
 apt-get install -y composer
 apt-get install -y ccls
 apt-get install -y luarocks
-apt-get install -y ruby
-apt-get install -y ruby-dev
+apt-get install -y zoxide
+apt-get install -y wl-clipboard
 apt-get install -y ubuntu-desktop
 
 install_lsd
