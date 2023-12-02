@@ -4,11 +4,5 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
 cd $(dirname "${SCRIPT_PATH}")
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache -t kasmweb/jupyter-base:dev \
-                    -f kasm-jupyter-base.Dockerfile .
-else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:jupyter-base \
-                    -f kasm-jupyter-base.Dockerfile .
-fi
+sudo docker build --pull --no-cache -t doctorwhen/kasm:jupyter-base \
+                  -f kasm-jupyter-base.Dockerfile .

@@ -41,14 +41,8 @@ do
   }
 done
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache -t kasmweb/asciiville-deluxe:dev \
-                    -f kasm-asciiville-deluxe.Dockerfile .
-else
-  sudo docker build --pull --no-cache -t doctorwhen/kasm:asciiville-deluxe \
-                    -f kasm-asciiville-deluxe.Dockerfile .
-fi
+sudo docker build --pull --no-cache -t doctorwhen/kasm:asciiville-deluxe \
+                  -f kasm-asciiville-deluxe.Dockerfile .
 
 for priv in ${PRIVS}
 do

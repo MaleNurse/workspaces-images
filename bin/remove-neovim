@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker image rm kasmweb/neovim:dev
+sudo docker image rm doctorwhen/kasm:neovim

@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/jupyter-datascience doctorwhen/kasm:jupyter-datascience
-  sudo docker push doctorwhen/kasm:jupyter-datascience
-else
-  sudo docker push doctorwhen/kasm:jupyter-datascience
-fi
+sudo docker push doctorwhen/kasm:jupyter-datascience

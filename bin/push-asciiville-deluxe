@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/asciiville-deluxe doctorwhen/kasm:asciiville-deluxe
-  sudo docker push doctorwhen/kasm:asciiville-deluxe
-else
-  sudo docker push doctorwhen/kasm:asciiville-deluxe
-fi
+sudo docker push doctorwhen/kasm:asciiville-deluxe

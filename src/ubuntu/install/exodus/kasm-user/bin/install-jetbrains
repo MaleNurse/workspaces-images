@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# install-jetbrains - install the JetBrains Nerd Mono font
+#
+FONT="JetBrainsMono.tar.xz"
+DL_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${FONT}"
+FONT_DIR="${HOME}/.local/share/fonts"
+export GH_TOKEN="__GITHUB_API_TOKEN__"
+
+[ -d "${FONT_DIR}" ] || mkdir -p "${FONT_DIR}"
+cd "${FONT_DIR}"
+
+curl -fsLO -H "Authorization: Bearer ${GH_TOKEN}" ${DL_URL}
+
+tar xf ${FONT}
+rm -f ${FONT}
+fc-cache -f

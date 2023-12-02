@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/neovim doctorwhen/kasm:neovim
-  sudo docker push doctorwhen/kasm:neovim
-else
-  sudo docker push doctorwhen/kasm:neovim
-fi
+sudo docker push doctorwhen/kasm:neovim

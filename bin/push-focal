@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker tag kasmweb/ubuntu-focal doctorwhen/kasm:ubuntu-focal
-  sudo docker push doctorwhen/kasm:ubuntu-focal
-else
-  sudo docker push doctorwhen/kasm:ubuntu-focal
-fi
+sudo docker push doctorwhen/kasm:ubuntu-focal

@@ -6,4 +6,4 @@ printf "\n\nThe Neovim container is now accessible via a browser : https://${myi
 printf "\n\tUser : kasm_user"
 printf "\n\tPassword: password\n"
 
-sudo docker run --rm  -it --shm-size=512m -p 6901:6901 -e VNC_PW=password kasmweb/neovim:dev
+sudo docker run --rm  -it --shm-size=512m -p 6901:6901 -e VNC_PW=password doctorwhen/kasm:neovim

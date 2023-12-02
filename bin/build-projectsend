@@ -11,15 +11,7 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
 cd $(dirname "${SCRIPT_PATH}")
 
-if [ "$1" == "kasmweb" ]
-then
-  sudo docker build --pull --no-cache \
-                    --build-arg "PROJECTSEND_VERSION=${VER}" \
-                    -t kasmweb/projectsend:dev \
-                    -f kasm-ubuntu-jammy-projectsend.Dockerfile .
-else
-  sudo docker build --pull --no-cache \
-                    --build-arg "PROJECTSEND_VERSION=${VER}" \
-                    -t doctorwhen/kasm:projectsend \
-                    -f kasm-projectsend.Dockerfile .
-fi
+sudo docker build --pull --no-cache \
+                  --build-arg "PROJECTSEND_VERSION=${VER}" \
+                  -t doctorwhen/kasm:projectsend \
+                  -f kasm-projectsend.Dockerfile .
