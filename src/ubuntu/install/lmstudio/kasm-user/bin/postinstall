@@ -74,10 +74,27 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
 notify-send "Installing LLM command line utility"
 python3 -m pip install --user llm > ${LOGDIR}/install-llm.log 2>&1
+python3 -m pip install --user strip-tags >> ${LOGDIR}/install-llm.log 2>&1
+python3 -m pip install --user ttok >> ${LOGDIR}/install-llm.log 2>&1
+python3 -m pip install --user symbex >> ${LOGDIR}/install-llm.log 2>&1
 notify-send "Using LLM to install gpt4all plugin"
 llm install llm-gpt4all >> ${LOGDIR}/install-llm.log 2>&1
 llm models default orca-mini-3b-gguf2-q4_0 >> ${LOGDIR}/install-llm.log 2>&1
-llm aliases set orca-mini orca-mini-3b-gguf2-q4_0 >> ${LOGDIR}/install-llm.log 2>&1
+llm aliases set orca-mini orca-mini-3b-gguf2-q4_0
+llm aliases set orca-medium orca-2-7b
+llm aliases set orca-full orca-2-13b
+llm aliases set openorca mistral-7b-openorca
+llm aliases set minilm all-MiniLM-L6-v2-f16
+llm aliases set replit replit-code-v1_5-3b-q4_0
+llm aliases set mptchat mpt-7b-chat-merges-q4_0
+llm aliases set rift rift-coder-v0-7b-q4_0
+llm aliases set german em_german_mistral_v01
+llm aliases set instruct mistral-7b-instruct-v0
+llm aliases set falcon gpt4all-falcon-q4_0
+llm aliases set snoozy gpt4all-13b-snoozy-q4_0
+llm aliases set wizard wizardlm-13b-v1
+llm aliases set hermes nous-hermes-llama2-13b
+llm aliases set starcoder starcoder-q4_0
 
 LMS="LM_Studio.AppImage"
 [ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
