@@ -210,6 +210,9 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] && {
   notify-send "Starting Kitty terminal emulator session"

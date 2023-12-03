@@ -1,0 +1,8 @@
+#!/bin/bash
+
+TOP="$HOME/AI-Messenger"
+
+[ -f ${TOP}/main.py ] && {
+  cd ${TOP}
+  python3 main.py
+}

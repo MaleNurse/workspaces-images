@@ -120,6 +120,8 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 kill $(pgrep "notifyd")
 
 have_open=$(type -p exo-open)

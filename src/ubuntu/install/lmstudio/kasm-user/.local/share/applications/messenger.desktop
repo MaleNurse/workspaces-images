@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=AI Messenger
+Exec=/home/kasm-user/bin/start-ai-messenger
+Icon=/home/kasm-user/.local/share/icons/hicolor/128x128/apps/messenger.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Network;Application;
+Name[en_US]=AI Messenger
