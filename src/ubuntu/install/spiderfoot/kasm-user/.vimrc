@@ -305,6 +305,7 @@ let g:syntastic_html_checkers = []
 
 " ======= Toggle Transparency ========
 let t:is_transparent = 0
+hi Normal guibg=NONE ctermbg=NONE
 function! Toggle_transparent_background()
   if t:is_transparent == 0
     hi Normal guibg=#111111 ctermbg=black
@@ -314,7 +315,7 @@ function! Toggle_transparent_background()
     let t:is_transparent = 0
   endif
 endfunction
-nnoremap <C-t> :call Toggle_transparent_background()<CR>
+nnoremap <C-x> :call Toggle_transparent_background()<CR>
 
 " ======= NERDTree config start ========
 " Open NERDTree on vim start
