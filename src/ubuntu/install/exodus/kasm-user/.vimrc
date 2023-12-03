@@ -303,6 +303,14 @@ endif
 set guifont=Inconsolata:h18
 let g:syntastic_html_checkers = []
 
+if has("gui_running")
+  colorscheme onedark
+else
+" colorscheme darkspectrum
+  colorscheme onedark
+" colorscheme darktango
+endif
+
 " ======= Toggle Transparency ========
 let t:is_transparent = 0
 hi Normal guibg=NONE ctermbg=NONE
@@ -341,11 +349,3 @@ let g:NERDTreeShowHidden=1
 " augroup END
 
 " ======= NERDTree config end =======
-
-if has("gui_running")
-  colorscheme onedark
-else
-" colorscheme darkspectrum
-  colorscheme onedark
-" colorscheme darktango
-endif

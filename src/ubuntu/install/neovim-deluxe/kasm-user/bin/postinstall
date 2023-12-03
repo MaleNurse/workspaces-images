@@ -44,6 +44,9 @@ have_kitty=$(type -p kitty)
   }
 }
 
+notify-send "Installing zoxide smart cd command"
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)

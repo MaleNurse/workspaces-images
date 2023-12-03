@@ -124,7 +124,6 @@ apt-get install -y php
 apt-get install -y composer
 apt-get install -y ccls
 apt-get install -y luarocks
-apt-get install -y zoxide
 apt-get install -y wl-clipboard
 apt-get install -y ubuntu-desktop
 

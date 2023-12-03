@@ -78,7 +78,6 @@ apt-get install -y pandoc
 apt-get install -y ranger
 apt-get install -y tmux
 apt-get install -y zip
-apt-get install -y zoxide
 apt-get install -y wl-clipboard
 
 install_lsd

@@ -5,17 +5,13 @@
 row=3
 col=0
 
+[/home/kasm-user/Desktop/com.obsproject.Studio.desktop]
+row=0
+col=1
+
 [/home/kasm-user/Desktop/google-chrome.desktop]
 row=2
 col=0
-
-[/home/kasm-user/Desktop/exo-file-manager.desktop]
-row=5
-col=0
-
-[/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
-row=1
-col=1
 
 [/home/kasm-user/Desktop/code.desktop]
 row=3
@@ -25,24 +21,24 @@ col=2
 row=2
 col=1
 
+[/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
+row=1
+col=1
+
+[/home/kasm-user/Desktop/ranger.desktop]
+row=5
+col=0
+
 [/home/kasm-user/Desktop/Downloads]
 row=0
 col=0
-
-[/home/kasm-user/Desktop/gimp.desktop]
-row=4
-col=1
 
 [/home/kasm-user/Desktop/signal-desktop.desktop]
 row=2
 col=2
 
-[/home/kasm-user/Desktop/com.obsproject.Studio.desktop]
-row=0
-col=1
-
-[/home/kasm-user/Desktop/kitty.desktop]
-row=5
+[/home/kasm-user/Desktop/gimp.desktop]
+row=4
 col=1
 
 [/home/kasm-user/Desktop/btop.desktop]
@@ -56,6 +52,10 @@ col=2
 [/home/kasm-user/Desktop/Zoom.desktop]
 row=0
 col=2
+
+[/home/kasm-user/Desktop/kitty.desktop]
+row=5
+col=1
 
 [/home/kasm-user/Desktop/org.remmina.Remmina.desktop]
 row=3

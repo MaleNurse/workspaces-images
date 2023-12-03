@@ -91,7 +91,6 @@ apt-get install -y exuberant-ctags
 apt-get install -y highlight
 apt-get install -y catdoc
 apt-get install -y pandoc
-apt-get install -y zoxide
 apt-get install -y tmux
 apt-get install -y w3m
 apt-get install -y asciinema

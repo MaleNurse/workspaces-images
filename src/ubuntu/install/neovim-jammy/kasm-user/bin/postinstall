@@ -41,6 +41,8 @@ have_kitty=$(type -p kitty)
   }
 }
 
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)

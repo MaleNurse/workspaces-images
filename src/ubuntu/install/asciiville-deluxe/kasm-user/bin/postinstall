@@ -32,6 +32,8 @@ LOGDIR="$HOME/logs"
   }
 }
 
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 # Initialize Asciiville
 [ -x $HOME/bin/init-asciiville ] && {
   xfce4-terminal --title "Asciiville Intialization" \

@@ -56,6 +56,9 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
+notify-send "Installing zoxide smart cd command"
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 notify-send "Starting SpiderFoot"
 start-spiderfoot &
 
@@ -126,7 +129,7 @@ rm -rf /home/kasm-default-profile/.??*
 notify-send "Installing Vim plugins"
 vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
-notify-send "Spiderfoot desktop initialization and configuration complete!"
+notify-send "Spiderfoot desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
