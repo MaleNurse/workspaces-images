@@ -32,7 +32,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/terraform/install_terraform.sh \
                   /ubuntu/install/telegram/install_telegram.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
-                  /ubuntu/install/slack/install_slack.sh \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/wing/install_tools_wing.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
