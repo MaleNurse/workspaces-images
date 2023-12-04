@@ -1,0 +1,16 @@
+#!/bin/bash
+
+[ -s ${HOME}/.config/rclone/rclone.conf ] || {
+  have_rclone=$(type -p rclone)
+  [ "${have_rclone}" ] && {
+    /home/kasm-user/.local/kitty.app/bin/kitty --session none \
+                                               --title 'Rclone Configuration' \
+                                               rclone config
+  }
+}
+
+[ -s ${HOME}/.config/rclone/rclone.conf ] && {
+  rm -f ${HOME}/.config/autostart/rclone-config.desktop
+}
+
+exit 0
