@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+curl -s \
+  https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv \
+  | tail +2 | ruby -rcsv -e 'CSV.parse(STDIN.read) {|row| puts row.join("\t")}' \
+  | fzf -1 -q "$1" --with-nth 1 --delimiter "\t" --preview 'echo {2} \
+  | fold -s -w $(tput cols)' | cut -d"	" -f2 > /tmp/gpt_prompt$$
+
+cat /tmp/gpt_prompt$$ | xclip -selection clipboard
+
+printf "\nYour selected ChatGPT prompt is:\n\n"
+cat /tmp/gpt_prompt$$
+
+printf "\n\nThe prompt has been copied to your clipboard\n"
+
+printf "\nPaste this prompt with Ctrl-v\n"
+printf "\nExit with Ctrl-c\n"
+
+rm -f /tmp/gpt_prompt$$
+while true
+do
+  sleep 10
+done

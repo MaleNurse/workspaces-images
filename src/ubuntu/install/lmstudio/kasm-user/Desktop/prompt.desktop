@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Find Prompt
+GenericName=Find GPT Prompt
+Comment=Find a ChatGPT prompt using Awesome ChatGPT Prompts
+Exec=/home/kasm-user/.local/kitty.app/bin/kitty --session /home/kasm-user/.config/kitty/sessions/prompt --title 'Find ChatGPT Prompt'
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/chatgpt.png
+Categories=System;TerminalEmulator;

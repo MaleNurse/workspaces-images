@@ -48,11 +48,13 @@ else
   AUTH_HEADER=
 fi
 
+apt-get update
+apt-get install -y curl
 add-apt-repository universe
 add-apt-repository ppa:appimagelauncher-team/stable
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 apt-get update
 apt-get install -y apt-utils
-apt-get install -y curl
 apt-get install -y jq
 apt-get install -y libfuse2
 apt-get install -y appimagelauncher
@@ -80,6 +82,7 @@ apt-get install -y libjpeg-dev
 apt-get install -y libpng-dev
 apt-get install -y khard
 apt-get install -y git
+apt-get install -y git-lfs
 apt-get install -y mplayer
 apt-get install -y golang
 apt-get install -y bsdgames

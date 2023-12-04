@@ -77,9 +77,18 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 
 notify-send "Installing LLM command line utility"
 python3 -m pip install --user llm > ${LOGDIR}/install-llm.log 2>&1
-python3 -m pip install --user strip-tags >> ${LOGDIR}/install-llm.log 2>&1
-python3 -m pip install --user ttok >> ${LOGDIR}/install-llm.log 2>&1
-python3 -m pip install --user symbex >> ${LOGDIR}/install-llm.log 2>&1
+
+notify-send "Installing AI helper Python modules"
+python3 -m pip install --user strip-tags > ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user ttok >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user symbex >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user openai >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user pyperclip >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user pyaml >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user click >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user rich >> ${LOGDIR}/install-pip.log 2>&1
+python3 -m pip install --user huggingface_hub >> ${LOGDIR}/install-pip.log 2>&1
+
 notify-send "Using LLM to install gpt4all plugin"
 llm install llm-gpt4all >> ${LOGDIR}/install-llm.log 2>&1
 llm models default orca-mini-3b-gguf2-q4_0 >> ${LOGDIR}/install-llm.log 2>&1
@@ -124,12 +133,12 @@ llm aliases set starcoder starcoder-q4_0
 
 LMS="LM_Studio.AppImage"
 [ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
-if [ -f /share/${LMS} ]; then
+if [ -f /share/AppImages/${LMS} ]; then
   notify-send "Installing LM Studio"
   if [ -x ${HOME}/bin/appimage-launcher ]; then
-    ${HOME}/bin/appimage-launcher /share/${LMS}
+    ${HOME}/bin/appimage-launcher /share/AppImages/${LMS}
   else
-    cp /share/${LMS} ${HOME}/Applications
+    cp /share/AppImages/${LMS} ${HOME}/Applications
   fi
 else
   [ -x ${HOME}/.local/kitty.app/bin/kitty ] && {
@@ -141,12 +150,12 @@ else
     }
   }
 fi
-# Copy the AppImage back to /share if needed
-[ -f /share/${LMS} ] || {
+# Copy the AppImage back to /share/AppImages if needed
+[ -f /share/AppImages/${LMS} ] || {
   for appimg in ${HOME}/Applications/LM_Studio*AppImage
   do
     [ "${appimg}" == "${HOME}/Applications/LM_Studio*AppImage" ] && continue
-    cp "${appimg}" /share/${LMS}
+    cp "${appimg}" /share/AppImages/${LMS}
     break
   done
 }
