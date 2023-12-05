@@ -15,7 +15,7 @@ install_asciiville() {
     TEMP_DEB="$(mktemp --suffix=.deb)"
     wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
     chmod 644 "${TEMP_DEB}"
-    apt install -y "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
     rm -f "${TEMP_DEB}"
     printf " done"
   }
@@ -33,7 +33,25 @@ install_external_package() {
     TEMP_DEB="$(mktemp --suffix=.deb)"
     wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
     chmod 644 "${TEMP_DEB}"
-    apt install -y "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
+    rm -f "${TEMP_DEB}"
+    printf " done"
+  }
+}
+
+install_lsd() {
+  API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "lsd_" | grep "_amd64\.deb")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling LSD ..."
+    TEMP_DEB="$(mktemp --suffix=.deb)"
+    wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+    chmod 644 "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
     rm -f "${TEMP_DEB}"
     printf " done"
   }
@@ -48,54 +66,55 @@ else
   AUTH_HEADER=
 fi
 
-apt update
-apt install -y apt-utils
-apt install -y jq
-apt install -y fzf
-apt install -y ripgrep
-apt install -y bat
-apt install -y lsd
-apt install -y figlet
-apt install -y lolcat
-apt install -y libnotify-bin
-apt install -y xclip
-apt install -y xsel
-apt install -y python3
-apt install -y python3-pip
-apt install -y python3-venv
-apt install -y uuid-runtime
-apt install -y libaa-bin
-apt install -y libaa1
-apt install -y bb
-apt install -y dconf-cli
-apt install -y libncurses-dev
-apt install -y libjpeg-dev
-apt install -y libpng-dev
-apt install -y khard
-apt install -y git
-apt install -y mplayer
-apt install -y libportaudio2
-apt install -y libportaudiocpp0
-apt install -y portaudio19-dev
-apt install -y golang
-apt install -y bsdgames
-apt install -y greed
-apt install -y nudoku
-apt install -y node
-apt install -y dialog
-apt install -y ranger
-apt install -y tmux
-apt install -y w3m
-apt install -y asciinema
-apt install -y gnupg
-apt install -y zip
-apt install -y imagemagick
-apt install -y cmatrix
-apt install -y neomutt
-apt install -y newsboat
-apt install -y speedtest-cli
-apt install -y neofetch
-apt install -y wl-clipboard
+apt-get update
+apt-get install -y apt-utils
+apt-get install -y jq
+apt-get install -y fzf
+apt-get install -y ripgrep
+apt-get install -y bat
+apt-get install -y figlet
+apt-get install -y lolcat
+apt-get install -y libnotify-bin
+apt-get install -y xclip
+apt-get install -y xsel
+apt-get install -y python3
+apt-get install -y python3-pip
+apt-get install -y python3-venv
+apt-get install -y uuid-runtime
+apt-get install -y libaa-bin
+apt-get install -y libaa1
+apt-get install -y bb
+apt-get install -y dconf-cli
+apt-get install -y libncurses-dev
+apt-get install -y libjpeg-dev
+apt-get install -y libpng-dev
+apt-get install -y khard
+apt-get install -y git
+apt-get install -y mplayer
+apt-get install -y libportaudio2
+apt-get install -y libportaudiocpp0
+apt-get install -y portaudio19-dev
+apt-get install -y golang
+apt-get install -y bsdgames
+apt-get install -y greed
+apt-get install -y nudoku
+apt-get install -y node
+apt-get install -y dialog
+apt-get install -y ranger
+apt-get install -y tmux
+apt-get install -y w3m
+apt-get install -y asciinema
+apt-get install -y gnupg
+apt-get install -y zip
+apt-get install -y imagemagick
+apt-get install -y cmatrix
+apt-get install -y neomutt
+apt-get install -y newsboat
+apt-get install -y speedtest-cli
+apt-get install -y neofetch
+apt-get install -y wl-clipboard
+
+install_lsd
 
 install_asciiville
 

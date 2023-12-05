@@ -136,6 +136,9 @@ do
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 have_rclone=$(type -p rclone)
 [ "${have_rclone}" ] && {
   notify-send "Configuring rclone"
@@ -157,9 +160,6 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 notify-send "Cloud Storage desktop initialization complete!"
 sleep 5

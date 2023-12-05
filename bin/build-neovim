@@ -23,6 +23,7 @@ PRIVS="${PATH_PRIVS}/neovim/kasm-user/bin/install-neovide \
        ${PATH_PRIVS}/neovim/kasm-user/bin/install-jetbrains \
        ${PATH_PRIVS}/neovim/kasm-user/bin/install-neovim \
        ${PATH_PRIVS}/neovim/kasm-user/bin/install-lazyman \
+       ${PATH_PRIVS}/neovim/install_tools_neovim.sh \
        ${PATH_PRIVS}/neovim/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do

@@ -39,6 +39,24 @@ install_external_package() {
   }
 }
 
+install_lsd() {
+  API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "lsd_" | grep "_amd64\.deb")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling LSD ..."
+    TEMP_DEB="$(mktemp --suffix=.deb)"
+    wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+    chmod 644 "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
+    rm -f "${TEMP_DEB}"
+    printf " done"
+  }
+}
+
 # GH_TOKEN, a GitHub token must be set in the environment
 export GH_TOKEN="__GITHUB_API_TOKEN__"
 
@@ -54,7 +72,6 @@ apt-get install -y jq
 apt-get install -y fzf
 apt-get install -y ripgrep
 apt-get install -y bat
-apt-get install -y lsd
 apt-get install -y figlet
 apt-get install -y lolcat
 apt-get install -y libnotify-bin
@@ -91,6 +108,8 @@ apt-get install -y gir1.2-gst-plugins-base-1.0
 apt-get install -y gstreamer1.0-plugins-good
 apt-get install -y gstreamer1.0-plugins-ugly
 apt-get install -y gstreamer1.0-tools
+
+install_lsd
 
 install_musicplayerplus
 
