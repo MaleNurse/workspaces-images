@@ -39,6 +39,28 @@ install_external_package() {
   }
 }
 
+install_fzf() {
+  API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "linux_amd64\.tar\.gz")
+
+  [ "${DL_URL}" ] && {
+    TEMP_TGZ="$(mktemp --suffix=.tgz)"
+    wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
+    chmod 644 "${TEMP_TGZ}"
+    mkdir -p /tmp/fzft$$
+    tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
+    [ -f /tmp/fzft$$/fzf ] && {
+      cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
+      chmod 755 ${HOME}/.local/bin/fzf
+    }
+    rm -f "${TEMP_TGZ}"
+    rm -rf /tmp/fzft$$
+  }
+}
+
 install_lsd() {
   API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
   DL_URL=
@@ -69,7 +91,6 @@ fi
 apt-get update
 apt-get install -y apt-utils
 apt-get install -y jq
-apt-get install -y fzf
 apt-get install -y ripgrep
 apt-get install -y bat
 apt-get install -y figlet
@@ -109,6 +130,7 @@ apt-get install -y gstreamer1.0-plugins-good
 apt-get install -y gstreamer1.0-plugins-ugly
 apt-get install -y gstreamer1.0-tools
 
+install_fzf
 install_lsd
 
 install_musicplayerplus
