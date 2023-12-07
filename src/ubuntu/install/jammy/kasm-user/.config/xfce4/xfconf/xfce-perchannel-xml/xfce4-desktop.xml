@@ -45,5 +45,7 @@
       <property name="show-trash" type="bool" value="false"/>
     </property>
     <property name="single-click" type="bool" value="true"/>
+    <property name="use-custom-font-size" type="bool" value="true"/>
+    <property name="font-size" type="double" value="10.000000"/>
   </property>
 </channel>
