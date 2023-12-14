@@ -133,6 +133,8 @@ find $HOME/.config -type f | xargs chmod 644
 find $HOME/.config -type d | xargs chmod 755
 find $HOME/.local -type d | xargs chmod 755
 find $HOME/.oh-my-zsh -type d | xargs chmod 755
+find $HOME/.oh-my-zsh -perm 666 | xargs chmod 644
+find $HOME/.oh-my-zsh -perm 777 | xargs chmod 755
 chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
 chmod 755 $HOME/bin

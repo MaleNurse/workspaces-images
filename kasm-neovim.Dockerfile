@@ -51,6 +51,9 @@ RUN \
   chown -R 1000:0 /home/kasm-user && \
   rm -Rf ${INST_DIR}
 
+# Set kasm-user login shell to Zsh
+RUN chsh -s /bin/zsh kasm-user
+
 # Userspace Runtime
 ENV HOME /home/kasm-default-profile
 ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
@@ -58,6 +61,9 @@ WORKDIR $HOME
 USER 1000
 
 RUN \
+  sh -c \
+  "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
+  "" --unattended --keep-zshrc --skip-chsh && \
   git clone https://github.com/romkatv/powerlevel10k.git \
       $ZSH_CUSTOM/themes/powerlevel10k && \
   git clone https://github.com/zsh-users/zsh-autosuggestions \

@@ -101,5 +101,3 @@ install_lsd
 OWNER=doctorfree
 PROJECT=btop
 install_external_package
-
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
