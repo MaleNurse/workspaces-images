@@ -44,6 +44,22 @@ have_kitty=$(type -p kitty)
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
+[ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
+     $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
+}
+[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
+}
+[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
+}
+[ -f $HOME/.local/share/applications/kitty.desktop ] && {
+  cp $HOME/.local/share/applications/kitty.desktop \
+     $HOME/Desktop/kitty.desktop
+}
 
 notify-send "Installing nvm node version manager"
 
@@ -102,32 +118,21 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f $HOME/.local/share/applications/neovim.desktop ] && {
   cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop
 }
-for desk in kitty lazyman nvims
+for desk in lazyman nvims
 do
   [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
     cp $HOME/.local/share/applications/${desk}.desktop \
        $HOME/Desktop/${desk}.desktop
   }
 done
-[ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
-     $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
-}
-[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
-}
-[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
-}
 
 # Correct permissions/ownership
 chmod 755 $HOME
-chmod 644 $HOME/.aliases $HOME/.bashrc
+chmod 644 $HOME/.aliases $HOME/.bashrc $HOME/.zshrc
 find $HOME/.config -type f | xargs chmod 644
 find $HOME/.config -type d | xargs chmod 755
 find $HOME/.local -type d | xargs chmod 755
+find $HOME/.oh-my-zsh -type d | xargs chmod 755
 chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
 chmod 755 $HOME/bin

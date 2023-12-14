@@ -68,6 +68,13 @@ fi
 
 apt-get update
 apt-get install -y apt-utils
+apt-get install -y build-essential
+apt-get install -y curl
+apt-get install -y file
+apt-get install -y git
+apt-get install -y git-core
+apt-get install -y zsh
+apt-get install -y fonts-powerline
 apt-get install -y jq
 apt-get install -y g++
 apt-get install -y ripgrep
@@ -94,3 +101,5 @@ install_lsd
 OWNER=doctorfree
 PROJECT=btop
 install_external_package
+
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
