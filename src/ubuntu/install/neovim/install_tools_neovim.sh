@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
 #
 
+install_external_package() {
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "\.amd64\.deb")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling %s ..." "${PROJECT}"
+    TEMP_DEB="$(mktemp --suffix=.deb)"
+    wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+    chmod 644 "${TEMP_DEB}"
+    apt-get install -y "${TEMP_DEB}"
+    rm -f "${TEMP_DEB}"
+    printf " done"
+  }
+}
+
 install_fzf() {
   API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
   DL_URL=
@@ -72,3 +90,7 @@ apt-get install -y wl-clipboard
 
 install_fzf
 install_lsd
+
+OWNER=doctorfree
+PROJECT=btop
+install_external_package

@@ -102,7 +102,7 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f $HOME/.local/share/applications/neovim.desktop ] && {
   cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop
 }
-for desk in kitty lazyman neovide nvims
+for desk in kitty lazyman nvims
 do
   [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
     cp $HOME/.local/share/applications/${desk}.desktop \
