@@ -62,6 +62,8 @@ WORKDIR $HOME
 USER 1000
 
 RUN \
+  bash -c \
+  "$(curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh)" && \
   sh -c \
   "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
   "" --unattended --keep-zshrc --skip-chsh && \
@@ -77,6 +79,7 @@ RUN \
       ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-kitty && \
   git clone https://github.com/Aloxaf/fzf-tab \
       ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
+  bash ${HOME}/bin/install-kitty && \
   bash ${HOME}/bin/install-neovim && \
   bash ${HOME}/bin/install-neovide && \
   bash ${HOME}/bin/install-lazyman -y -z noinstall && \

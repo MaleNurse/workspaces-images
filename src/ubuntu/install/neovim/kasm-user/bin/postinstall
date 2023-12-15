@@ -14,7 +14,10 @@ umask 022
 }
 [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
 
-sleep 5
+rm -rf /home/kasm-default-profile/*
+rm -rf /home/kasm-default-profile/.??*
+
+sleep 3
 notify-send -u critical "One-time Neovim Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
                         "This process can take several minutes, please be patient"
@@ -36,14 +39,14 @@ notify-send "Installing JetBrains Nerd Mono font"
   }
 }
 
-notify-send "Installing Kitty terminal emulator"
+#notify-send "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
-have_kitty=$(type -p kitty)
-[ "${have_kitty}" ] || {
-  [ -x $HOME/bin/install-kitty ] && {
-    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
-  }
-}
+#have_kitty=$(type -p kitty)
+#[ "${have_kitty}" ] || {
+#  [ -x $HOME/bin/install-kitty ] && {
+#    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
+#  }
+#}
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
      $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -74,11 +77,11 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
-notify-send "Installing zoxide smart cd command"
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-
-## Neovim, Neovide, and Lazyman installs are now done in the Dockerfile
+## Neovim, Neovide, zoxide, kitty, and Lazyman installs are now done in the Dockerfile
 #
+#notify-send "Installing zoxide smart cd command"
+#curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 # Try to install Neovim and Neovide
 #have_nvim=$(type -p nvim)
 #have_neov=$(type -p neovide)
@@ -173,9 +176,6 @@ done
 
 rm -f $HOME/Desktop/xfce4-terminal.desktop
 rm -f $HOME/Desktop/xfce4-file-manager.desktop
-
-rm -rf /home/kasm-default-profile/*
-rm -rf /home/kasm-default-profile/.??*
 
 notify-send "Installing Vim plugins"
 vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
