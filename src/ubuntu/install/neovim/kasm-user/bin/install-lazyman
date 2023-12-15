@@ -3059,7 +3059,7 @@ show_main_menu() {
         ;;
       "Initialize Lazyman"*,* | *,"Initialize Lazyman"*)
         [ -x "${INSTNVIM}" ] && {
-          "${INSTNVIM}" $darg $head $brew $yes
+          "${INSTNVIM}" -u $darg $head $brew $yes
         }
         lazyman ${darg} init
         set_haves
@@ -4899,7 +4899,7 @@ install_remove() {
     brief_usage
   }
   if [ -x "${INSTNVIM}" ]; then
-    "${INSTNVIM}" -a $darg $head $brew $yes
+    "${INSTNVIM}" -a -u $darg $head $brew $yes
     [ -f "${LMANDIR}/.initialized" ] && {
       echo "__extra_tools__=1" >>"${LMANDIR}"/.initialized
     }
@@ -5139,7 +5139,7 @@ fi
   [ -d "${HOME}/.local" ] || mkdir -p "${HOME}/.local"
   [ -d "${HOME}/.local/bin" ] || mkdir -p "${HOME}/.local/bin"
   if [ -x "${INSTNVIM}" ]; then
-    "${INSTNVIM}" $inst_pkgs $darg $head $brew $yes
+    "${INSTNVIM}" -u $inst_pkgs $darg $head $brew $yes
     have_nvim=$(type -p nvim)
     [ "$have_nvim" ] || {
       printf "\nERROR: cannot locate neovim."
