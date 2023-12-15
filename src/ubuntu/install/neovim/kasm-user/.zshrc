@@ -55,10 +55,15 @@
 #
 ### Setup and Configuration # End
 
+# Environment workarounds for first session in a Docker container with kasmVNC
 export SHELL=/bin/zsh
 export USER=kasm-user
 export USERNAME=$USER
 export KASM_USER=$USER
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="${ZSH}/custom"
 
 [ -f $STARTUPDIR/generate_container_user ] && {
   source $STARTUPDIR/generate_container_user
@@ -133,9 +138,6 @@ if command -v pyenv > /dev/null; then
   eval "$(pyenv init --path)"
 fi
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -194,9 +196,6 @@ DISABLE_AUTO_TITLE="true"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Highlighters to activate
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)

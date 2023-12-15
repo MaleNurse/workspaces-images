@@ -93,6 +93,13 @@ apt-get install -y python3
 apt-get install -y python3-venv
 apt-get install -y ruby
 apt-get install -y ruby-dev
+apt-get install -y exuberant-ctags
+apt-get install -y dialog
+apt-get install -y highlight
+apt-get install -y neofetch
+apt-get install -y catdoc
+apt-get install -y pandoc
+apt-get install -y ranger
 apt-get install -y wl-clipboard
 
 install_fzf
