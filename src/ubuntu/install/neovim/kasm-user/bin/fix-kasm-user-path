@@ -1,0 +1,11 @@
+#!/bin/bash
+
+find ${HOME} -type f -print0 | xargs -0 grep -l kasm-default-profile | while read p
+do
+  b=$(basename $p)
+  [ "$b" == "fix-kasm-user-path" ] && continue
+  cat $p | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/p$$
+  cp /tmp/p$$ $p
+  rm -f /tmp/p$$
+done
+

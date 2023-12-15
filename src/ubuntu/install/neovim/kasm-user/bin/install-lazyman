@@ -293,6 +293,7 @@ init_lvim() {
 }
 
 init_neovim() {
+  [ "${nosync}" ] && return
   neodir="$1"
   [ "${input_req}" ] && debug=1
   [ -d "${HOME}/.config/${neodir}" ] || return
@@ -3392,6 +3393,7 @@ namespace=
 input_req=
 setconf=
 nopatch=
+nosync=1
 nvchaddir="nvim-NvChad"
 spacevimdir="nvim-SpaceVim"
 magicvimdir="nvim-MagicVim"
@@ -3401,8 +3403,11 @@ neovimdir=()
   [ "$1" == "-F" ] && set -- "$@" 'config'
   [ "$1" == "-U" ] && neovimdir=("${LAZYMAN}")
 }
-while getopts "9aAb:BcC:dD:eE:f:F:gGhHi:IjJkK:lL:mMnN:oO:pPqQrRsStTUvV:w:Wx:XyYzZu" flag; do
+while getopts "09aAb:BcC:dD:eE:f:F:gGhHi:IjJkK:lL:mMnN:oO:pPqQrRsStTUvV:w:Wx:XyYzZu" flag; do
   case $flag in
+  0)
+    nosync=
+    ;;
   9)
     nopatch=1
     ;;

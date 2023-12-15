@@ -40,10 +40,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
 COPY ./src/ $INST_DIR
 
 # Run installations
+ENV DENO_INSTALL /usr
 RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  curl -fsSL https://deno.land/x/install/install.sh | sh && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
@@ -77,7 +79,8 @@ RUN \
       ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
   bash ${HOME}/bin/install-neovim && \
   bash ${HOME}/bin/install-neovide && \
-  bash ${HOME}/bin/install-lazyman -y -z noinstall
+  bash ${HOME}/bin/install-lazyman -y -z noinstall && \
+  bash ${HOME}/bin/fix-kasm-user-path
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME

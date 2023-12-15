@@ -21,14 +21,6 @@ notify-send -u critical "Installing Neovim Configuration Manager and Dependencie
 
 LOGDIR="$HOME/logs"
 
-notify-send "Fixing kasm-default-profile pathnames"
-find $HOME -type f -print0 | xargs -0 grep -l kasm-default-profile | while read p
-do
-  cat $p | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/p$$
-  cp /tmp/p$$ $p
-  rm -f /tmp/p$$
-done
-
 notify-send "Installing JetBrains Nerd Mono font"
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
@@ -85,6 +77,8 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
+## Neovim, Neovide, and Lazyman installs are now done in the Dockerfile
+#
 # Try to install Neovim and Neovide
 #have_nvim=$(type -p nvim)
 #have_neov=$(type -p neovide)
@@ -108,10 +102,19 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 #  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
 #}
 
+# Perform a Lazy sync in the Lazyman Neovim configuration
+#
+have_lazy=$(type -p install-lazyman)
+[ "${have_lazy}" ] && {
+  export NVIM_APPNAME="nvim-Lazyman"
+  install-lazyman -0 init > ${LOGDIR}/init-lazyman.log 2>&1
+}
+
 # We gave it our best shot
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
+rm -f /home/*/bin/fix-kasm-user-path
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
