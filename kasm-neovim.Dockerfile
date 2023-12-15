@@ -50,10 +50,8 @@ RUN \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
+  chsh -s /bin/zsh kasm-user && \
   rm -Rf ${INST_DIR}
-
-# Set kasm-user login shell to Zsh
-RUN chsh -s /bin/zsh kasm-user
 
 # Userspace Runtime
 ENV HOME /home/kasm-default-profile
@@ -76,11 +74,10 @@ RUN \
   git clone https://github.com/redxtech/zsh-kitty \
       ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-kitty && \
   git clone https://github.com/Aloxaf/fzf-tab \
-      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
-
-RUN bash ${HOME}/bin/install-neovim
-RUN bash ${HOME}/bin/install-neovide
-RUN bash ${HOME}/bin/install-lazyman -y -z noinstall
+      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
+  bash ${HOME}/bin/install-neovim && \
+  bash ${HOME}/bin/install-neovide && \
+  bash ${HOME}/bin/install-lazyman -y -z noinstall
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME

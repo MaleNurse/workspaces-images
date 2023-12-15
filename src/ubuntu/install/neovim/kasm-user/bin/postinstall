@@ -21,6 +21,14 @@ notify-send -u critical "Installing Neovim Configuration Manager and Dependencie
 
 LOGDIR="$HOME/logs"
 
+notify-send "Fixing kasm-default-profile pathnames"
+find $HOME -type f -print0 | xargs -0 grep -l kasm-default-profile | while read p
+do
+  cat $p | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/p$$
+  cp /tmp/p$$ $p
+  rm -f /tmp/p$$
+done
+
 notify-send "Installing JetBrains Nerd Mono font"
 # Install JetBrains Mono font
 [ -x $HOME/bin/install-jetbrains ] && {
