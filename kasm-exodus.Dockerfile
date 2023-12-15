@@ -21,11 +21,14 @@ RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfc
 ### Install user config and dependencies
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/
 COPY ./src/ubuntu/install/exodus/ $INST_SCRIPTS/
+COPY ./src/ubuntu/install/backgrounds $INST_SCRIPTS/backgrounds/
 RUN \
   bash $INST_SCRIPTS/exodus/install_tools_exodus.sh && \
+  bash $INST_SCRIPTS/backgrounds/install_backgrounds.sh && \
   bash $INST_SCRIPTS/install_kasm_user.sh exodus && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh && \
-  rm -rf $INST_SCRIPTS/exodus
+  rm -rf $INST_SCRIPTS/exodus && \
+  rm -rf $INST_SCRIPTS/backgrounds
 
 ######### Customize Container Here ###########
 

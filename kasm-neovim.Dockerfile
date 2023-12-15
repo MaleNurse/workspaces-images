@@ -33,6 +33,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/neovim/install_tools_neovim.sh \
+                  /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts

@@ -90,10 +90,13 @@ RUN bash $INST_SCRIPTS/thunderbird/install_thunderbird.sh  && rm -rf $INST_SCRIP
 
 ### Install Ubuntu Focal packages and user configuration
 COPY ./src/ubuntu/install/focal $INST_SCRIPTS/focal/
+COPY ./src/ubuntu/install/backgrounds $INST_SCRIPTS/backgrounds/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS
 RUN bash $INST_SCRIPTS/focal/install_tools_focal.sh && \
+    bash $INST_SCRIPTS/backgrounds/install_backgrounds.sh && \
     bash $INST_SCRIPTS/install_kasm_user.sh focal && \
     rm -rf $INST_SCRIPTS/focal/ && \
+    rm -rf $INST_SCRIPTS/backgrounds/ && \
     rm -f $INST_SCRIPTS/install_kasm_user.sh
 
 # Do not prompt for upgrade

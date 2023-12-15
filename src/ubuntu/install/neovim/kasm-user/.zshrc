@@ -6,7 +6,6 @@
 ## @date Written 17-Sep-2012
 ## @version 1.0.1
 ##
-
 ### Setup and Configuration # Begin
 #
 ## Install ZSH
@@ -56,13 +55,19 @@
 #
 ### Setup and Configuration # End
 
+export SHELL=/bin/zsh
+export USER=kasm-user
+export USERNAME=$USER
+export KASM_USER=$USER
+
+[ -f $STARTUPDIR/generate_container_user ] && {
+  source $STARTUPDIR/generate_container_user
+}
+
 # If using GPG_TTY=$(tty) this needs to happen before p10k instant prompt
 # as p10k instant prompt redirects stdin. Or, just use $TTY as that is a zsh
 # environment variable available at all times regardless of stdin redirection
 export GPG_TTY=$TTY
-
-# Login should set this but to be sure
-export SHELL=/bin/zsh
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -373,13 +378,13 @@ setterm -linewrap on 2> /dev/null
 # colorize man pages
 man () {
   LESS_TERMCAP_mb=$'\e[1;32m' \
-    LESS_TERMCAP_md=$'\e[1;32m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[01;33m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[1;4;31m' \
-    command man "$@"
+  LESS_TERMCAP_md=$'\e[1;32m' \
+  LESS_TERMCAP_me=$'\e[0m' \
+  LESS_TERMCAP_se=$'\e[0m' \
+  LESS_TERMCAP_so=$'\e[01;33m' \
+  LESS_TERMCAP_ue=$'\e[0m' \
+  LESS_TERMCAP_us=$'\e[1;4;31m' \
+  command man "$@"
 }
 
 export LESSHISTFILE=-
