@@ -95,10 +95,10 @@ notify-send "Installing Neovide"
   }
 }
 
-have_lazy=$(type -p install-lazyman)
-[ "${have_lazy}" ] && {
-  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
-}
+#have_lazy=$(type -p install-lazyman)
+#[ "${have_lazy}" ] && {
+#  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
+#}
 
 # We gave it our best shot
 rm -f /home/*/bin/install-lazyman
