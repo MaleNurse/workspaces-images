@@ -78,22 +78,22 @@ notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # Try to install Neovim and Neovide
-have_nvim=$(type -p nvim)
-have_neov=$(type -p neovide)
+#have_nvim=$(type -p nvim)
+#have_neov=$(type -p neovide)
 
-notify-send "Installing Neovim"
-[ "${have_nvim}" ] || {
-  [ -x $HOME/bin/install-neovim ] && {
-    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
-  }
-}
+#notify-send "Installing Neovim"
+#[ "${have_nvim}" ] || {
+#  [ -x $HOME/bin/install-neovim ] && {
+#    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
+#  }
+#}
 
-notify-send "Installing Neovide"
-[ "${have_neov}" ] || {
-  [ -x $HOME/bin/install-neovide ] && {
-    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
-  }
-}
+#notify-send "Installing Neovide"
+#[ "${have_neov}" ] || {
+#  [ -x $HOME/bin/install-neovide ] && {
+#    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
+#  }
+#}
 
 #have_lazy=$(type -p install-lazyman)
 #[ "${have_lazy}" ] && {

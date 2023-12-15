@@ -78,6 +78,8 @@ RUN \
   git clone https://github.com/Aloxaf/fzf-tab \
       ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
 
+RUN bash ${HOME}/bin/install-neovim
+RUN bash ${HOME}/bin/install-neovide
 RUN bash ${HOME}/bin/install-lazyman -y -z noinstall
 
 ENV HOME /home/kasm-user
