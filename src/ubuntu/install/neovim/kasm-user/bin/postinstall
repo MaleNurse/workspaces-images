@@ -98,32 +98,14 @@ notify-send "Installing Neovide"
   }
 }
 
-# Fix Lazyman permissions
-[ -d $HOME/.config/nvim-Lazyman/scripts ] && {
-  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
-  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*/*.sh
-  chmod 755 $HOME/.config/nvim-Lazyman/*.sh
-}
-
-[ -f $HOME/.config/nvim-Lazyman/lazyman.sh ] && {
-  cp $HOME/.config/nvim-Lazyman/lazyman.sh $HOME/.local/bin/lazyman
-  chmod 755 $HOME/.local/bin/lazyman
-}
-
-#have_lazy=$(type -p install-lazyman)
-#[ "${have_lazy}" ] && {
-#  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
-#}
-
-# Perform a Lazy sync in the Lazyman Neovim configuration
-#
+notify-send "Installing the Lazyman Neovim configuration manager"
 have_lazy=$(type -p install-lazyman)
 [ "${have_lazy}" ] && {
-  export NVIM_APPNAME="nvim-Lazyman"
-  install-lazyman -0 init > ${LOGDIR}/init-lazyman.log 2>&1
+  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
 }
 
 # We gave it our best shot
+rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
