@@ -1,14 +1,14 @@
 #!/bin/bash
 
 export HOME="/home/kasm-user"
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH="${HOME}/bin:${HOME}/.local/bin:$PATH"
 umask 022
 
 # Do we have a Github API token?
 [ "${GH_TOKEN}" ] || {
   [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
   [ "${GH_TOKEN}" ] || {
-    [ -f $HOME/.private ] && source $HOME/.private
+    [ -f ${HOME}/.private ] && source ${HOME}/.private
     [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
   }
 }
@@ -22,19 +22,19 @@ notify-send -u critical "One-time Neovim Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager and Dependencies" \
                         "This process can take several minutes, please be patient"
 
-LOGDIR="$HOME/logs"
+LOGDIR="${HOME}/logs"
 
 notify-send "Installing JetBrains Nerd Mono font"
 # Install JetBrains Mono font
-[ -x $HOME/bin/install-jetbrains ] && {
+[ -x ${HOME}/bin/install-jetbrains ] && {
   ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
   FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
               .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
               .config/xfce4/terminal/terminalrc"
-  [ -f $HOME/.local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf ] && {
+  [ -f ${HOME}/.local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf ] && {
     for font_file in ${FONT_FILES}
     do
-      [ -f $HOME/${font_file}-jb ] && mv $HOME/${font_file}-jb $HOME/${font_file}
+      [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
     done
   }
 }
@@ -43,25 +43,25 @@ notify-send "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] || {
-  [ -x $HOME/bin/install-kitty ] && {
+  [ -x ${HOME}/bin/install-kitty ] && {
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
-[ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
-     $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
+[ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
+     ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
 }
-[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
+[ -f ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty-128.png
 }
-[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
+[ -f ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
 }
-[ -f $HOME/.local/share/applications/kitty.desktop ] && {
-  cp $HOME/.local/share/applications/kitty.desktop \
-     $HOME/Desktop/kitty.desktop
+[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/Desktop/kitty.desktop
 }
 
 notify-send "Installing nvm node version manager"
@@ -86,14 +86,14 @@ have_neov=$(type -p neovide)
 
 notify-send "Installing Neovim"
 [ "${have_nvim}" ] || {
-  [ -x $HOME/bin/install-neovim ] && {
+  [ -x ${HOME}/bin/install-neovim ] && {
     ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
   }
 }
 
 notify-send "Installing Neovide"
 [ "${have_neov}" ] || {
-  [ -x $HOME/bin/install-neovide ] && {
+  [ -x ${HOME}/bin/install-neovide ] && {
     ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
   }
 }
@@ -122,65 +122,74 @@ rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f /home/*/bin/fix-kasm-user-path
-rm -f $HOME/.config/autostart/postinstall.desktop
+rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-[ -f $HOME/.local/share/applications/neovim.desktop ] && {
-  cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop
-}
-for desk in lazyman neovide nvims
+for desk in lazyman neovide neovim nvims
 do
-  [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
-    cp $HOME/.local/share/applications/${desk}.desktop \
-       $HOME/Desktop/${desk}.desktop
+  [ -f ${HOME}/.local/share/applications/${desk}.desktop ] && {
+    cp ${HOME}/.local/share/applications/${desk}.desktop \
+       ${HOME}/Desktop/${desk}.desktop
   }
 done
 
 # Correct permissions/ownership
-chmod 755 $HOME
-chmod 644 $HOME/.aliases $HOME/.bashrc $HOME/.zshrc
-find $HOME/.config -type d | xargs chmod 755
-for cdir in $HOME/.config/*
+chmod 755 ${HOME}
+chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc
+for fdir in launchpadlib mozilla vim
 do
-  [ "${cdir}" == "$HOME/.config/*" ] && continue
-  [ "${cdir}" == "$HOME/.config/nvim-Lazyman" ] && continue
-  [ "${cdir}" == "$HOME/.config/autostart" ] && continue
+  [ -d ${HOME}/.${fdir} ] && {
+    find ${HOME}/.${fdir} -type f | xargs chmod 644
+    find ${HOME}/.${fdir} -type d | xargs chmod 755
+  }
+done
+find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
+do
+  chmod 755 $f
+done
+find ${HOME}/.config -type d | xargs chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
   find ${cdir} -type f | xargs chmod 644
 done
-chmod 600 $HOME/.config/user-dirs.*
-find $HOME/.local -type d | xargs chmod 755
-find $HOME/.oh-my-zsh -type d | xargs chmod 755
-find $HOME/.oh-my-zsh -perm 666 | xargs chmod 644
-find $HOME/.oh-my-zsh -perm 777 | xargs chmod 755
-chmod 755 $HOME/Desktop
-chmod 755 $HOME/Desktop/*
-chmod 755 $HOME/.local/share/applications/*.desktop
-chmod 755 $HOME/bin
-chmod 755 $HOME/bin/*
-chmod 755 $HOME/.cargo
-chmod 755 $HOME/logs
-[ -d $HOME/.cache ] || mkdir $HOME/.cache
-chmod 755 $HOME/.cache
-[ -d $HOME/.cache/mozilla ] || mkdir $HOME/.cache/mozilla
-chmod 755 $HOME/.cache/mozilla
-[ -d $HOME/.mozilla ] || mkdir $HOME/.mozilla
-chmod 755 $HOME/.mozilla
-[ -d $HOME/.mozilla/firefox ] || mkdir $HOME/.mozilla/firefox
-chmod 755 $HOME/.mozilla/firefox
-[ -d $HOME/.pki ] || mkdir $HOME/.pki
-chmod 700 $HOME/.pki
-[ -d $HOME/.pki/nssdb ] || mkdir $HOME/.pki/nssdb
-chmod 700 $HOME/.pki/nssdb
-for nss in $HOME/.pki/nssdb/*
+chmod 600 ${HOME}/.config/user-dirs.*
+find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
+find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
+find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755
+chmod 755 ${HOME}/.config/ranger/*.sh
+chmod 755 ${HOME}/Desktop
+chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/.local/share/applications/*.desktop
+chmod 755 ${HOME}/bin
+chmod 755 ${HOME}/bin/*
+chmod 755 ${HOME}/.cargo
+chmod 755 ${HOME}/logs
+[ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
+chmod 755 ${HOME}/.cache
+[ -d ${HOME}/.cache/mozilla ] || mkdir ${HOME}/.cache/mozilla
+chmod 755 ${HOME}/.cache/mozilla
+[ -d ${HOME}/.mozilla ] || mkdir ${HOME}/.mozilla
+chmod 755 ${HOME}/.mozilla
+[ -d ${HOME}/.mozilla/firefox ] || mkdir ${HOME}/.mozilla/firefox
+chmod 755 ${HOME}/.mozilla/firefox
+[ -d ${HOME}/.pki ] || mkdir ${HOME}/.pki
+chmod 700 ${HOME}/.pki
+[ -d ${HOME}/.pki/nssdb ] || mkdir ${HOME}/.pki/nssdb
+chmod 700 ${HOME}/.pki/nssdb
+for nss in ${HOME}/.pki/nssdb/*
 do
-  [ "${nss}" == "$HOME/.pki/nssdb/*" ] && continue
+  [ "${nss}" == "${HOME}/.pki/nssdb/*" ] && continue
   [ -d "${nss}" ] && chmod 700 "${nss}"
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
-[ -f $HOME/.pki/nssdb/pkcs11.txt ] && {
-  cat $HOME/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
-  cp /tmp/k$$ $HOME/.pki/nssdb/pkcs11.txt
+[ -f ${HOME}/.pki/nssdb/pkcs11.txt ] && {
+  cat ${HOME}/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
+  cp /tmp/k$$ ${HOME}/.pki/nssdb/pkcs11.txt
   rm -f /tmp/k$$
 }
 
@@ -191,8 +200,8 @@ done
   chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
 }
 
-rm -f $HOME/Desktop/xfce4-terminal.desktop
-rm -f $HOME/Desktop/xfce4-file-manager.desktop
+rm -f ${HOME}/Desktop/xfce4-terminal.desktop
+rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 
 notify-send "Neovim desktop initialization and configuration complete!"
 
