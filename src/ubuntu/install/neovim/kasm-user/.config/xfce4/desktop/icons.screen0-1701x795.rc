@@ -9,6 +9,10 @@ col=0
 row=0
 col=1
 
+[/home/kasm-user/Desktop/neovide.desktop]
+row=3
+col=1
+
 [/home/kasm-user/Desktop/Downloads]
 row=0
 col=0
@@ -17,9 +21,13 @@ col=0
 row=2
 col=0
 
-[/home/kasm-user/Desktop/kitty.desktop]
-row=2
+[/home/kasm-user/Desktop/neovim.desktop]
+row=5
 col=1
+
+[/home/kasm-user/Desktop/kitty.desktop]
+row=5
+col=0
 
 [/home/kasm-user/Desktop/google-chrome.desktop]
 row=3
@@ -30,7 +38,7 @@ row=1
 col=0
 
 [/home/kasm-user/Desktop/lazyman.desktop]
-row=3
+row=2
 col=1
 
 [/home/kasm-user/Desktop/btop.desktop]

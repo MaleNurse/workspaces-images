@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ "${NVIM_APPNAME}" ] || export NVIM_APPNAME=nvim-Lazyman
+
+if [ "$1" ]; then
+  nvim $*
+else
+  nvim
+fi

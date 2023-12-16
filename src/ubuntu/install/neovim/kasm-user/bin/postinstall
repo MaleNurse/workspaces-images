@@ -116,6 +116,7 @@ have_kitty=$(type -p kitty)
 }
 
 # We gave it our best shot
+rm -f /home/*/bin/install-jetbrains
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
@@ -128,7 +129,7 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f $HOME/.local/share/applications/neovim.desktop ] && {
   cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop
 }
-for desk in lazyman nvims
+for desk in lazyman neovide nvims
 do
   [ -f $HOME/.local/share/applications/${desk}.desktop ] && {
     cp $HOME/.local/share/applications/${desk}.desktop \
