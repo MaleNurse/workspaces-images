@@ -66,9 +66,7 @@ RUN \
   git clone https://github.com/Aloxaf/fzf-tab \
       ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
   git clone https://github.com/doctorfree/nvim-lazyman \
-      ${HOME}/.config/nvim-Lazyman && \
-  cp ${HOME}/.config/nvim-Lazyman/lazyman.sh ${HOME}/.local/bin/lazyman && \
-  chmod 755 ${HOME}/.local/bin/lazyman
+      ${HOME}/.config/nvim-Lazyman
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME

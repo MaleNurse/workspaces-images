@@ -105,6 +105,11 @@ notify-send "Installing Neovide"
   chmod 755 $HOME/.config/nvim-Lazyman/*.sh
 }
 
+[ -f $HOME/.config/nvim-Lazyman/lazyman.sh ] && {
+  cp $HOME/.config/nvim-Lazyman/lazyman.sh $HOME/.local/bin/lazyman
+  chmod 755 $HOME/.local/bin/lazyman
+}
+
 #have_lazy=$(type -p install-lazyman)
 #[ "${have_lazy}" ] && {
 #  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
