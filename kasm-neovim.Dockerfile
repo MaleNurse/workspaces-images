@@ -33,7 +33,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
-  curl -fsSL https://deno.land/x/install/install.sh | sh && \
+  sh -c "$(curl -fsSL https://deno.land/x/install/install.sh)" && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
@@ -75,6 +75,10 @@ RUN \
   cp ${HOME}/.config/nvim-Lazyman/lazyman.sh ${HOME}/.local/bin/lazyman && \
   chmod 755 ${HOME}/.local/bin/lazyman && \
   bash ${HOME}/bin/fix-kasm-user-path
+
+USER root
+
+RUN $STARTUPDIR/set_user_permission.sh $HOME
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME
