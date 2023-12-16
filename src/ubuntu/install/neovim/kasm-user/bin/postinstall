@@ -39,14 +39,14 @@ notify-send "Installing JetBrains Nerd Mono font"
   }
 }
 
-#notify-send "Installing Kitty terminal emulator"
+notify-send "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
-#have_kitty=$(type -p kitty)
-#[ "${have_kitty}" ] || {
-#  [ -x $HOME/bin/install-kitty ] && {
-#    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
-#  }
-#}
+have_kitty=$(type -p kitty)
+[ "${have_kitty}" ] || {
+  [ -x $HOME/bin/install-kitty ] && {
+    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
+  }
+}
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
      $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -77,28 +77,33 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
-## Neovim, Neovide, zoxide, kitty, and Lazyman installs are now done in the Dockerfile
-#
-#notify-send "Installing zoxide smart cd command"
-#curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+notify-send "Installing zoxide smart cd command"
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # Try to install Neovim and Neovide
-#have_nvim=$(type -p nvim)
-#have_neov=$(type -p neovide)
+have_nvim=$(type -p nvim)
+have_neov=$(type -p neovide)
 
-#notify-send "Installing Neovim"
-#[ "${have_nvim}" ] || {
-#  [ -x $HOME/bin/install-neovim ] && {
-#    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
-#  }
-#}
+notify-send "Installing Neovim"
+[ "${have_nvim}" ] || {
+  [ -x $HOME/bin/install-neovim ] && {
+    ${HOME}/bin/install-neovim > ${LOGDIR}/install-neovim.log 2>&1
+  }
+}
 
-#notify-send "Installing Neovide"
-#[ "${have_neov}" ] || {
-#  [ -x $HOME/bin/install-neovide ] && {
-#    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
-#  }
-#}
+notify-send "Installing Neovide"
+[ "${have_neov}" ] || {
+  [ -x $HOME/bin/install-neovide ] && {
+    ${HOME}/bin/install-neovide > ${LOGDIR}/install-neovide.log 2>&1
+  }
+}
+
+# Fix Lazyman permissions
+[ -d $HOME/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 $HOME/.config/nvim-Lazyman/*.sh
+}
 
 #have_lazy=$(type -p install-lazyman)
 #[ "${have_lazy}" ] && {
@@ -121,13 +126,6 @@ rm -f /home/*/bin/fix-kasm-user-path
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
-
-# Fix Lazyman permissions
-[ -d $HOME/.config/nvim-Lazyman/scripts ] && {
-  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
-  chmod 755 $HOME/.config/nvim-Lazyman/scripts/*/*.sh
-  chmod 755 $HOME/.config/nvim-Lazyman/*.sh
-}
 
 [ -f $HOME/.local/share/applications/neovim.desktop ] && {
   cp $HOME/.local/share/applications/neovim.desktop $HOME/.config/autostart/neovim.desktop

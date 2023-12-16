@@ -50,6 +50,8 @@ WORKDIR $HOME
 USER 1000
 
 RUN \
+  bash -c \
+  "$(curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh)" && \
   sh -c \
   "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
   "" --unattended --keep-zshrc --skip-chsh && \
@@ -65,10 +67,18 @@ RUN \
       ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-kitty && \
   git clone https://github.com/Aloxaf/fzf-tab \
       ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
+  bash ${HOME}/bin/install-kitty && \
+  bash ${HOME}/bin/install-neovim && \
+  bash ${HOME}/bin/install-neovide && \
   git clone https://github.com/doctorfree/nvim-lazyman \
       ${HOME}/.config/nvim-Lazyman && \
   cp ${HOME}/.config/nvim-Lazyman/lazyman.sh ${HOME}/.local/bin/lazyman && \
-  chmod 755 ${HOME}/.local/bin/lazyman
+  chmod 755 ${HOME}/.local/bin/lazyman && \
+  bash ${HOME}/bin/fix-kasm-user-path
+
+USER root
+
+RUN $STARTUPDIR/set_user_permission.sh $HOME
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME
