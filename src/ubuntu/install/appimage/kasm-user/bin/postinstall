@@ -76,6 +76,7 @@ notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
+rm -f ${HOME}/bin/install-jetbrains
 
 notify-send "Installing Desktop entries and fixing permissions"
 

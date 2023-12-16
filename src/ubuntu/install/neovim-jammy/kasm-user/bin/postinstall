@@ -63,6 +63,7 @@ have_neov=$(type -p neovide)
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
+rm -f $HOME/bin/install-jetbrains
 
 have_lazy=$(type -p lazyman)
 [ "${have_lazy}" ] && {

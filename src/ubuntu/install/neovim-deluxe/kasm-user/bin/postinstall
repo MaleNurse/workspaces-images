@@ -75,6 +75,7 @@ rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop
+rm -f $HOME/bin/install-jetbrains
 
 notify-send "Installing Desktop entries and fixing permissions"
 # Fix Lazyman permissions

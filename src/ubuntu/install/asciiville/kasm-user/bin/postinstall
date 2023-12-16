@@ -89,6 +89,7 @@ notify-send "Initializing Asciiville"
 }
 
 rm -f $HOME/.config/autostart/postinstall.desktop
+rm -f $HOME/bin/install-jetbrains
 
 notify-send "Fixing permissions and cleaning up"
 

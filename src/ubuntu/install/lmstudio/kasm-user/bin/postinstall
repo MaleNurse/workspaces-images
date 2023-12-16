@@ -161,6 +161,7 @@ fi
 }
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
+rm -f $HOME/bin/install-jetbrains
 
 notify-send "Installing Desktop entries and fixing permissions"
 

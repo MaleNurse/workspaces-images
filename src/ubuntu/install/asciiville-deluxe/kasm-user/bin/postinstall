@@ -65,6 +65,7 @@ have_neov=$(type -p neovide)
 }
 
 # We gave it our best shot
+rm -f /home/*/bin/install-jetbrains
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f $HOME/.config/autostart/postinstall.desktop

@@ -123,6 +123,7 @@ have_lazy=$(type -p install-lazyman)
 }
 
 # We gave it our best shot
+rm -f /home/*/bin/install-jetbrains
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
