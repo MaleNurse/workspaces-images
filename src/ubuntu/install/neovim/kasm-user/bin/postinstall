@@ -98,10 +98,21 @@ notify-send "Installing Neovide"
   }
 }
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 notify-send "Installing the Lazyman Neovim configuration manager"
 have_lazy=$(type -p install-lazyman)
+have_kitty=$(type -p kitty)
 [ "${have_lazy}" ] && {
-  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
+  if [ "${have_kitty}" ]; then
+    kitty --title="Lazyman Initialization" \
+          --start-as normal \
+          --override startup_session=none \
+          install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+  else
+    xfce4-terminal -x install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+  fi
 }
 
 # We gave it our best shot
@@ -128,14 +139,22 @@ done
 # Correct permissions/ownership
 chmod 755 $HOME
 chmod 644 $HOME/.aliases $HOME/.bashrc $HOME/.zshrc
-find $HOME/.config -type f | xargs chmod 644
 find $HOME/.config -type d | xargs chmod 755
+for cdir in $HOME/.config/*
+do
+  [ "${cdir}" == "$HOME/.config/*" ] && continue
+  [ "${cdir}" == "$HOME/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "$HOME/.config/autostart" ] && continue
+  find ${cdir} -type f | xargs chmod 644
+done
+chmod 600 $HOME/.config/user-dirs.*
 find $HOME/.local -type d | xargs chmod 755
 find $HOME/.oh-my-zsh -type d | xargs chmod 755
 find $HOME/.oh-my-zsh -perm 666 | xargs chmod 644
 find $HOME/.oh-my-zsh -perm 777 | xargs chmod 755
 chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
+chmod 755 $HOME/.local/share/applications/*.desktop
 chmod 755 $HOME/bin
 chmod 755 $HOME/bin/*
 chmod 755 $HOME/.cargo
@@ -158,22 +177,23 @@ do
   [ -d "${nss}" ] && chmod 700 "${nss}"
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
+[ -f $HOME/.pki/nssdb/pkcs11.txt ] && {
+  cat $HOME/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
+  cp /tmp/k$$ $HOME/.pki/nssdb/pkcs11.txt
+  rm -f /tmp/k$$
+}
+
+# Fix Lazyman permissions
+[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
+}
 
 rm -f $HOME/Desktop/xfce4-terminal.desktop
 rm -f $HOME/Desktop/xfce4-file-manager.desktop
 
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
-
 notify-send "Neovim desktop initialization and configuration complete!"
-sleep 5
-
-kill $(pgrep "notifyd")
-
-have_open=$(type -p exo-open)
-[ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
-  [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
-}
 
 have_lazyman=$(type -p lazyman)
 have_kitty=$(type -p kitty)
@@ -200,3 +220,14 @@ else
     fi
   }
 fi
+sleep 4
+have_center=$(type -p center-active-window)
+[ "${have_center}" ] && center-active-window
+sleep 4
+
+kill $(pgrep "notifyd")
+
+have_open=$(type -p exo-open)
+[ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
+  [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
+}

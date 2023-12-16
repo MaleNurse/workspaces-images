@@ -3393,7 +3393,7 @@ namespace=
 input_req=
 setconf=
 nopatch=
-nosync=1
+nosync=
 nvchaddir="nvim-NvChad"
 spacevimdir="nvim-SpaceVim"
 magicvimdir="nvim-MagicVim"
@@ -3406,7 +3406,7 @@ neovimdir=()
 while getopts "09aAb:BcC:dD:eE:f:F:gGhHi:IjJkK:lL:mMnN:oO:pPqQrRsStTUvV:w:Wx:XyYzZu" flag; do
   case $flag in
   0)
-    nosync=
+    nosync=1
     ;;
   9)
     nopatch=1

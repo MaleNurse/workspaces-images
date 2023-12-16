@@ -2,7 +2,7 @@
 #
 # Kitty tab with Neofetch
 new_tab
-launch --hold neofetch --kitty ascii
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 #
@@ -23,5 +23,6 @@ layout tall
 new_tab Desktop
 cd ~/Desktop
 launch --hold lsd --group-dirs first
+launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall

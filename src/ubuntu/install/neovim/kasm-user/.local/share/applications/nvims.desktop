@@ -90,7 +90,7 @@ Comment[vi]=Soạn thảo tập tin văn bản
 Comment[wa]=Asspougnî des fitchîs tecses
 Comment[zh_CN]=编辑文本文件
 Comment[zh_TW]=編輯文字檔
-Exec=kitty --title="Neovim" --start-as normal --override startup_session=none lazyman open
+Exec=kitty --title="Neovim" --start-as normal --session /home/kasm-user/.config/kitty/sessions/nvims
 Categories=System;
 Terminal=false
 Type=Application
