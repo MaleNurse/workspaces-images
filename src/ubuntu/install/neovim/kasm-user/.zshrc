@@ -430,9 +430,11 @@ fi
 [ -d /usr/local/go/bin ] && PATH=$PATH:/usr/local/go/bin
 export PATH
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[ -d "$HOME/.nvm" ] && {
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
 
 export GEM_HOME="$HOME/gems"
 export PATH="$PATH:$HOME/gems/bin"
@@ -450,6 +452,9 @@ export PATH="$PATH:$HOME/gems/bin"
 [ -f ~/.aliases ] && source ~/.aliases
 
 export TZ="America/Los_Angeles"
+
+# Tell Neovim to use the Lazyman configuration
+export NVIM_APPNAME="nvim-Lazyman"
 # Source the Lazyman shell initialization for aliases and nvims selector
 # shellcheck source=.config/nvim-Lazyman/.lazymanrc
 [ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
