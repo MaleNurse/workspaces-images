@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Lazyman
 Comment=Neovim Configuration Manager
-Exec=kitty --title="Lazyman Neovim Configuration Manager" --start-as normal --override startup_session=none lazyman
+Exec=kitty --title="Lazyman Neovim Configuration Manager" --start-as normal --session /home/kasm-user/.config/kitty/sessions/lazyman
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
 Categories=System;

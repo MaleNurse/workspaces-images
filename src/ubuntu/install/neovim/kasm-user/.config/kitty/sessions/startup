@@ -12,17 +12,17 @@ launch zsh
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab in Documents folder
-new_tab Documents
-cd ~/Documents
-launch --hold lsd --group-dirs first
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
 # Kitty tab in Desktop folder
 new_tab Desktop
 cd ~/Desktop
 launch --hold lsd --group-dirs first
 launch center-active-window
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab in Documents folder
+new_tab Documents
+cd ~/Documents
+launch --hold lsd --group-dirs first
 enabled_layouts tall:bias=50;full_size=1
 layout tall

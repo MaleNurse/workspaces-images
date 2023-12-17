@@ -1,0 +1,10 @@
+#!/bin/bash
+
+have_kitty=$(type -p kitty)
+[ "${have_kitty}" ] && {
+  sleep 4
+  kitty --session /home/kasm-user/.config/kitty/sessions/startup \
+        --title 'Kitty Neovim Session' \
+        --override allow_remote_control=yes \
+        --listen-on unix:/tmp/cowboykitty &
+}

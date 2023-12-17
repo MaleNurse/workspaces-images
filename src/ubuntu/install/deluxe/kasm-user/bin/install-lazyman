@@ -293,6 +293,7 @@ init_lvim() {
 }
 
 init_neovim() {
+  [ "${nosync}" ] && return
   neodir="$1"
   [ "${input_req}" ] && debug=1
   [ -d "${HOME}/.config/${neodir}" ] || return
@@ -3059,7 +3060,7 @@ show_main_menu() {
         ;;
       "Initialize Lazyman"*,* | *,"Initialize Lazyman"*)
         [ -x "${INSTNVIM}" ] && {
-          "${INSTNVIM}" $darg $head $brew $yes
+          "${INSTNVIM}" -u $darg $head $brew $yes
         }
         lazyman ${darg} init
         set_haves
@@ -3392,6 +3393,7 @@ namespace=
 input_req=
 setconf=
 nopatch=
+nosync=
 nvchaddir="nvim-NvChad"
 spacevimdir="nvim-SpaceVim"
 magicvimdir="nvim-MagicVim"
@@ -3401,8 +3403,11 @@ neovimdir=()
   [ "$1" == "-F" ] && set -- "$@" 'config'
   [ "$1" == "-U" ] && neovimdir=("${LAZYMAN}")
 }
-while getopts "9aAb:BcC:dD:eE:f:F:gGhHi:IjJkK:lL:mMnN:oO:pPqQrRsStTUvV:w:Wx:XyYzZu" flag; do
+while getopts "09aAb:BcC:dD:eE:f:F:gGhHi:IjJkK:lL:mMnN:oO:pPqQrRsStTUvV:w:Wx:XyYzZu" flag; do
   case $flag in
+  0)
+    nosync=1
+    ;;
   9)
     nopatch=1
     ;;
@@ -4899,7 +4904,7 @@ install_remove() {
     brief_usage
   }
   if [ -x "${INSTNVIM}" ]; then
-    "${INSTNVIM}" -a $darg $head $brew $yes
+    "${INSTNVIM}" -a -u $darg $head $brew $yes
     [ -f "${LMANDIR}/.initialized" ] && {
       echo "__extra_tools__=1" >>"${LMANDIR}"/.initialized
     }
@@ -5138,13 +5143,17 @@ fi
 [ "${instnvim}" ] && {
   [ -d "${HOME}/.local" ] || mkdir -p "${HOME}/.local"
   [ -d "${HOME}/.local/bin" ] || mkdir -p "${HOME}/.local/bin"
+  export PATH=$PATH:${HOME}/.local/bin
   if [ -x "${INSTNVIM}" ]; then
-    "${INSTNVIM}" $inst_pkgs $darg $head $brew $yes
+    "${INSTNVIM}" -u $inst_pkgs $darg $head $brew $yes
+    [ "$NVM_DIR" ] && {
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    }
     have_nvim=$(type -p nvim)
     [ "$have_nvim" ] || {
       printf "\nERROR: cannot locate neovim."
-      printf "\nHomebrew install failure, manual debug required."
-      printf "\n\t'brew update && lazyman -d'."
+      printf "\nLazyman install failure, manual debug required."
+      printf "\n\t'lazyman -d'."
       printf "\nNeovim 0.9 or later required. Install and retry. Exiting.\n"
       brief_usage
     }

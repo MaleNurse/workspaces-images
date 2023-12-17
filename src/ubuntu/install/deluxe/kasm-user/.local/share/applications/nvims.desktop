@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name[de]=Neovim
-Name[eo]=Neovim
-Name[fr]=Neovim
-Name[it]=Neovim
-Name[ru]=Neovim
-Name[sr]=Neovim
-Name[tr]=Neovim
-Name=Neovim
+Name[de]=Neovim Selector
+Name[eo]=Neovim Selector
+Name[fr]=Neovim Selector
+Name[it]=Neovim Selector
+Name[ru]=Neovim Selector
+Name[sr]=Neovim Selector
+Name[tr]=Neovim Selector
+Name=Neovim Selector
 GenericName=Text Editor
 GenericName[de]=Texteditor
 GenericName[eo]=Tekstoredaktilo
@@ -90,7 +90,7 @@ Comment[vi]=Soạn thảo tập tin văn bản
 Comment[wa]=Asspougnî des fitchîs tecses
 Comment[zh_CN]=编辑文本文件
 Comment[zh_TW]=編輯文字檔
-Exec=kitty --title="Neovim" --start-as normal --override startup_session=none lazyman open
+Exec=kitty --title="Neovim" --start-as normal --session /home/kasm-user/.config/kitty/sessions/nvims
 Categories=System;
 Terminal=false
 Type=Application

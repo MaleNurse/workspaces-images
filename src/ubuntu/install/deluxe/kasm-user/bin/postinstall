@@ -158,12 +158,12 @@ rm -f /home/*/bin/fix-kasm-user-path
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-[ -f ${HOME}/.local/share/applications/session.desktop ] && {
-  cp ${HOME}/.local/share/applications/session.desktop \
-     ${HOME}/.config/autostart/session.desktop
-}
+#[ -f ${HOME}/.local/share/applications/session.desktop ] && {
+#  cp ${HOME}/.local/share/applications/session.desktop \
+#     ${HOME}/.config/autostart/session.desktop
+#}
 
-for desk in asciiville btop code lazyman neovide neovim nvims ranger spiderfoot
+for desk in asciiville btop code lazyman neovide neovim ranger spiderfoot
 do
   [ -f ${HOME}/.local/share/applications/${desk}.desktop ] && {
     cp ${HOME}/.local/share/applications/${desk}.desktop \
@@ -199,6 +199,7 @@ find ${HOME}/Wing -type d | xargs chmod 755
 
 chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.local/share/icons -type f | xargs chmod 644
 find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
 find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
 find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755
@@ -210,7 +211,6 @@ chmod 755 ${HOME}/bin/*
 chmod 755 ${HOME}/.cargo
 chmod 755 ${HOME}/logs
 chmod 755 ${HOME}/.config/ranger/*.sh
-chmod 644 ${HOME}/.local/share/backgrounds/*
 
 [ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
 chmod 755 ${HOME}/.cache

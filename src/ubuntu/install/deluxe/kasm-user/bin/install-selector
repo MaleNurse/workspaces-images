@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# install-selector - installs the nvims desktop entry if multiple
+#                    Lazyman Neovim configurations are installed
+#
+[ -f $HOME/.config/nvim-Lazyman/.nvimdirs ] || {
+  [ -f $HOME/Desktop/nvims.desktop ] && {
+    rm -f $HOME/Desktop/nvims.desktop
+  }
+  exit 0
+}
+
+numvim=$(grep -v ^$ $HOME/.config/nvim-Lazyman/.nvimdirs | wc -l)
+[ "${numvim}" ] || exit 0
+
+if [ ${numvim} -gt 1 ]; then
+  [ -f $HOME/Desktop/nvims.desktop ] || {
+    [ -f $HOME/.local/share/applications/nvims.desktop ] && {
+      cp $HOME/.local/share/applications/nvims.desktop \
+         $HOME/Desktop/nvims.desktop
+    }
+  }
+else
+  [ -f $HOME/Desktop/nvims.desktop ] && {
+    rm -f $HOME/Desktop/nvims.desktop
+  }
+fi

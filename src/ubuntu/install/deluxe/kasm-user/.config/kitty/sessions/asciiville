@@ -1,4 +1,4 @@
 new_tab Asciiville
 title Asciiville
-launch bash -c 'asciiville'
+launch zsh -c 'asciiville'
 layout tall

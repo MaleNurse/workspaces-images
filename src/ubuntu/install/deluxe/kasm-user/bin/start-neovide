@@ -1,0 +1,37 @@
+#!/bin/bash
+
+desktop=
+[ "$1" == "__desktop__" ] && {
+  desktop=1
+  shift
+}
+win_id=$(xdotool getwindowfocus)
+
+export NVIM_APPNAME=nvim-Lazyman
+
+if [ "$1" ]; then
+  neovide $*
+else
+  neovide
+fi
+
+sleep 1
+neo_id=$(xdotool getwindowfocus)
+pid=$(xdotool getactivewindow getwindowpid)
+xdotool windowfocus --sync ${win_id}
+xdotool windowfocus --sync ${neo_id}
+
+have_right=$(type -p upper-right-window)
+if [ "${have_right}" ]; then
+  upper-right-window
+else
+  [ -x $HOME/bin/upper-right-window ] && $HOME/bin/upper-right-window
+fi
+
+[ "${pid}" ] && {
+  if [ "${desktop}" ]; then
+    tail --pid=${pid} -f /dev/null >/dev/null
+  else
+    nohup tail --pid=${pid} -f /dev/null >/dev/null 2>&1 &
+  fi
+}
