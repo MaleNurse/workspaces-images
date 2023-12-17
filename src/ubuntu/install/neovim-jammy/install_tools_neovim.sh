@@ -65,6 +65,7 @@ apt install -y libnotify-bin
 apt install -y xclip
 apt install -y xsel
 apt install -y python3
+apt install -y python3-pip
 apt install -y python3-venv
 apt install -y ruby
 apt install -y ruby-dev

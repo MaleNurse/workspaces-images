@@ -83,6 +83,7 @@ apt-get install -y libnotify-bin
 apt-get install -y xclip
 apt-get install -y xsel
 apt-get install -y python3
+apt-get install -y python3-pip
 apt-get install -y python3-venv
 apt-get install -y ruby
 apt-get install -y ruby-dev

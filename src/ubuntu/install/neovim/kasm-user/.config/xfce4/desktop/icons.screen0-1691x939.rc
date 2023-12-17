@@ -1,17 +1,17 @@
 [xfdesktop-version-4.10.3+-rcfile_format]
 4.10.3+=true
 
-[/home/kasm-user/Desktop/neovide.desktop]
-row=6
-col=0
+[/home/kasm-user/Desktop/thunderbird.desktop]
+row=2
+col=1
 
 [/home/kasm-user/Desktop/ranger.desktop]
 row=2
 col=0
 
-[/home/kasm-user/Desktop/thunderbird.desktop]
-row=2
-col=1
+[/home/kasm-user/Desktop/neovide.desktop]
+row=5
+col=0
 
 [/home/kasm-user/Desktop/Downloads]
 row=0
@@ -22,12 +22,12 @@ row=0
 col=1
 
 [/home/kasm-user/Desktop/neovim.desktop]
-row=7
+row=6
 col=0
 
-[/home/kasm-user/Desktop/lazyman.desktop]
-row=4
-col=0
+[/home/kasm-user/Desktop/kitty.desktop]
+row=3
+col=1
 
 [/home/kasm-user/Desktop/google-chrome.desktop]
 row=1
@@ -37,15 +37,11 @@ col=1
 row=1
 col=0
 
-[/home/kasm-user/Desktop/nvims.desktop]
-row=5
+[/home/kasm-user/Desktop/lazyman.desktop]
+row=4
 col=0
 
 [/home/kasm-user/Desktop/btop.desktop]
 row=3
 col=0
-
-[/home/kasm-user/Desktop/kitty.desktop]
-row=3
-col=1
 

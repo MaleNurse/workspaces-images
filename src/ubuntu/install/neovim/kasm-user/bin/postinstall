@@ -126,7 +126,7 @@ rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-for desk in lazyman neovide neovim nvims
+for desk in lazyman neovide neovim
 do
   [ -f ${HOME}/.local/share/applications/${desk}.desktop ] && {
     cp ${HOME}/.local/share/applications/${desk}.desktop \
@@ -158,6 +158,7 @@ do
 done
 chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.local/share/icons -type f | xargs chmod 644
 find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
 find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
 find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755

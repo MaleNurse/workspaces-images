@@ -101,6 +101,7 @@ apt-get install -y libnotify-bin
 apt-get install -y xclip
 apt-get install -y xsel
 apt-get install -y python3
+apt-get install -y python3-pip
 apt-get install -y python3-venv
 apt-get install -y uuid-runtime
 apt-get install -y libaa-bin
