@@ -453,6 +453,9 @@ export PATH="$PATH:$HOME/gems/bin"
 
 export TZ="America/Los_Angeles"
 
+# Ranger devicon plugin configuration
+export RANGER_DEVICONS_SEPARATOR="  "
+
 # Tell Neovim to use the Lazyman configuration
 export NVIM_APPNAME="nvim-Lazyman"
 # Source the Lazyman shell initialization for aliases and nvims selector

@@ -1,34 +1,42 @@
 # Kitty tabbed startup session
 #
+# Kitty tab with Neofetch
+new_tab
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
 # Kitty tab for Wing development
 new_tab Wing
 cd ~/Wing
-launch bash
+launch zsh
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Wing examples
 new_tab Examples
 cd ~/Wing/examples
-launch bash
+launch zsh
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Ranger
 new_tab Ranger
 cd ~
-launch bash -c ranger
+launch zsh -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Btop++
 new_tab Btop
-launch bash -c btop
+launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for HOME directory
-new_tab
-launch bash
+# Kitty tab in Desktop folder
+new_tab Desktop
+cd ~/Desktop
+launch --hold lsd --group-dirs first
+launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall

@@ -179,9 +179,6 @@ if command -v zoxide > /dev/null; then
   eval "$(zoxide init bash)"
 fi
 
-# Ranger devicon plugin configuration
-export RANGER_DEVICONS_SEPARATOR="  "
-
 [ -d "$HOME/.nvm" ] && {
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -193,6 +190,8 @@ export RANGER_DEVICONS_SEPARATOR="  "
 [ -d ${HOME}/.local/share/bob/nvim-bin ] && {
   export PATH="${HOME}/.local/share/bob/nvim-bin${PATH:+:${PATH}}"
 }
+# Tell Neovim to use the Lazyman configuration
+export NVIM_APPNAME="nvim-Lazyman"
 # Source the Lazyman shell initialization for aliases and nvims selector
 # shellcheck source=.config/nvim-Lazyman/.lazymanrc
 [ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc

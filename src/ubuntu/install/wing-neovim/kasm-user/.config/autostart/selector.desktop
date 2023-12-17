@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Selector
+Comment=Neovim Selector Desktop
+Exec=/home/kasm-user/bin/install-selector
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
+Categories=System;

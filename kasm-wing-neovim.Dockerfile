@@ -1,6 +1,6 @@
-ARG BASE_TAG="develop"
-ARG BASE_IMAGE="core-ubuntu-jammy"
-FROM kasmweb/$BASE_IMAGE:$BASE_TAG
+ARG BASE_TAG="neovim"
+ARG BASE_IMAGE="kasm"
+FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
@@ -14,12 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
-                  /ubuntu/install/misc/install_tools.sh \
-                  /ubuntu/install/chrome/install_chrome.sh \
-                  /ubuntu/install/chromium/install_chromium.sh \
-                  /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/sublime_text/install_sublime_text.sh \
+    INST_SCRIPTS="/ubuntu/install/sublime_text/install_sublime_text.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/nextcloud/install_nextcloud.sh \
                   /ubuntu/install/remmina/install_remmina.sh \
@@ -31,10 +26,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/ansible/install_ansible.sh \
                   /ubuntu/install/terraform/install_terraform.sh \
                   /ubuntu/install/telegram/install_telegram.sh \
-                  /ubuntu/install/thunderbird/install_thunderbird.sh \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/wing-neovim/install_tools_wing.sh \
-                  /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts
@@ -51,6 +44,7 @@ RUN \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
+  chsh -s /bin/zsh kasm-user && \
   rm -Rf ${INST_DIR}
 
 # Publishing this port in docker_run_config enables browser access to

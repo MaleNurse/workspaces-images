@@ -117,69 +117,78 @@ notify-send "Installing Neovide"
   }
 }
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
+notify-send "Installing the Lazyman Neovim configuration manager"
 have_lazy=$(type -p install-lazyman)
+have_kitty=$(type -p kitty)
 [ "${have_lazy}" ] && {
-  install-lazyman -z noinstall > ${LOGDIR}/install-lazyman.log 2>&1
+  if [ "${have_kitty}" ]; then
+    kitty --title="Lazyman Initialization" \
+          --start-as normal \
+          --override startup_session=none \
+          install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+  else
+    xfce4-terminal -x install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+  fi
 }
 
 # We gave it our best shot
 rm -f /home/*/bin/install-jetbrains
+rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-[ -f $HOME/.local/share/applications/code.desktop ] && {
-  cp $HOME/.local/share/applications/code.desktop \
-     $HOME/Desktop/code.desktop
-}
-[ -f $HOME/.local/share/applications/lazyman.desktop ] && {
-  cp $HOME/.local/share/applications/lazyman.desktop \
-     $HOME/Desktop/lazyman.desktop
-}
-[ -f $HOME/.local/share/applications/nvims.desktop ] && {
-  cp $HOME/.local/share/applications/nvims.desktop \
-     $HOME/Desktop/nvims.desktop
-}
-[ -f $HOME/.local/share/applications/btop.desktop ] && {
-  cp $HOME/.local/share/applications/btop.desktop \
-     $HOME/Desktop/btop.desktop
-}
-[ -f $HOME/.local/share/applications/ranger.desktop ] && {
-  cp $HOME/.local/share/applications/ranger.desktop \
-     $HOME/Desktop/ranger.desktop
-}
-
-# Fix Lazyman permissions
-[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
-  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
-  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
-  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
-}
+for desk in lazyman neovide neovim
+do
+  [ -f ${HOME}/.local/share/applications/${desk}.desktop ] && {
+    cp ${HOME}/.local/share/applications/${desk}.desktop \
+       ${HOME}/Desktop/${desk}.desktop
+  }
+done
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
-chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
-for fdir in config launchpadlib vim
+chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc
+for fdir in launchpadlib mozilla vim
 do
   [ -d ${HOME}/.${fdir} ] && {
     find ${HOME}/.${fdir} -type f | xargs chmod 644
     find ${HOME}/.${fdir} -type d | xargs chmod 755
   }
 done
+find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
+do
+  chmod 755 $f
+done
+find ${HOME}/.config -type d | xargs chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
+  find ${cdir} -type f | xargs chmod 644
+done
+chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.local/share/icons -type f | xargs chmod 644
+find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
+find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
+find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755
 find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
-chmod 755 $HOME/.config/ranger/*.sh
-chmod 755 $HOME/.local/share/applications/*
-chmod 644 $HOME/.local/share/backgrounds/*
+chmod 755 ${HOME}/.config/ranger/*.sh
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/.local/share/applications/*.desktop
 chmod 755 ${HOME}/bin
 chmod 755 ${HOME}/bin/*
-chmod 755 ${HOME}/logs
 chmod 755 ${HOME}/.cargo
+chmod 755 ${HOME}/logs
 [ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
 chmod 755 ${HOME}/.cache
 [ -d ${HOME}/.cache/mozilla ] || mkdir ${HOME}/.cache/mozilla
@@ -198,6 +207,35 @@ do
   [ -d "${nss}" ] && chmod 700 "${nss}"
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
+[ -f ${HOME}/.pki/nssdb/pkcs11.txt ] && {
+  cat ${HOME}/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
+  cp /tmp/k$$ ${HOME}/.pki/nssdb/pkcs11.txt
+  rm -f /tmp/k$$
+}
+
+[ -f $HOME/.local/share/applications/code.desktop ] && {
+  cp $HOME/.local/share/applications/code.desktop \
+     $HOME/Desktop/code.desktop
+}
+[ -f $HOME/.local/share/applications/lazyman.desktop ] && {
+  cp $HOME/.local/share/applications/lazyman.desktop \
+     $HOME/Desktop/lazyman.desktop
+}
+[ -f $HOME/.local/share/applications/btop.desktop ] && {
+  cp $HOME/.local/share/applications/btop.desktop \
+     $HOME/Desktop/btop.desktop
+}
+[ -f $HOME/.local/share/applications/ranger.desktop ] && {
+  cp $HOME/.local/share/applications/ranger.desktop \
+     $HOME/Desktop/ranger.desktop
+}
+
+# Fix Lazyman permissions
+[ -d ${HOME}/.config/nvim-Lazyman/scripts ] && {
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/scripts/*/*.sh
+  chmod 755 ${HOME}/.config/nvim-Lazyman/*.sh
+}
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
@@ -206,9 +244,6 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 notify-send "Wing desktop initialization and configuration complete!"
 sleep 5
