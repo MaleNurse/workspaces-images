@@ -9,111 +9,55 @@ ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
 ### Envrionment config
-ENV DEBIAN_FRONTEND noninteractive
-ENV KASM_RX_HOME $STARTUPDIR/kasmrx
-ENV INST_SCRIPTS $STARTUPDIR/install
-ENV DONT_PROMPT_WSL_INSTALL "No_Prompt_please"
+ENV DEBIAN_FRONTEND=noninteractive \
+    SKIP_CLEAN=true \
+    KASM_RX_HOME=$STARTUPDIR/kasmrx \
+    DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
+    INST_DIR=$STARTUPDIR/install \
+    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
+                  /ubuntu/install/misc/install_tools.sh \
+                  /ubuntu/install/chrome/install_chrome.sh \
+                  /ubuntu/install/firefox/install_firefox.sh \
+                  /ubuntu/install/sublime_text/install_sublime_text.sh \
+                  /ubuntu/install/vs_code/install_vs_code.sh \
+                  /ubuntu/install/nextcloud/install_nextcloud.sh \
+                  /ubuntu/install/remmina/install_remmina.sh \
+                  /ubuntu/install/only_office/install_only_office.sh \
+                  /ubuntu/install/signal/install_signal.sh \
+                  /ubuntu/install/gimp/install_gimp.sh \
+                  /ubuntu/install/zoom/install_zoom.sh \
+                  /ubuntu/install/obs/install_obs.sh \
+                  /ubuntu/install/ansible/install_ansible.sh \
+                  /ubuntu/install/terraform/install_terraform.sh \
+                  /ubuntu/install/telegram/install_telegram.sh \
+                  /ubuntu/install/thunderbird/install_thunderbird.sh \
+                  /ubuntu/install/focal/install_tools_focal.sh \
+                  /ubuntu/install/backgrounds/install_backgrounds.sh \
+                  /ubuntu/install/cleanup/cleanup.sh"
 
-# Add Kasm Branding
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-RUN cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png
-RUN sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+# Copy install scripts
+COPY ./src/ $INST_DIR
 
-### Install Tools
-COPY ./src/ubuntu/install/tools $INST_SCRIPTS/tools/
-RUN bash $INST_SCRIPTS/tools/install_tools_deluxe.sh  && rm -rf $INST_SCRIPTS/tools/
+# Run installations
+RUN \
+  cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png && \
+  cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png && \
+  sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml && \
+  for SCRIPT in $INST_SCRIPTS; do \
+    bash ${INST_DIR}${SCRIPT}; \
+  done && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh jammy && \
+  sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades && \
+  $STARTUPDIR/set_user_permission.sh $HOME && \
+  rm -f /etc/X11/xinit/Xclients && \
+  chown 1000:0 $HOME && \
+  mkdir -p /home/kasm-user && \
+  chown -R 1000:0 /home/kasm-user && \
+  rm -Rf ${INST_DIR}
 
-# Install Utilities
-COPY ./src/ubuntu/install/misc $INST_SCRIPTS/misc/
-RUN bash $INST_SCRIPTS/misc/install_tools.sh && rm -rf $INST_SCRIPTS/misc/
-
-# Install Google Chrome
-COPY ./src/ubuntu/install/chrome $INST_SCRIPTS/chrome/
-RUN bash $INST_SCRIPTS/chrome/install_chrome.sh  && rm -rf $INST_SCRIPTS/chrome/
-
-# Install Firefox
-COPY ./src/ubuntu/install/firefox/ $INST_SCRIPTS/firefox/
-COPY ./src/ubuntu/install/firefox/firefox.desktop $HOME/Desktop/
-RUN bash $INST_SCRIPTS/firefox/install_firefox.sh && rm -rf $INST_SCRIPTS/firefox/
-
-### Install Sublime Text
-COPY ./src/ubuntu/install/sublime_text $INST_SCRIPTS/sublime_text/
-RUN bash $INST_SCRIPTS/sublime_text/install_sublime_text.sh  && rm -rf $INST_SCRIPTS/sublime_text/
-
-### Install Visual Studio Code
-COPY ./src/ubuntu/install/vs_code $INST_SCRIPTS/vs_code/
-RUN bash $INST_SCRIPTS/vs_code/install_vs_code.sh  && rm -rf $INST_SCRIPTS/vs_code/
-
-### Install NextCloud
-COPY ./src/ubuntu/install/nextcloud $INST_SCRIPTS/nextcloud/
-RUN bash $INST_SCRIPTS/nextcloud/install_nextcloud.sh  && rm -rf $INST_SCRIPTS/nextcloud/
-
-### Install Remmina
-COPY ./src/ubuntu/install/remmina $INST_SCRIPTS/remmina/
-RUN bash $INST_SCRIPTS/remmina/install_remmina.sh  && rm -rf $INST_SCRIPTS/remmina/
-
-### Install Only Office
-COPY ./src/ubuntu/install/only_office $INST_SCRIPTS/only_office/
-RUN bash $INST_SCRIPTS/only_office/install_only_office.sh  && rm -rf $INST_SCRIPTS/only_office/
-
-### Install Signal
-COPY ./src/ubuntu/install/signal $INST_SCRIPTS/signal/
-RUN bash $INST_SCRIPTS/signal/install_signal.sh  && rm -rf $INST_SCRIPTS/signal/
-
-### Install GIMP
-COPY ./src/ubuntu/install/gimp $INST_SCRIPTS/gimp/
-RUN bash $INST_SCRIPTS/gimp/install_gimp.sh  && rm -rf $INST_SCRIPTS/gimp/
-
-### Install Zoom
-COPY ./src/ubuntu/install/zoom $INST_SCRIPTS/zoom/
-RUN bash $INST_SCRIPTS/zoom/install_zoom.sh  && rm -rf $INST_SCRIPTS/zoom/
-
-### Install OBS Studio
-COPY ./src/ubuntu/install/obs $INST_SCRIPTS/obs/
-RUN bash $INST_SCRIPTS/obs/install_obs.sh  && rm -rf $INST_SCRIPTS/obs/
-
-### Install Ansible
-COPY ./src/ubuntu/install/ansible $INST_SCRIPTS/ansible/
-RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansible/
-
-### Install Terraform
-COPY ./src/ubuntu/install/terraform $INST_SCRIPTS/terraform/
-RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/terraform/
-
-### Install Telegram
-COPY ./src/ubuntu/install/telegram $INST_SCRIPTS/telegram/
-RUN bash $INST_SCRIPTS/telegram/install_telegram.sh  && rm -rf $INST_SCRIPTS/telegram/
-
-### Install Thunderbird
-COPY ./src/ubuntu/install/thunderbird $INST_SCRIPTS/thunderbird/
-RUN bash $INST_SCRIPTS/thunderbird/install_thunderbird.sh  && rm -rf $INST_SCRIPTS/thunderbird/
-
-### Install Ubuntu Focal packages and user configuration
-COPY ./src/ubuntu/install/focal $INST_SCRIPTS/focal/
-COPY ./src/ubuntu/install/backgrounds $INST_SCRIPTS/backgrounds/
-COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS
-RUN bash $INST_SCRIPTS/focal/install_tools_focal.sh && \
-    bash $INST_SCRIPTS/backgrounds/install_backgrounds.sh && \
-    bash $INST_SCRIPTS/install_kasm_user.sh focal && \
-    rm -rf $INST_SCRIPTS/focal/ && \
-    rm -rf $INST_SCRIPTS/backgrounds/ && \
-    rm -f $INST_SCRIPTS/install_kasm_user.sh
-
-# Do not prompt for upgrade
-RUN sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades
-
-# Set kasm-user login shell to Bash
-RUN chsh -s /bin/bash kasm-user
-
-#ADD ./src/common/scripts $STARTUPDIR
-RUN $STARTUPDIR/set_user_permission.sh $HOME
-
-RUN chown 1000:0 $HOME
-
+# Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
-RUN mkdir -p $HOME && chown -R 1000:0 $HOME
-
 USER 1000
 
 CMD ["--tail-log"]
