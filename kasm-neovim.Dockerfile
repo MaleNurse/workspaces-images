@@ -64,9 +64,7 @@ RUN \
   git clone https://github.com/redxtech/zsh-kitty \
       ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-kitty && \
   git clone https://github.com/Aloxaf/fzf-tab \
-      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
-  git clone https://github.com/doctorfree/nvim-lazyman \
-      ${HOME}/.config/nvim-Lazyman
+      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME
