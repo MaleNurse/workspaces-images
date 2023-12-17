@@ -97,7 +97,12 @@ apt-get install -y libncurses-dev
 apt-get install -y libjpeg-dev
 apt-get install -y libpng-dev
 apt-get install -y khard
+apt-get install -y build-essential
 apt-get install -y git
+apt-get install -y git-core
+apt-get install -y file
+apt-get install -y zsh
+apt-get install -y fonts-powerline
 apt-get install -y mplayer
 apt-get install -y golang
 apt-get install -y bsdgames

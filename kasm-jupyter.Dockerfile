@@ -8,6 +8,9 @@ WORKDIR $HOME
 
 ######### START CUSTOMIZATION ########
 
+COPY ./src/ubuntu/install/chrome /dockerstartup/chrome/
+COPY ./src/ubuntu/install/edge /dockerstartup/edge/
+
 RUN apt-get update && apt-get install -y \
         libasound2 \
         libegl1-mesa \
@@ -56,9 +59,12 @@ RUN apt-get update && apt-get install -y \
     && cp /usr/share/applications/rstudio.desktop $HOME/Desktop/ \
     && chmod +x $HOME/Desktop/*.desktop \
     # Install Chrome
-    && bash ./src/ubuntu/install/jupyter/install_chrome.sh \
+    && bash /dockerstartup/chrome/install_chrome.sh \
+    && rm -rf /dockerstartup/chrome \
     # Install MS Edge
-    && bash ./src/ubuntu/install/jupyter/install_edge.sh \
+    && bash /dockerstartup/edge/install_edge.sh \
+    && rm -rf $INST_SCRIPTS/edge/ \
+    && rm -rf /dockerstartup/jupyter \
     ### Install kasm user config
     && bash ./src/ubuntu/install/install_kasm_user.sh jupyter
 
