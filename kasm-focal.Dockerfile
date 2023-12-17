@@ -46,7 +46,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
-  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh jammy && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh focal && \
   sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
