@@ -63,8 +63,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /dockerstartup/chrome \
     # Install MS Edge
     && bash /dockerstartup/edge/install_edge.sh \
-    && rm -rf $INST_SCRIPTS/edge/ \
-    && rm -rf /dockerstartup/jupyter \
+    && rm -rf /dockerstartup/edge/ \
     ### Install kasm user config
     && bash ./src/ubuntu/install/install_kasm_user.sh jupyter
 
