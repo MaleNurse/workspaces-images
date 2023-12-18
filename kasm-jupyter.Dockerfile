@@ -4,12 +4,14 @@ USER root
 
 ENV HOME /home/kasm-default-profile
 ENV STARTUPDIR /dockerstartup
+ENV INST_DIR $STARTUPDIR/install
 WORKDIR $HOME
 
 ######### START CUSTOMIZATION ########
 
-COPY ./src/ubuntu/install/chrome /dockerstartup/chrome/
-COPY ./src/ubuntu/install/edge /dockerstartup/edge/
+COPY ./src/ubuntu/install/chrome $INST_DIR/chrome/
+COPY ./src/ubuntu/install/edge $INST_DIR/edge/
+COPY ./src/ubuntu/install/jupyter $INST_DIR/jupyter/
 
 RUN apt-get update && apt-get install -y \
         libasound2 \
@@ -59,17 +61,14 @@ RUN apt-get update && apt-get install -y \
     && cp /usr/share/applications/rstudio.desktop $HOME/Desktop/ \
     && chmod +x $HOME/Desktop/*.desktop \
     # Install Chrome
-    && bash /dockerstartup/chrome/install_chrome.sh \
-    && rm -rf /dockerstartup/chrome \
+    && bash $INST_DIR/chrome/install_chrome.sh \
     # Install MS Edge
-    && bash /dockerstartup/edge/install_edge.sh \
-    && rm -rf /dockerstartup/edge/ \
-    ### Install kasm user config
-    && bash ./src/ubuntu/install/install_kasm_user.sh jupyter
+    && bash $INST_DIR/edge/install_edge.sh \
+    && bash $INST_DIR/install_kasm_user.sh jupyter \
+    && chown -R 1000:0 $HOME \
+    && rm -rf $INST_DIR/
 
-COPY ./src/ubuntu/install/jupyter/RStudio.desktop $HOME/Desktop/
-COPY ./src/ubuntu/install/jupyter/spyder.desktop $HOME/Desktop/
-COPY ./src/ubuntu/install/jupyter/jupyter.desktop $HOME/Desktop/
+COPY ./src/ubuntu/install/jupyter/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
 
 # Install example packages in the conda environment
 USER 1000
@@ -82,18 +81,9 @@ RUN bash -c "source /opt/anaconda3/bin/activate \
         basemap \
         matplotlib"
 
-USER root
-
-COPY ./src/ubuntu/install/jupyter/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
-
 ######### END CUSTOMIZATIONS ########
-
-RUN chown -R 1000:0 $HOME
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME
-RUN mkdir -p $HOME && chown -R 1000:0 $HOME
-
-USER 1000
 
 CMD ["--tail-log"]
