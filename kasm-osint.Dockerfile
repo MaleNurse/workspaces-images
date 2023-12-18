@@ -18,13 +18,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_SCRIPTS="/ubuntu/install/tools/install_tools.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
                   /ubuntu/install/osint/install_osint.sh \
+                  /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Update the desktop environment to be optimized for a single application
 RUN cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/
 RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-RUN apt-get remove -y xfce4-panel
-
 
 # Copy install scripts
 COPY ./src/ $INST_DIR
@@ -46,6 +45,9 @@ RUN \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
   bash $INST_DIR/ubuntu/install/install_kasm_user.sh spiderfoot && \
+  mkdir -p ${HOME}/.local/share/fonts && \
+  tar xzf ${INST_DIR}/ubuntu/install/fonts/JetBrainsMonoNerdFont.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
