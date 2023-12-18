@@ -36,8 +36,9 @@ RUN \
   sh -c "$(curl -fsSL https://deno.land/x/install/install.sh)" && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
+  mkdir -p ${HOME}/.local/share/fonts && \
   tar xzf ${INST_DIR}/ubuntu/install/fonts/JetBrainsMonoNerdFont.tar.gz \
-    -C ${HOME}/.local/share && \
+    -C ${HOME}/.local/share/fonts && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
