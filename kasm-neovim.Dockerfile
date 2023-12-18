@@ -34,6 +34,7 @@ RUN \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
   sh -c "$(curl -fsSL https://deno.land/x/install/install.sh)" && \
+  rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
   tar -C ${HOME}/.local/share xzf \
     ${INST_DIR}/ubuntu/install/fonts/JetBrainsMonoNerdFont.tar.gz && \
