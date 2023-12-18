@@ -120,7 +120,6 @@ do
 done
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
-rm -f ${HOME}/bin/install-jetbrains
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop

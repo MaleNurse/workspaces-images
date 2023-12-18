@@ -20,8 +20,7 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/asciiville/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/asciiville/install_tools_asciiville.sh \
+PRIVS="${PATH_PRIVS}/asciiville/install_tools_asciiville.sh \
        ${PATH_PRIVS}/asciiville/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do

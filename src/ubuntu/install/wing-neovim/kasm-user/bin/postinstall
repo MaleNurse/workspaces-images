@@ -32,7 +32,6 @@ do
   [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
 done
 
-
 notify-send "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)
@@ -133,7 +132,6 @@ have_kitty=$(type -p kitty)
 }
 
 # We gave it our best shot
-rm -f /home/*/bin/install-jetbrains
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim

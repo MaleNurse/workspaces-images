@@ -45,6 +45,11 @@ RUN \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh appimage && \
+  wget -O /tmp/fonts.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+  tar xzf /tmp/fonts.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
+  rm -f /tmp/fonts.tar.gz && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \

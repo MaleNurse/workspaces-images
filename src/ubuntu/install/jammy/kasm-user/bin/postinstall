@@ -19,20 +19,17 @@ notify-send -u critical "One-time Ubuntu Jammy Desktop Configuration"
 
 LOGDIR="$HOME/logs"
 
-notify-send "Installing JetBrains Nerd Mono font"
-# Install JetBrains Mono font
-[ -x $HOME/bin/install-jetbrains ] && {
-  ${HOME}/bin/install-jetbrains > ${LOGDIR}/install-jetbrains.log 2>&1
-  FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
-              .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
-              .config/xfce4/terminal/terminalrc"
-  [ -f $HOME/.local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf ] && {
-    for font_file in ${FONT_FILES}
-    do
-      [ -f $HOME/${font_file}-jb ] && mv $HOME/${font_file}-jb $HOME/${font_file}
-    done
-  }
-}
+notify-send "Installing JetBrainsMono Nerd Font"
+have_fc=$(type -p fc-cache)
+[ "${have_fc}" ] && fc-cache -f
+
+FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
+            .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
+            .config/xfce4/terminal/terminalrc"
+for font_file in ${FONT_FILES}
+do
+  [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
+done
 
 notify-send "Installing Kitty terminal emulator"
 # Install Kitty terminal emulator
@@ -60,7 +57,6 @@ notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 rm -f $HOME/.config/autostart/postinstall.desktop
-rm -f $HOME/bin/install-jetbrains
 
 notify-send "Installing Desktop entries and fixing permissions"
 

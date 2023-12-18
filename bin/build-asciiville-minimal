@@ -20,7 +20,6 @@ cd $(dirname "${SCRIPT_PATH}")
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
 PRIVS="${PATH_PRIVS}/asciiville-minimal/kasm-user/bin/install-asciiville \
-       ${PATH_PRIVS}/asciiville-minimal/kasm-user/bin/install-jetbrains \
        ${PATH_PRIVS}/asciiville-minimal/install_tools_asciiville.sh \
        ${PATH_PRIVS}/asciiville-minimal/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}

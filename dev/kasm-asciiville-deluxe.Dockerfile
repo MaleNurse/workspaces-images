@@ -102,6 +102,12 @@ RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/t
 COPY ./src/ubuntu/install/telegram $INST_SCRIPTS/telegram/
 RUN bash $INST_SCRIPTS/telegram/install_telegram.sh  && rm -rf $INST_SCRIPTS/telegram/
 
+RUN wget -O /tmp/fonts.tar.gz \
+  https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+  tar xzf /tmp/fonts.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
+  rm -f /tmp/fonts.tar.gz
+
 #ADD ./src/common/scripts $STARTUPDIR
 RUN $STARTUPDIR/set_user_permission.sh $HOME
 

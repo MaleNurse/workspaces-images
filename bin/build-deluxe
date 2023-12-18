@@ -19,8 +19,7 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/deluxe/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/deluxe/kasm-user/bin/install-neovide \
+PRIVS="${PATH_PRIVS}/deluxe/kasm-user/bin/install-neovide \
        ${PATH_PRIVS}/deluxe/kasm-user/bin/install-lazyman \
        ${PATH_PRIVS}/deluxe/kasm-user/bin/install-neovim \
        ${PATH_PRIVS}/deluxe/install_tools_deluxe.sh \

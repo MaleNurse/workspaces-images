@@ -146,7 +146,6 @@ have_kitty=$(type -p kitty)
 }
 
 # We gave it our best shot
-rm -f /home/*/bin/install-jetbrains
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
 rm -f /home/*/bin/install-neovim

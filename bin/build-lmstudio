@@ -19,8 +19,7 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/lmstudio/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/lmstudio/install_tools_lmstudio.sh \
+PRIVS="${PATH_PRIVS}/lmstudio/install_tools_lmstudio.sh \
        ${PATH_PRIVS}/lmstudio/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do

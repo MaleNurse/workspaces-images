@@ -42,6 +42,11 @@ COPY ./src/ubuntu/install/neovim-deluxe $INST_SCRIPTS/neovim-deluxe/
 RUN \
   bash $INST_SCRIPTS/neovim-deluxe/install_tools_neovim.sh && \
   bash $INST_SCRIPTS/install_kasm_user.sh neovim-deluxe && \
+  wget -O /tmp/fonts.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+  tar xzf /tmp/fonts.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
+  rm -f /tmp/fonts.tar.gz && \
   rm -rf $INST_SCRIPTS/neovim-deluxe/ && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh
 

@@ -25,6 +25,11 @@ COPY ./src/ubuntu/install/neovim-jammy $INST_SCRIPTS/neovim-jammy/
 RUN \
   bash $INST_SCRIPTS/neovim-jammy/install_tools_neovim.sh && \
   bash $INST_SCRIPTS/install_kasm_user.sh neovim-jammy && \
+  wget -O /tmp/fonts.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+  tar xzf /tmp/fonts.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
+  rm -f /tmp/fonts.tar.gz && \
   rm -rf $INST_SCRIPTS/neovim-jammy/ && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh
 

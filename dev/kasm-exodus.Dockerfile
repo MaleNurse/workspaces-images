@@ -26,6 +26,11 @@ RUN \
   bash $INST_SCRIPTS/exodus/install_tools_exodus.sh && \
   bash $INST_SCRIPTS/backgrounds/install_backgrounds.sh && \
   bash $INST_SCRIPTS/install_kasm_user.sh exodus && \
+  wget -O /tmp/fonts.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+  tar xzf /tmp/fonts.tar.gz \
+    -C ${HOME}/.local/share/fonts && \
+  rm -f /tmp/fonts.tar.gz && \
   rm -f $INST_SCRIPTS/install_kasm_user.sh && \
   rm -rf $INST_SCRIPTS/exodus && \
   rm -rf $INST_SCRIPTS/backgrounds

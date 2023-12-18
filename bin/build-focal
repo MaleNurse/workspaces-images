@@ -19,8 +19,7 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/focal/kasm-user/bin/install-jetbrains \
-       ${PATH_PRIVS}/jammy/install_tools_focal.sh \
+PRIVS="${PATH_PRIVS}/jammy/install_tools_focal.sh \
        ${PATH_PRIVS}/focal/kasm-user/.config/autostart/postinstall.desktop"
 for priv in ${PRIVS}
 do
