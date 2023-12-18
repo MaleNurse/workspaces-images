@@ -1,44 +1,104 @@
 ![Logo][logo]
-# Workspaces Images
-This repository contains several example of desktop and application Workspaces images.
-Administrators may leverage these images directly or use them as a starting point for their own custom images.
-Each of these images is based off one of the [**Workspaces Core Images**](https://github.com/kasmtech/workspaces-core-images?utm_campaign=Github&utm_source=github) which contain the necessary wiring to work within the Kasm Workspaces platform.
 
+# Kasm Workspaces Images
 
-For more information about building custom images please review the  [**How To Guide**](https://kasmweb.com/docs/latest/how_to/building_images.html?utm_campaign=Github&utm_source=github)
+This repository contains several examples of desktop and application Kasm
+Workspaces images. Administrators may leverage these images directly or use
+them as a starting point for their own custom images. Each of these images
+is based off one of the
+[**Workspaces Core Images**](https://github.com/kasmtech/workspaces-core-images?utm_campaign=Github&utm_source=github)
+which contain the necessary wiring to work within the Kasm Workspaces platform.
 
-The Kasm team publishes applications and desktop images for use inside the platform. More information, including source can be found in the [**Default Images List**](https://kasmweb.com/docs/latest/guide/custom_images.html?utm_campaign=Github&utm_source=github)
+For more information about building custom images please review the
+[**How To Guide**](https://kasmweb.com/docs/latest/how_to/building_images.html?utm_campaign=Github&utm_source=github)
 
+The Kasm team publishes applications and desktop images for use inside the platform.
+More information, including source can be found in the
+[**Default Images List**](https://kasmweb.com/docs/latest/guide/custom_images.html?utm_campaign=Github&utm_source=github)
 
-# Manual Deployment
+## Repository Structure
 
-To build the provided images:
+The top-level directory of this repository contains the Dockerfiles used to
+build the Kasm workspace images deployed to the
+[Record Technologies Kasm Workspace Registry](https://doctorfree.github.io/kasm-registry).
+By convention, these Dockerfiles have a `.Dockerfile` filename suffix.
 
-    sudo docker build -t kasmweb/firefox:dev -f dockerfile-kasm-firefox .
+The subdirectory `kasmtech` contains the Dockerfiles used by the `kasmtech` project
+from which this repository was forked. By convention, these Dockerfiles have a
+`dockerfile-kasm` filename prefix.
 
+The subdirectory `dev` contains Dockerfiles in development but not yet deployed
+to the Record Technologies workspace registry.
 
-While these image are primarily built to run inside the Workspaces platform, they can also be executed manually.  Please note that certain functionality, such as audio, uploads, downloads, and microphone pass-through are only available within the Kasm platform.
+The `bin` directory contains convenience scripts used to build and push the
+workspace images.
+
+The `src` directory contains files, scripts, archives, configuration, and
+data used by each image build.
+
+## Manual Deployment
+
+Use `docker` to build the provided images. For example, to build the
+`doctorwhen/kasm:neovim` image for the `Neovim` workspace:
+
+```bash
+sudo docker build -t doctorwhen/kasm:neovim -f kasm-neovim.Dockerfile .
+```
+
+Convenience scripts exist for some image builds. For example, to build
+the `doctorwhen/kasm:neovim` image for the `Neovim` workspace using the
+provided convenience script:
+
+```bash
+bin/build-neovim
+```
+
+For some image builds it is necessary to use the convenience script as
+this script modifies some files in the build to add a Github API key if
+one is present in the environment.
+
+### Manual Execution
+
+While these image are primarily built to run inside the Workspaces platform,
+they can also be executed manually. Please note that certain functionality,
+such as audio, uploads, downloads, and microphone pass-through are only
+available within the Kasm platform.
 
 ```
-sudo docker run --rm  -it --shm-size=512m -p 6901:6901 -e VNC_PW=password kasmweb/firefox:dev
+sudo docker run --rm  -it --shm-size=512m -p 6901:6901 -e VNC_PW=password doctorwhen/kasm:neovim
 ```
 
 The container is now accessible via a browser : `https://<IP>:6901`
 
- - **User** : `kasm_user`
- - **Password**: `password`
+- **User** : `kasm_user`
+- **Password**: `password`
 
+## About Workspaces
 
-# About Workspaces
-Kasm Workspaces is a docker container streaming platform that enables you to deliver browser-based access to desktops, applications, and web services. Kasm uses a modern DevOps approach for programmatic delivery of services via Containerized Desktop Infrastructure (CDI) technology to create on-demand, disposable, docker containers that are accessible via web browser. The rendering of the graphical-based containers is powered by the open-source project   [**KasmVNC**](https://github.com/kasmtech/KasmVNC?utm_campaign=Github&utm_source=github)
+Kasm Workspaces is a docker container streaming platform that enables you to
+deliver browser-based access to desktops, applications, and web services.
+Kasm uses a modern DevOps approach for programmatic delivery of services via
+Containerized Desktop Infrastructure (CDI) technology to create on-demand,
+disposable, docker containers that are accessible via web browser.
+
+The rendering of the graphical-based containers is powered by the open-source
+project
+[**KasmVNC**](https://github.com/kasmtech/KasmVNC?utm_campaign=Github&utm_source=github)
 
 ![Screenshot][Kasm_Workflow]
 
-Kasm Workspaces was developed to meet the most demanding secure collaboration requirements that is highly scalable, customizable, and easy to maintain.  Most importantly, Kasm provides a solution, rather than a service, so it is infinitely customizable to your unique requirements and includes a developer API so that it can be integrated with, rather than replace, your existing applications and workflows. Kasm can be deployed in the cloud (Public or Private), on-premise (Including Air-Gapped Networks), or in a hybrid configuration.
+Kasm Workspaces was developed to meet the most demanding secure collaboration
+requirements that is highly scalable, customizable, and easy to maintain.
+Most importantly, Kasm provides a solution, rather than a service, so it is
+infinitely customizable to your unique requirements and includes a developer
+API so that it can be integrated with, rather than replace, your existing
+applications and workflows. Kasm can be deployed in the cloud
+(Public or Private), on-premise (Including Air-Gapped Networks), or in a
+hybrid configuration.
 
-# Live Demo
-A self-guided on-demand demo is available at [**kasmweb.com**](https://www.kasmweb.com/demo.html?utm_campaign=Github&utm_source=github)
-
+## Live Demo
+A self-guided on-demand demo is available at
+[**kasmweb.com**](https://www.kasmweb.com/demo.html?utm_campaign=Github&utm_source=github)
 
 [logo]: https://cdn2.hubspot.net/hubfs/5856039/dockerhub/kasm_logo.png "Kasm Logo"
 [Kasm_Workflow]: https://cdn2.hubspot.net/hubfs/5856039/dockerhub/kasm_workflow_960.gif "Kasm Workflow"
