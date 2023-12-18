@@ -5,8 +5,8 @@ launch zsh -c games_menu
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for Zsh
+# Kitty tab with Neofetch
 new_tab
-launch zsh
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/games.png
 enabled_layouts tall:bias=50;full_size=1
 layout tall
