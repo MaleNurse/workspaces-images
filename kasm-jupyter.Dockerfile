@@ -12,6 +12,7 @@ WORKDIR $HOME
 COPY ./src/ubuntu/install/chrome $INST_DIR/chrome/
 COPY ./src/ubuntu/install/edge $INST_DIR/edge/
 COPY ./src/ubuntu/install/jupyter $INST_DIR/jupyter/
+COPY ./src/ubuntu/install/install_kasm_user.sh $INST_DIR/
 
 RUN apt-get update && apt-get install -y \
         libasound2 \
