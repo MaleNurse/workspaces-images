@@ -1,6 +1,6 @@
 # Kitty tab for Btop++
 #
 new_tab Btop
-launch bash -c btop
+launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall

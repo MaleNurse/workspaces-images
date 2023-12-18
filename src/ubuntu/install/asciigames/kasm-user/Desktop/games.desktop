@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ascii Games
+GenericName=Ascii Games
+Exec=/home/kasm-user/.local/kitty.app/bin/kitty --session /home/kasm-user/.config/kitty/sessions/games --title 'Ascii Games Menu'
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/games.png
+Categories=System;TerminalEmulator;

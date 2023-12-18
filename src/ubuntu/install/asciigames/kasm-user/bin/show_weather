@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# show_weather - display a weather report in ANSI characters
+
+usage() {
+  printf "\nUsage: show_weather [-f format] [-h] [-L location] [-l lang] [-u]"
+  printf "\n\t-f 'format' specifies a format string (default: AFQn1)"
+  printf "\n\t-h indicates show online help message and exit"
+  printf "\n\t-L 'location' specifies the location key to use"
+  printf "\n\t\tUse any of the location types described in the help document"
+  printf "\n\t\tQuote a location key that includes spaces"
+  printf "\n\t-l 'lang' specifies the language code"
+  printf "\n\tSupported languages:"
+  printf "\n\t\tam ar af be bn ca da de el et fr fa hi hu ia id it lt mg nb nl oc pl pt-br ro ru ta tr th uk vi zh-cn zh-tw"
+  printf "\n\t-u indicates show this usage message and exit\n"
+  [ "${showhelp}" ] && curl ${server}/:help
+  exit 1
+}
+
+lang=
+langopt=
+location=
+showhelp=
+server="wttr.in"
+format="AFQn1"
+while getopts "f:hL:l:u" flag; do
+    case $flag in
+        f)
+            format="${OPTARG}"
+            ;;
+        h)
+            showhelp=1
+            ;;
+        L)
+            location="${OPTARG}"
+            location=`echo ${location} | sed -e "s/ /+/g"`
+            ;;
+        l)
+            lang="${OPTARG}"
+            langopt="&lang=${lang}"
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "/usr/local/bin"
+pathadd "${HOME}/.local/bin"
+export PATH
+
+have_curl=`type -p curl`
+[ "${have_curl}" ] || {
+  echo "This command requires curl. No curl command is found in the execution PATH."
+  usage
+}
+
+printf "\n"
+[ "${showhelp}" ] && {
+  curl ${server}/:help
+  exit 0
+}
+
+if [ -x ${ASHARE}/tools/bin/weatherfetch ]
+then
+  if [ "${lang}" ]
+  then
+    ${ASHARE}/tools/bin/weatherfetch -l ${lang} ${location}
+  else
+    ${ASHARE}/tools/bin/weatherfetch ${location}
+  fi
+  printf "\n"
+  [ "${location}" ] && location="/${location}"
+  curl ${server}${location}?${format}${langopt} 2> /dev/null
+else
+  format=`echo "${format}" | sed -e "s/Q/q/"`
+  [ "${location}" ] && location="/${location}"
+  curl ${server}${location}?${format}${langopt} 2> /dev/null
+fi
+printf "\n"

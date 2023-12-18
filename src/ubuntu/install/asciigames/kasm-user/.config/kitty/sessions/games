@@ -1,0 +1,12 @@
+# Kitty tab for Games Menu
+#
+new_tab Games
+launch zsh -c games_menu
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Zsh
+new_tab
+launch zsh
+enabled_layouts tall:bias=50;full_size=1
+layout tall
