@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SpiderFoot
+Comment=SpiderFoot
+Exec=/home/kasm-user/bin/start-spiderfoot
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/spiderfoot.png
+Categories=System;
