@@ -1,6 +1,6 @@
-ARG BASE_TAG="develop"
-ARG BASE_IMAGE="core-ubuntu-jammy"
-FROM kasmweb/$BASE_IMAGE:$BASE_TAG
+ARG BASE_TAG="ubuntu-jammy"
+ARG BASE_IMAGE="kasm"
+FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
@@ -14,28 +14,19 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
-                  /ubuntu/install/misc/install_tools.sh \
-                  /ubuntu/install/chrome/install_chrome.sh \
-                  /ubuntu/install/chromium/install_chromium.sh \
-                  /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/thunderbird/install_thunderbird.sh \
-                  /ubuntu/install/neovim/install_tools_neovim.sh \
-                  /ubuntu/install/backgrounds/install_backgrounds.sh \
+    INST_SCRIPTS="/ubuntu/install/asciigames/install_tools_asciigames.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts
 COPY ./src/ $INST_DIR
 
 # Run installations
-ENV DENO_INSTALL /usr
 RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
-  sh -c "$(curl -fsSL https://deno.land/x/install/install.sh)" && \
   rm -rf ${HOME}/.mozilla && \
-  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh neovim && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh asciigames && \
   mkdir -p ${HOME}/.local && \
   mkdir -p ${HOME}/.local/share && \
   mkdir -p ${HOME}/.local/share/fonts && \

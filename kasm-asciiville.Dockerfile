@@ -34,6 +34,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/asciiville/install_tools_asciiville.sh \
+                  /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts
@@ -44,7 +45,11 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh asciiville && \
+  mkdir -p ${HOME}/.local && \
+  mkdir -p ${HOME}/.local/share && \
+  mkdir -p ${HOME}/.local/share/fonts && \
   wget -O /tmp/fonts.tar.gz \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
   tar xzf /tmp/fonts.tar.gz \

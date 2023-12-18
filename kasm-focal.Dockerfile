@@ -46,8 +46,12 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh focal && \
   sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades && \
+  mkdir -p ${HOME}/.local && \
+  mkdir -p ${HOME}/.local/share && \
+  mkdir -p ${HOME}/.local/share/fonts && \
   wget -O /tmp/fonts.tar.gz \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
   tar xzf /tmp/fonts.tar.gz \
