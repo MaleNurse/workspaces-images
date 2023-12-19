@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y \
     && bash /tmp/Anaconda3.sh -b -p /opt/anaconda3 \
     && rm -f /tmp/Anaconda3.sh \
     && echo 'source /opt/anaconda3/bin/activate' >> /etc/bash.bashrc \
-    # Update all the conad things
+    # Update all the conda things
     && bash -c "source /opt/anaconda3/bin/activate \
         && conda update -n root conda  \
         && conda update --all \
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
     && /opt/anaconda3/bin/conda install pip \
     && mkdir -p /home/kasm-user/.pip \
     && chown -R 1000:1000 /opt/anaconda3 /home/kasm-default-profile/.conda/ \
-    #RStudio Server
+    # RStudio Server
     && apt-get update && apt-get -y install software-properties-common \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
                    --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
@@ -49,16 +49,6 @@ RUN apt-get update && apt-get install -y \
         https://download2.rstudio.org/server/xenial/amd64/rstudio-server-1.4.1106-amd64.deb \
     && gdebi --n /tmp/rstudio-server.deb \
     && rm -f /tmp/rstudio-server.deb \
-    #RStudio
-    && apt-get update && apt-get -y install software-properties-common \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-                   --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
-    && add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/' \
-    && apt-get update && apt-get install -y gdebi-core r-base \
-    && wget -O /tmp/rstudio.deb \
-        https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.4.1106-amd64.deb \
-    && gdebi --n /tmp/rstudio.deb \
-    && rm -f /tmp/rstudio.deb \
     && cp /usr/share/applications/rstudio.desktop $HOME/Desktop/ \
     && chmod +x $HOME/Desktop/*.desktop \
     # Install Chrome
