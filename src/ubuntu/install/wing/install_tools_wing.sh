@@ -92,9 +92,13 @@ apt-get install -y ruby
 apt-get install -y ruby-dev
 apt-get install -y exuberant-ctags
 apt-get install -y git
+apt-get install -y build-essential
+apt-get install -y file
+apt-get install -y zsh
+apt-get install -y fonts-powerline
+apt-get install -y neofetch
 apt-get install -y dialog
 apt-get install -y highlight
-apt-get install -y neofetch
 apt-get install -y catdoc
 apt-get install -y pandoc
 apt-get install -y ranger

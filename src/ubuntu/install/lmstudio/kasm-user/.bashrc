@@ -94,8 +94,6 @@ esac
 # MEDIAROOT is used by doctorfree's Scripts to identify the media root
 export MEDIAROOT=/share/media
 
-# export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 

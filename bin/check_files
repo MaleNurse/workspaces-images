@@ -1,0 +1,117 @@
+#!/bin/bash
+
+copy=
+diff=
+[ "$1" == "-c" ] && {
+  copy=1
+  shift
+}
+[ "$1" == "-d" ] && {
+  diff=1
+  shift
+}
+
+one=$1
+two=$2
+[ "${one}" ] || {
+  echo "check_files one two"
+  exit 1
+}
+[ "${two}" ] || {
+  echo "check_files one two"
+  exit 1
+}
+
+FILES="kasm-user/Desktop/ranger.desktop \
+kasm-user/Desktop/btop.desktop \
+kasm-user/Desktop/kitty.desktop \
+kasm-user/.local/share/applications/ranger.desktop \
+kasm-user/.local/share/applications/btop.desktop \
+kasm-user/.local/share/applications/kitty.desktop \
+kasm-user/.local/share/icons/hicolor/32x32/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/128x128/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/btop.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/ranger.png \
+kasm-user/.local/share/icons/hicolor/512x512/apps/kitty.png \
+kasm-user/.p10k.zsh \
+kasm-user/bin/upper-right-window \
+kasm-user/bin/install-kitty \
+kasm-user/bin/gitdiff \
+kasm-user/bin/aptlist \
+kasm-user/bin/start-vscode \
+kasm-user/bin/center-active-window \
+kasm-user/bin/upper-center-window \
+kasm-user/bin/updgit \
+kasm-user/bin/findgrep \
+kasm-user/bin/lower-right-window \
+kasm-user/bin/aptsearch \
+kasm-user/.vimrc \
+kasm-user/.config/btop/btop.conf \
+kasm-user/.config/btop/themes/adwaita.theme \
+kasm-user/.config/btop/themes/everforest-dark-hard.theme \
+kasm-user/.config/btop/themes/elementarish.theme \
+kasm-user/.config/btop/themes/catppuccin_frappe.theme \
+kasm-user/.config/btop/themes/catppuccin_latte.theme \
+kasm-user/.config/btop/themes/catppuccin_macchiato.theme \
+kasm-user/.config/btop/themes/horizon.theme \
+kasm-user/.config/btop/themes/catppuccin_mocha.theme \
+kasm-user/.config/kitty/sessions/btop \
+kasm-user/.config/kitty/sessions/ranger \
+kasm-user/.config/ranger/rc.conf \
+kasm-user/.config/ranger/commands.py \
+kasm-user/.config/ranger/scope.sh \
+kasm-user/.config/ranger/rifle.conf \
+kasm-user/.config/ranger/plugins/zoxide/LICENSE.md \
+kasm-user/.config/ranger/plugins/zoxide/README.md \
+kasm-user/.config/ranger/plugins/zoxide/__init__.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/LICENSE \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/filter.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/README.md \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/__init__.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/command.py \
+kasm-user/.config/ranger/plugins/ranger_devicons/devicons.py \
+kasm-user/.config/ranger/plugins/ranger_devicons/LICENSE \
+kasm-user/.config/ranger/plugins/ranger_devicons/LICENSE_NERDFONT \
+kasm-user/.config/ranger/plugins/ranger_devicons/screenshot.png \
+kasm-user/.config/ranger/plugins/ranger_devicons/CONTRIBUTING.MD \
+kasm-user/.config/ranger/plugins/ranger_devicons/README.md \
+kasm-user/.config/ranger/plugins/ranger_devicons/__init__.py \
+kasm-user/.config/xfce4/terminal/terminalrc-jb \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml-jb \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml-jb \
+kasm-user/.config/neofetch/config.conf \
+kasm-user/.bashrc \
+kasm-user/.aliases \
+kasm-user/.zshrc"
+
+for file in $FILES
+do
+  missing=
+  [ -f ${one}/${file} ] || {
+    echo "${one}/${file} missing"
+    missing=1
+  }
+  [ -f ${two}/${file} ] || {
+    echo "${two}/${file} missing"
+    missing=1
+  }
+  [ "${missing}" ] || {
+    cmp ${one}/${file} ${two}/${file} > /dev/null 2>&1
+    [ $? -eq 0 ] || {
+      if [ "${diff}" ]; then
+        echo "${file} diff:"
+        diff -b ${one}/${file} ${two}/${file}
+        echo "=============================="
+      else
+        if [ "${copy}" ]; then
+          cp ${one}/${file} ${two}/${file}
+        else
+          echo "${file} differs"
+        fi
+      fi
+    }
+  }
+done

@@ -1,0 +1,34 @@
+# Kitty tabbed startup session
+#
+# Kitty tab for Wing development
+new_tab Wing
+cd ~/Wing
+launch bash
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Wing examples
+new_tab Examples
+cd ~/Wing/examples
+launch bash
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Ranger
+new_tab Ranger
+cd ~
+launch bash -c ranger
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Btop++
+new_tab Btop
+launch bash -c btop
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for HOME directory
+new_tab
+launch bash
+enabled_layouts tall:bias=50;full_size=1
+layout tall

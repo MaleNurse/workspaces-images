@@ -179,6 +179,9 @@ if command -v zoxide > /dev/null; then
   eval "$(zoxide init bash)"
 fi
 
+# Ranger devicon plugin configuration
+export RANGER_DEVICONS_SEPARATOR="  "
+
 [ -d "$HOME/.nvm" ] && {
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -1,6 +1,6 @@
-ARG BASE_TAG="develop"
-ARG BASE_IMAGE="core-ubuntu-focal"
-FROM kasmweb/$BASE_IMAGE:$BASE_TAG
+ARG BASE_TAG="ubuntu-focal"
+ARG BASE_IMAGE="kasm"
+FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
@@ -15,9 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/tools/install_tools.sh \
-                  /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/spiderfoot/install_spiderfoot.sh \
+    INST_SCRIPTS="/ubuntu/install/spiderfoot/install_spiderfoot.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts

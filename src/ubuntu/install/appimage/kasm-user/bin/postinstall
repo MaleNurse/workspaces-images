@@ -90,25 +90,39 @@ notify-send "Installing Desktop entries and fixing permissions"
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
-chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
-for fdir in config launchpadlib vim
+chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc
+for fdir in launchpadlib mozilla vim
 do
   [ -d ${HOME}/.${fdir} ] && {
     find ${HOME}/.${fdir} -type f | xargs chmod 644
     find ${HOME}/.${fdir} -type d | xargs chmod 755
   }
 done
+find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
+do
+  chmod 755 $f
+done
+find ${HOME}/.config -type d | xargs chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
+  find ${cdir} -type f | xargs chmod 644
+done
+chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.local/share/icons -type f | xargs chmod 644
+find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
+find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
+find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755
 chmod 755 ${HOME}/.config/ranger/*.sh
-chmod 755 ${HOME}/.local/share/applications/*
-chmod 644 ${HOME}/.local/share/backgrounds/*
-[ -d ${HOME}/Applications ] || mkdir -p ${HOME}/Applications
-chmod 755 ${HOME}/Applications
-chmod 755 ${HOME}/Applications/*
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/.local/share/applications/*.desktop
 chmod 755 ${HOME}/bin
 chmod 755 ${HOME}/bin/*
+chmod 755 ${HOME}/.cargo
 chmod 755 ${HOME}/logs
 [ -d ${HOME}/.cache ] || mkdir ${HOME}/.cache
 chmod 755 ${HOME}/.cache
@@ -128,6 +142,15 @@ do
   [ -d "${nss}" ] && chmod 700 "${nss}"
   [ -f "${nss}" ] && chmod 600 "${nss}"
 done
+[ -f ${HOME}/.pki/nssdb/pkcs11.txt ] && {
+  cat ${HOME}/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
+  cp /tmp/k$$ ${HOME}/.pki/nssdb/pkcs11.txt
+  rm -f /tmp/k$$
+}
+
+[ -d ${HOME}/Applications ] || mkdir -p ${HOME}/Applications
+chmod 755 ${HOME}/Applications
+chmod 755 ${HOME}/Applications/*
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop

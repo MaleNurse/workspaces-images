@@ -1,0 +1,94 @@
+#!/bin/bash
+
+one="jammy"
+[ "$1" == "-s" ] && {
+  one="$2"
+  shift 2
+}
+two="$1"
+[ "${two}" ] || {
+  echo "zsh_files [-s source] dest"
+  exit 1
+}
+
+FILES="kasm-user/Desktop/ranger.desktop \
+kasm-user/Desktop/btop.desktop \
+kasm-user/Desktop/kitty.desktop \
+kasm-user/.local/share/applications/ranger.desktop \
+kasm-user/.local/share/applications/btop.desktop \
+kasm-user/.local/share/applications/kitty.desktop \
+kasm-user/.local/share/icons/hicolor/32x32/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/128x128/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/kitty.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/btop.png \
+kasm-user/.local/share/icons/hicolor/256x256/apps/ranger.png \
+kasm-user/.local/share/icons/hicolor/512x512/apps/kitty.png \
+kasm-user/.p10k.zsh \
+kasm-user/bin/upper-right-window \
+kasm-user/bin/install-kitty \
+kasm-user/bin/gitdiff \
+kasm-user/bin/aptlist \
+kasm-user/bin/start-vscode \
+kasm-user/bin/center-active-window \
+kasm-user/bin/upper-center-window \
+kasm-user/bin/updgit \
+kasm-user/bin/findgrep \
+kasm-user/bin/lower-right-window \
+kasm-user/bin/aptsearch \
+kasm-user/.vimrc \
+kasm-user/.config/btop/btop.conf \
+kasm-user/.config/btop/themes/adwaita.theme \
+kasm-user/.config/btop/themes/everforest-dark-hard.theme \
+kasm-user/.config/btop/themes/elementarish.theme \
+kasm-user/.config/btop/themes/catppuccin_frappe.theme \
+kasm-user/.config/btop/themes/catppuccin_latte.theme \
+kasm-user/.config/btop/themes/catppuccin_macchiato.theme \
+kasm-user/.config/btop/themes/horizon.theme \
+kasm-user/.config/btop/themes/catppuccin_mocha.theme \
+kasm-user/.config/kitty/sessions/btop \
+kasm-user/.config/kitty/sessions/ranger \
+kasm-user/.config/ranger/rc.conf \
+kasm-user/.config/ranger/commands.py \
+kasm-user/.config/ranger/scope.sh \
+kasm-user/.config/ranger/rifle.conf \
+kasm-user/.config/ranger/plugins/zoxide/LICENSE.md \
+kasm-user/.config/ranger/plugins/zoxide/README.md \
+kasm-user/.config/ranger/plugins/zoxide/__init__.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/LICENSE \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/filter.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/README.md \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/__init__.py \
+kasm-user/.config/ranger/plugins/ranger-fzf-filter/command.py \
+kasm-user/.config/ranger/plugins/ranger_devicons/devicons.py \
+kasm-user/.config/ranger/plugins/ranger_devicons/LICENSE \
+kasm-user/.config/ranger/plugins/ranger_devicons/LICENSE_NERDFONT \
+kasm-user/.config/ranger/plugins/ranger_devicons/screenshot.png \
+kasm-user/.config/ranger/plugins/ranger_devicons/CONTRIBUTING.MD \
+kasm-user/.config/ranger/plugins/ranger_devicons/README.md \
+kasm-user/.config/ranger/plugins/ranger_devicons/__init__.py \
+kasm-user/.config/xfce4/terminal/terminalrc-jb \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml-jb \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml \
+kasm-user/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml-jb \
+kasm-user/.config/neofetch/config.conf \
+kasm-user/.bashrc \
+kasm-user/.aliases \
+kasm-user/.zshrc"
+
+for file in $FILES
+do
+  missing=
+  [ -f ${one}/${file} ] || {
+    echo "${one}/${file} missing"
+    continue
+  }
+  [ -f ${two}/${file} ] && continue
+  bdir=$(dirname ${two}/${file})
+  [ -d ${bdir} ] || mkdir -p ${bdir}
+  [ -d ${bdir} ] || {
+    echo "Missing directory: ${bdir}"
+    continue
+  }
+  cp ${one}/${file} ${two}/${file}
+done

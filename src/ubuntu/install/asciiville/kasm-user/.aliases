@@ -3,7 +3,8 @@ alias ldown='ls -1tr ~/Downloads'
 alias df='df -h'
 alias du='du -h'
 alias dutop='du -h -d 0'
-alias neo='neofetch | lolcat'
+alias neo='neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png'
+alias neolol='neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png | lolcat'
 alias whence='type -a'
 alias sudo='sudo '
 alias pbcopy='xclip -selection clipboard'
@@ -49,3 +50,8 @@ command -v bat > /dev/null && alias less='bat'
 command -v batcat > /dev/null && \
 	alias bat='batcat' && \
 	alias less='batcat'
+
+### Neovim
+if [ -d $HOME/.config/nvim-Lazyman ]; then
+  command -v nvim > /dev/null && alias vi="NVIM_APPNAME=nvim-Lazyman nvim"
+fi
