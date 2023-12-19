@@ -8,7 +8,7 @@ install_external_package() {
   DL_URL=
   DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "\.amd64\.deb")
+    | grep "amd64\.deb")
 
   [ "${DL_URL}" ] && {
     printf "\n\tInstalling %s ..." "${PROJECT}"
@@ -110,6 +110,11 @@ apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y dialog
 apt-get install -y ranger
+apt-get install -y exuberant-ctags
+apt-get install -y highlight
+apt-get install -y neofetch
+apt-get install -y catdoc
+apt-get install -y pandoc
 apt-get install -y tmux
 apt-get install -y w3m
 apt-get install -y asciinema
@@ -119,7 +124,6 @@ apt-get install -y imagemagick
 apt-get install -y cmatrix
 apt-get install -y neomutt
 apt-get install -y newsboat
-apt-get install -y neofetch
 apt-get install -y ca-certificates
 apt-get install -y ubuntu-desktop
 
@@ -131,6 +135,9 @@ install_external_package
 PROJECT=btop
 install_external_package
 PROJECT=cbftp
+install_external_package
+OWNER=obsidianmd
+PROJECT=obsidian-releases
 install_external_package
 
 FIGLET_DIR="/usr/share/figlet-fonts"

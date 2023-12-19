@@ -56,8 +56,15 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
-notify-send "Installing zoxide smart cd command"
+notify-send "Installing Zoxide Smart cd Command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
+notify-send "Installing Obsidian Cheat Sheets Vault"
+git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+[ -f ${HOME}/.config/obsidian.tar.gz ] && {
+  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
+  rm -f ${HOME}/.config/obsidian.tar.gz
+}
 
 rm -f $HOME/.config/autostart/postinstall.desktop
 
