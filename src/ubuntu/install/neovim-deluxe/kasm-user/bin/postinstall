@@ -31,6 +31,9 @@ for font_file in ${FONT_FILES}
 do
   [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
 done
+xfce4-panel -r
+xfconf-query -c xsettings -p /Gtk/FontName -s "JetBrainsMono Nerd Font"
+xfconf-query -c xsettings -p /Gtk/MonospaceFontName -s "JetBrainsMono Nerd Font Mono"
 
 # Install Kitty terminal emulator
 have_kitty=$(type -p kitty)

@@ -43,8 +43,8 @@ if [ "${platform}" == "Darwin" ]; then
 else
   TOP="/usr"
 fi
-FIG_FONTS="${TOP}/share/figlet-fonts"
-HOME_FIG_FONTS="${HOME}/src/Asciiville/share/figlet-fonts"
+FIG_FONTS="${TOP}/share/figlet"
+HOME_FIG_FONTS="${HOME}/.local/share/figlet"
 FIG_TEXT="Asciiville"
 USE_FONT="Standard"
 WEB_HOME="https://github.com/doctorfree/Asciiville#readme"
@@ -633,7 +633,7 @@ select_font() {
       FIG_TEXT="Apps"
       ;;
     AsciiGameTerm)
-      FIG_TEXT="Games"
+      FIG_TEXT="Ascii Games"
       ;;
     AsciiArt)
       if [ "${goBig}" ]; then
