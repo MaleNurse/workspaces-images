@@ -1,4 +1,6 @@
-FROM kasmweb/core-cuda-bionic:develop-rolling
+ARG BASE_TAG="ubuntu-jammy"
+ARG BASE_IMAGE="kasm"
+FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
 USER root
 
@@ -39,16 +41,28 @@ RUN apt-get update && apt-get install -y \
     && /opt/anaconda3/bin/conda install pip \
     && mkdir -p /home/kasm-user/.pip \
     && chown -R 1000:1000 /opt/anaconda3 /home/kasm-default-profile/.conda/ \
+    # R
+    # install two helper packages we need
+    && apt install --no-install-recommends software-properties-common dirmngr \
+    # add the signing key (by Michael Rutter) for these repos
+    # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+    # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
+    # && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+    #                --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
+    && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc \
+    # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
+    && add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" \
+    && apt install -y --no-install-recommends gdebi-core r-base \
     # RStudio Server
-    && apt-get update && apt-get -y install software-properties-common \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-                   --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
-    && add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/' \
-    && apt-get update && apt-get install -y gdebi-core r-base \
     && wget -O /tmp/rstudio-server.deb \
-        https://download2.rstudio.org/server/xenial/amd64/rstudio-server-1.4.1106-amd64.deb \
+        https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.0-369-amd64.deb \
     && gdebi --n /tmp/rstudio-server.deb \
     && rm -f /tmp/rstudio-server.deb \
+    # RStudio
+    && wget -O /tmp/rstudio-desktop.deb \
+        https://download1.rstudio.org/electron/jammy/amd64/rstudio-2023.12.0-369-amd64.deb \
+    && gdebi --n /tmp/rstudio-desktop.deb \
+    && rm -f /tmp/rstudio-desktop.deb \
     && cp /usr/share/applications/rstudio.desktop $HOME/Desktop/ \
     && chmod +x $HOME/Desktop/*.desktop \
     # Install Chrome

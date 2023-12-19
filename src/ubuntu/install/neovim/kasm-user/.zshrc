@@ -389,7 +389,7 @@ man () {
 export LESSHISTFILE=-
 
 # Set the location of the bat config file
-export BAT_CONFIG_PATH="/etc/bat.conf"
+export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
 
 # see /usr/share/doc/bash/examples/startup-files
 # (in the package bash-doc) for examples
