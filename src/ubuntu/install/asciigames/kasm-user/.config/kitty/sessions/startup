@@ -25,3 +25,9 @@ new_tab Btop
 launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
+
+new_tab Help
+cd ~/.local/share/doc
+launch --hold glow
+enabled_layouts tall:bias=50;full_size=1
+layout tall

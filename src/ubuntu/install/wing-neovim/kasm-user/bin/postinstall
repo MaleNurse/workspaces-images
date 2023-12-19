@@ -76,6 +76,19 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
+notify-send "Installing Obsidian Cheat Sheets Vault"
+git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+[ -f ${HOME}/.config/obsidian.tar.gz ] && {
+  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
+  rm -f ${HOME}/.config/obsidian.tar.gz
+}
+[ -f ${HOME}/.config/dotobsidian.tar.gz ] && {
+  [ -d ${HOME}/Documents/cheat-sheets-plus ] && {
+    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
+  }
+  rm -f ${HOME}/.config/dotobsidian.tar.gz
+}
+
 notify-send "Installing Wing"
 
 have_npm=$(type -p npm)

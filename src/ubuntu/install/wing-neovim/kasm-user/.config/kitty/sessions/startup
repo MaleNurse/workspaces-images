@@ -33,10 +33,9 @@ launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab in Desktop folder
-new_tab Desktop
-cd ~/Desktop
-launch --hold lsd --group-dirs first
+new_tab Help
+cd ~/.local/share/doc
+launch --hold glow
 launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall

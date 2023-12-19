@@ -78,6 +78,26 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
+notify-send "Installing Obsidian Cheat Sheets Vault"
+git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+[ -f ${HOME}/.config/obsidian.tar.gz ] && {
+  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
+  rm -f ${HOME}/.config/obsidian.tar.gz
+}
+[ -f ${HOME}/.config/dotobsidian.tar.gz ] && {
+  [ -d ${HOME}/Documents/cheat-sheets-plus ] && {
+    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
+  }
+  rm -f ${HOME}/.config/dotobsidian.tar.gz
+}
+
+notify-send "Installing Pillow and Pygments"
+python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
+python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
+
+notify-send "Installing Glow markdown previewer"
+go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
+
 notify-send "Initializing Asciiville"
 [ -x $HOME/bin/init-asciiville ] && {
   ${HOME}/bin/init-asciiville -y > ${LOGDIR}/init-asciiville.log 2>&1

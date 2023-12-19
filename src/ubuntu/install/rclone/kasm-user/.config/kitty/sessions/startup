@@ -3,6 +3,12 @@
 # Kitty tab for HOME directory
 new_tab
 launch zsh
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+new_tab Help
+cd ~/.local/share/doc
+launch --hold glow
 launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall

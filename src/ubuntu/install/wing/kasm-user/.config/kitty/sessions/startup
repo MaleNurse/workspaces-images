@@ -1,7 +1,7 @@
 # Kitty tabbed startup session
 #
 # Kitty tab for Wing development
-new_tab Wing
+new_tab
 cd ~/Wing
 launch zsh
 launch center-active-window
@@ -28,8 +28,8 @@ launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for HOME directory
-new_tab
-launch zsh
+new_tab Help
+cd ~/.local/share/doc
+launch --hold glow
 enabled_layouts tall:bias=50;full_size=1
 layout tall

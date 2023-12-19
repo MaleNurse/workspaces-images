@@ -32,6 +32,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/jammy/install_tools_jammy.sh \
                   /ubuntu/install/backgrounds/install_backgrounds.sh \
+                  /ubuntu/install/obsidian/install_obsidian_conf.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts
