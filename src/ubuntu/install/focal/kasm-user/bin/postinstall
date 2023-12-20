@@ -59,6 +59,29 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
+notify-send "Installing Pillow and Pygments"
+python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
+python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
+
+notify-send "Installing Glow markdown previewer"
+go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
+
+notify-send "Installing Obsidian Cheat Sheets Vault"
+git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+[ -f ${HOME}/.config/obsidian.tar.gz ] && {
+  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
+  rm -f ${HOME}/.config/obsidian.tar.gz
+}
+[ -f ${HOME}/.config/dotobsidian.tar.gz ] && {
+  [ -d ${HOME}/Documents/cheat-sheets-plus ] && {
+    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
+  }
+  rm -f ${HOME}/.config/dotobsidian.tar.gz
+}
+
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
@@ -87,9 +110,18 @@ notify-send "Installing Desktop entries and fixing permissions"
 # Correct permissions/ownership
 chmod 755 $HOME
 chmod 644 $HOME/.aliases $HOME/.bashrc
-find $HOME/.config -type f | xargs chmod 644
 find $HOME/.config -type d | xargs chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
+  find ${cdir} -type f | xargs chmod 644
+done
+chmod 600 ${HOME}/.config/user-dirs.*
 find $HOME/.local -type d | xargs chmod 755
+find $HOME/.local/share/icons -type f | xargs chmod 644
+chmod 755 $HOME/.config/ranger/*.sh
 chmod 755 $HOME/.local/share/applications/*
 chmod 644 $HOME/.local/share/backgrounds/*
 chmod 755 $HOME/Desktop
@@ -121,9 +153,6 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 notify-send "Ubuntu Focal desktop initialization complete!"
 sleep 5

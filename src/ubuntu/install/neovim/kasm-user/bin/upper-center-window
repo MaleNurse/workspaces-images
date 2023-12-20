@@ -1,4 +1,7 @@
 #!/bin/bash
+ 
+have_dot=$(type -p xdotool)
+[ "${have_dot}" ] || exit 0
 
 IFS='x' read screenWidth screenHeight < <(xdpyinfo | grep dimensions | grep -o '[0-9x]*' | head -n1)
 

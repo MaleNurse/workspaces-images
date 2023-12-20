@@ -59,7 +59,7 @@ Add the `Neovim` image as:
 
 - **Workspace Type**: `Container`
 - **Thumbnail URL**: `https://lazyman.dev/assets/neovim-hicontrast.png`
-- **Docker Image**: `kasmweb/neovim:dev`
+- **Docker Image**: `<your-dockerhub-user>/<your-dockerhub-repo>:neovim`
 - **Cores**: `2`
 - **Memory**: `5636`
 - **GPU Count**: `0`
@@ -79,7 +79,7 @@ is installed and configured.
 - [Kasm User Guide](https://www.kasmweb.com/docs/latest/user_guide.html)
 - [Kasm Workspaces - Resource Allocation](https://youtu.be/lv85XZ8EdjY?si=xcSfB-EWtu-2tIHQ) (YouTube)
 - [KasmVNC](https://www.kasmweb.com/kasmvnc)
-- [Record Technologies Kasm Registry](https://doctorfree.github.io/kasm-registry/1.0)
+- [Record Technologies Kasm Registry](https://doctorfree.github.io/kasm-registry/)
   - [Github Repository](https://github.com/doctorfree/kasm-registry) (deployment details)
 - [LinuxServer.io](https://www.linuxserver.io)
   - [3rd Party Workspace Registry](https://kasmregistry.linuxserver.io)

@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# This script can be ignored. It is used to prepare and sync Jammy based user configuration
+#
+# Need to be in the install folder
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd ${SCRIPT_PATH}/..
+
+# Jammy based except jammy
+# for work in appimage asciigames asciiville deluxe lmstudio neovim rclone wing wing-neovim
+# ALL except jammy
+for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
+do
+#   [ -d $work/kasm-user/.config/kitty/sessions ] || {
+#       echo "Missing .config/kitty/sessions in $work"
+#       continue
+#   }
+#   cp jammy/kasm-user/.config/kitty/sessions/btop \
+#      $work/kasm-user/.config/kitty/sessions/btop
+#   [ -d $work/kasm-user/.config/kitty/sessions ] || {
+#       echo "Missing .config/kitty/sessions in $work"
+#       continue
+#   }
+#   cp jammy/kasm-user/.config/kitty/sessions/ranger \
+#      $work/kasm-user/.config/kitty/sessions/ranger
+# [ -d $work/kasm-user/bin ] || {
+#   echo "Missing kasm-user/bin in $work"
+#   continue
+# }
+# cp jammy/kasm-user/bin/*window* $work/kasm-user/bin
+# chmod 755 $work/kasm-user/bin/*window*
+# [ -d $work/kasm-user/.config/glow ] || {
+#   cp -a /tmp/glow $work/kasm-user/.config/glow
+# }
+  [ -d $work/kasm-user/.local/share/doc ] || {
+    mkdir -p $work/kasm-user/.local/share
+    mkdir -p $work/kasm-user/.local/share/doc
+  }
+  cp jammy/kasm-user/.local/share/doc/*.md \
+     $work/kasm-user/.local/share/doc
+# [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
+#    echo "Missing rifle.conf in $work"
+#    continue
+# }
+# cp jammy/kasm-user/.config/ranger/rifle.conf \
+#    $work/kasm-user/.config/ranger/rifle.conf
+#   [ -f $work/kasm-user/.zshrc ] || {
+#       echo "Missing .zshrc in $work"
+#       continue
+#   }
+#   cp jammy/kasm-user/.zshrc \
+#      $work/kasm-user/.zshrc
+#   [ -f $work/kasm-user/.config/glow/glow.yml ] || {
+#       echo "Missing .config/glow/glow.yml in $work"
+#       continue
+#   }
+#   cp jammy/kasm-user/.config/glow/glow.yml \
+#      $work/kasm-user/.config/glow/glow.yml
+done

@@ -20,6 +20,14 @@ install_external_package() {
   }
 }
 
+install_go() {
+  curl --silent --location --output /tmp/go.tgz \
+       https://golang.org/dl/go1.16.7.linux-amd64.tar.gz
+  [ -d /usr/local ] || mkdir -p /usr/local
+  tar -C /usr/local -xf /tmp/go.tgz
+  rm -f /tmp/go.tgz
+}
+
 install_fzf() {
   API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
   DL_URL=
@@ -98,7 +106,6 @@ apt-get install -y libpng-dev
 apt-get install -y khard
 apt-get install -y git
 apt-get install -y mplayer
-apt-get install -y golang
 apt-get install -y bsdgames
 apt-get install -y greed
 apt-get install -y nudoku
@@ -118,6 +125,7 @@ apt-get install -y ca-certificates
 apt-get install -y ubuntu-desktop
 
 install_fzf
+install_go
 install_lsd
 
 PROJECT=asciigames

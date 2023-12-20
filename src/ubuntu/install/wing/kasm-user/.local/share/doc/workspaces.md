@@ -141,7 +141,24 @@ Currently available workspaces in this registry include:
 
 Record Technologies workspaces all include customized desktops with several
 additional productivity and development packages preconfigured for ease of use.
-For example, the Wing workspaces include Visual Studio Code with the Wing
+
+Advanced configuration is included for several components including:
+
+* [Bat](https://github.com/sharkdp/bat): A `cat(1)` clone with wings
+* [Btop](https://github.com/aristocratos/btop): Resource monitor
+* [Glow](https://github.com/charmbracelet/glow): Markdown previewer
+* [Kitty](https://sw.kovidgoyal.net/kitty): The fast, feature-rich, GPU based terminal emulator
+* [Lsd](https://github.com/lsd-rs/lsd): The next generation `ls` command
+* [Neofetch](https://github.com/dylanaraps/neofetch): System information tool
+* [Ranger](https://github.com/ranger/ranger): A Vim-inspired file manager for the terminal
+  * Extensive configuration for the Ranger file executor/opener `rifle`
+  * Integration with `Glow`, `AppImage`, `Wing`, and more
+* [Xfce4](https://www.xfce.org): The Xfce desktop environment
+* [Zsh](https://www.zsh.org): Features from `bash`, `ksh`, `tcsh`, and more
+  * [Oh My Zsh](https://ohmyz.sh): Framework for managing the `zsh` configuration
+  * [Powerlevel10k](https://github.com/romkatv/powerlevel10k): Theme for `zsh`
+
+The Wing workspaces include Visual Studio Code with the Wing
 extension; the Neovim workspaces include Neovide and Lazyman - the Neovim
 Configuration Manager, several workspaces include the
 [Ranger File Manager](https://github.com/ranger/ranger)
