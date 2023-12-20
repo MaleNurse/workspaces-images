@@ -74,13 +74,17 @@ apt-get update
 apt-get install -y libportaudio2
 apt-get install -y libportaudiocpp0
 apt-get install -y portaudio19-dev
+apt-get install -y bsdgames
+apt-get install -y greed
+apt-get install -y nudoku
 apt-get install -y speedtest-cli
-apt-get install -y luarocks
 
 install_fzf
 
 install_asciiville
 
+PROJECT=asciigames
+install_external_package
 PROJECT=any2ascii
 install_external_package
 PROJECT=endoh1
