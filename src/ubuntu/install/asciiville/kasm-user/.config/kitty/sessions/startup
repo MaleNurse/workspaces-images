@@ -13,14 +13,15 @@ launch zsh -c asciiville
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab with zsh shell
-new_tab
-launch zsh
+# Kitty tab for Cheat Sheets
+new_tab Cheat Sheets
+cd ~/Documents/cheat-sheets-plus
+launch zsh -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 new_tab Help
 cd ~/.local/share/doc
-launch --hold glow
+launch zsh -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall

@@ -1,14 +1,12 @@
-<h1 align="center">
-  <br>
-  <img width="240" src="https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/logo.png">
-  <br>
-  Record Technologies Workspace Registry
-  <br>
-</h1>
+![Logo](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/logo.png)
 
-<p align="center">This repository is home to the Record Technologies Kasm Workspaces registry. A front end website is automatically generated for the registry looking similar to:</p>
+# Record Technologies Workspace Registry
 
-![registry](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/registry.png)
+The repository at https://github.com/doctorfree/kasm-registry is home to the
+Record Technologies Kasm Workspaces registry. A front end website is
+automatically generated for the registry looking similar to:
+
+![Registry](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/registry.png)
 
 ## Contents
 

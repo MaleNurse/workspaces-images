@@ -10,6 +10,7 @@ layout tall
 new_tab Wing
 cd ~/Wing
 launch zsh
+launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
@@ -20,22 +21,21 @@ launch zsh
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for Ranger
-new_tab Ranger
-cd ~
-launch zsh -c ranger
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
 # Kitty tab for Btop++
 new_tab Btop
 launch zsh -c btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
+# Kitty tab for Cheat Sheets
+new_tab Cheat Sheets
+cd ~/Documents/cheat-sheets-plus
+launch zsh -c ranger
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
 new_tab Help
 cd ~/.local/share/doc
-launch --hold glow
-launch center-active-window
+launch zsh -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall

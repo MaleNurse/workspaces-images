@@ -79,6 +79,9 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
   rm -f ${HOME}/.config/dotobsidian.tar.gz
 }
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
@@ -169,9 +172,6 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 notify-send "Ubuntu Jammy desktop initialization complete!"
 sleep 5

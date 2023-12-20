@@ -1,24 +1,21 @@
-<h1 align="center">
-  <br>
-  <img width="240" src="https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/logo.png">
-  <br>
-  Record Technologies Kasm Workspace Images
-  <br>
-</h1>
+![Logo](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/logo.png)
 
-This repository contains several examples of desktop and application Kasm
+# Record Technologies Kasm Workspace Images
+
+The [Record Technologies Kasm repository](https://doctorfree.github.io/kasm-registry)
+contains several highly customized desktop and application Kasm
 Workspaces images. Administrators may leverage these images directly or use
 them as a starting point for their own custom images. Each of these images
 is based off one of the
-[**Workspaces Core Images**](https://github.com/kasmtech/workspaces-core-images?utm_campaign=Github&utm_source=github)
+[**Workspaces Core Images**](https://github.com/kasmtech/workspaces-core-images)
 which contain the necessary wiring to work within the Kasm Workspaces platform.
 
 For more information about building custom images please review the
-[**How To Guide**](https://kasmweb.com/docs/latest/how_to/building_images.html?utm_campaign=Github&utm_source=github)
+[**How To Guide**](https://kasmweb.com/docs/latest/how_to/building_images.html)
 
 The Kasm team publishes applications and desktop images for use inside the platform.
 More information, including source can be found in the
-[**Default Images List**](https://kasmweb.com/docs/latest/guide/custom_images.html?utm_campaign=Github&utm_source=github)
+[**Default Images List**](https://kasmweb.com/docs/latest/guide/custom_images.html)
 
 ## Table of Contents
 
@@ -104,9 +101,7 @@ disposable, docker containers that are accessible via web browser.
 
 The rendering of the graphical-based containers is powered by the open-source
 project
-[**KasmVNC**](https://github.com/kasmtech/KasmVNC?utm_campaign=Github&utm_source=github)
-
-![Screenshot][Kasm_Workflow]
+[**KasmVNC**](https://github.com/kasmtech/KasmVNC)
 
 Kasm Workspaces was developed to meet the most demanding secure collaboration
 requirements that is highly scalable, customizable, and easy to maintain.
@@ -119,7 +114,7 @@ hybrid configuration.
 
 ## Record Technologies Workspace Registry
 
-![registry](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/registry.png)
+![Registry](https://raw.githubusercontent.com/wiki/doctorfree/kasm-registry/registry.png)
 
 The [Record Technologies](https://doctorfree.github.io/kasm-registry) workspace
 registry serves as the distribution mechanism for Kasm workspaces
@@ -129,6 +124,7 @@ Currently available workspaces in this registry include:
 
 * `AppImage`: Customized Ubuntu 22.04 desktop with [AppImage Launcher](https://github.com/TheAssassin/AppImageLauncher)
 * [Asciiville](https://github.com/doctorfree/Asciiville#readme): Ascii art, utilities, games, more
+* [Ascii Games](https://github.com/doctorfree/asciigames#readme): Collection of Ascii games
 * `CloudStorage`: Utilizes [rclone](https://github.com/rclone/rclone), a command-line program to manage files on cloud storage
 * `Deluxe`: Asciiville, Neovim, Spiderfoot, Wing and more all in one workspace
 * [LM Studio](https://github.com/lmstudio-ai): Customized Ubuntu 22.04 desktop with `LM Studio`
@@ -210,7 +206,4 @@ volume mappings and the Docker library folders on a large second drive using XFS
 
 ## Live Demo
 A self-guided on-demand demo is available at
-[**kasmweb.com**](https://www.kasmweb.com/demo.html?utm_campaign=Github&utm_source=github)
-
-[logo]: https://cdn2.hubspot.net/hubfs/5856039/dockerhub/kasm_logo.png "Kasm Logo"
-[Kasm_Workflow]: https://cdn2.hubspot.net/hubfs/5856039/dockerhub/kasm_workflow_960.gif "Kasm Workflow"
+[**kasmweb.com**](https://www.kasmweb.com/demo.html)

@@ -3,20 +3,7 @@
 # Kitty tab with Neofetch
 new_tab
 launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
-new_tab Help
-cd ~/.local/share/doc
-launch --hold glow
 launch center-active-window
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
-# Kitty tab in Documents folder
-new_tab Documents
-cd ~/Documents
-launch --hold lsd --group-dirs first
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
@@ -31,5 +18,18 @@ layout tall
 new_tab Wing
 cd ~/Wing
 launch zsh
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Cheat Sheets
+new_tab Cheat Sheets
+cd ~/Documents/cheat-sheets-plus
+launch zsh -c ranger
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+new_tab Help
+cd ~/.local/share/doc
+launch zsh -c ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall
