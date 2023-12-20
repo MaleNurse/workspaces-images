@@ -2,6 +2,6 @@
 new_tab Ranger
 cd ~
 launch zsh -c ranger
-launch lower-right-window
+launch --env PAGER="less -r" ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall

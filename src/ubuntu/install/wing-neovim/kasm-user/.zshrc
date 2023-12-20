@@ -453,6 +453,8 @@ export PATH="$PATH:$HOME/gems/bin"
 
 export TZ="America/Los_Angeles"
 
+export PAGER="less -r"
+
 # Ranger devicon plugin configuration
 export RANGER_DEVICONS_SEPARATOR="  "
 

@@ -44,12 +44,8 @@ command -v bashtop > /dev/null && alias top='bashtop'
 command -v bpytop > /dev/null && alias top='bpytop'
 command -v btop > /dev/null && alias top='btop'
 
-### CAT & LESS
-command -v bat > /dev/null && alias less='bat'
 # In Debian the command is batcat
-command -v batcat > /dev/null && \
-	alias bat='batcat' && \
-	alias less='batcat'
+command -v batcat > /dev/null && alias bat='batcat'
 
 ### Neovim
 if [ -d $HOME/.config/nvim-Lazyman ]; then
