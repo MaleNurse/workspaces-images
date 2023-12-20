@@ -95,6 +95,9 @@ python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
 notify-send "Installing Glow markdown previewer"
 go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
@@ -177,9 +180,6 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 notify-send "AppImage Launcher desktop initialization complete!"
 sleep 5
