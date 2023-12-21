@@ -21,6 +21,14 @@ install_external_package() {
   }
 }
 
+install_go() {
+  curl --silent --location --output /tmp/go.tgz \
+       https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+  [ -d /usr/local ] || mkdir -p /usr/local
+  tar -C /usr/local -xf /tmp/go.tgz
+  rm -f /tmp/go.tgz
+}
+
 install_lsd() {
   API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
   DL_URL=
@@ -35,6 +43,45 @@ install_lsd() {
     chmod 644 "${TEMP_DEB}"
     apt-get install -y "${TEMP_DEB}"
     rm -f "${TEMP_DEB}"
+    printf " done"
+  }
+}
+
+install_obs() {
+  API_URL="https://api.github.com/repos/Yakitrak/obsidian-cli/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "obsidian-cli" | grep "linux_amd64\.tar\.gz")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling OBS ..."
+    TEMP_TGZ="$(mktemp --suffix=.tgz)"
+    wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
+    chmod 644 "${TEMP_TGZ}"
+    tar "${TEMP_TGZ}"
+    [ -d /usr/local ] || mkdir -p /usr/local
+    [ -d /usr/local/bin ] || mkdir -p /usr/local/bin
+    tar -C /usr/local/bin -xf "${TEMP_TGZ}"
+    rm -f "${TEMP_TGZ}" /usr/local/bin/LICENSE /usr/local/bin/README.md
+    # We run through hoops because the maintainer has not changed the name of
+    # the command even though it conflicts with OBS Studio but he might do so.
+    # We need it to be 'obs-cli'
+    if [ -f /usr/local/bin/obs ]; then
+      mv /usr/local/bin/obs /usr/local/bin/obs-cli
+      chmod 755 /usr/local/bin/obs-cli
+    else
+      if [ -f /usr/local/bin/obs-cli ]; then
+        chmod 755 /usr/local/bin/obs-cli
+      else
+        for cli in /usr/local/bin/obs*
+        do
+          [ "${cli}" == "/usr/local/bin/obs*" ] && continue
+          ln -s "${cli}" /usr/local/bin/obs-cli
+          break
+        done
+      fi
+    fi
     printf " done"
   }
 }
@@ -83,7 +130,6 @@ apt-get install -y file
 apt-get install -y zsh
 apt-get install -y fonts-powerline
 apt-get install -y mplayer
-apt-get install -y golang
 apt-get install -y dialog
 apt-get install -y ranger
 apt-get install -y exuberant-ctags
@@ -103,7 +149,9 @@ apt-get install -y newsboat
 apt-get install -y ca-certificates
 apt-get install -y ubuntu-desktop
 
+install_go
 install_lsd
+install_obs
 
 PROJECT=btop
 install_external_package

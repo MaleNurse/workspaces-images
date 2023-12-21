@@ -33,28 +33,28 @@ do
 # [ -d $work/kasm-user/.config/glow ] || {
 #   cp -a /tmp/glow $work/kasm-user/.config/glow
 # }
-  [ -d $work/kasm-user/.local/share/doc ] || {
-    mkdir -p $work/kasm-user/.local/share
-    mkdir -p $work/kasm-user/.local/share/doc
-  }
-  cp jammy/kasm-user/.local/share/doc/*.md \
-     $work/kasm-user/.local/share/doc
-# [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
-#    echo "Missing rifle.conf in $work"
-#    continue
+# [ -d $work/kasm-user/.local/share/doc ] || {
+#   mkdir -p $work/kasm-user/.local/share
+#   mkdir -p $work/kasm-user/.local/share/doc
 # }
-# cp jammy/kasm-user/.config/ranger/rifle.conf \
-#    $work/kasm-user/.config/ranger/rifle.conf
-#   [ -f $work/kasm-user/.zshrc ] || {
-#       echo "Missing .zshrc in $work"
-#       continue
-#   }
-#   cp jammy/kasm-user/.zshrc \
-#      $work/kasm-user/.zshrc
-#   [ -f $work/kasm-user/.config/glow/glow.yml ] || {
-#       echo "Missing .config/glow/glow.yml in $work"
-#       continue
-#   }
-#   cp jammy/kasm-user/.config/glow/glow.yml \
-#      $work/kasm-user/.config/glow/glow.yml
+# cp jammy/kasm-user/.local/share/doc/*.md \
+#    $work/kasm-user/.local/share/doc
+  [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
+     echo "Missing rifle.conf in $work"
+     continue
+  }
+  cp jammy/kasm-user/.config/ranger/rifle.conf \
+     $work/kasm-user/.config/ranger/rifle.conf
+# [ -f $work/kasm-user/.zshrc ] || {
+#   echo "Missing .zshrc in $work"
+#   continue
+# }
+# cp jammy/kasm-user/.zshrc \
+#    $work/kasm-user/.zshrc
+# [ -f $work/kasm-user/.config/glow/glow.yml ] || {
+#   echo "Missing .config/glow/glow.yml in $work"
+#   continue
+# }
+# cp jammy/kasm-user/.config/glow/glow.yml \
+#    $work/kasm-user/.config/glow/glow.yml
 done

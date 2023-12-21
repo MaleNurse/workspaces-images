@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# open-markdown - Open a Markdown format file with Obsidian or Glow
+
+[ -f "$1" ] || exit 1
+
+OBS=
+have_obs=$(type -p obs-cli)
+if [ "${have_obs}" ]; then
+  OBS="obs-cli"
+else
+  if [ -x /usr/local/bin/obs-cli ]; then
+    OBS="/usr/local/bin/obs-cli"
+  else
+    glow "$1"
+    exit 0
+  fi
+fi
+
+[ "${OBS}" ] || {
+  glow "$1"
+  exit 0
+}
+
+if [ "$1" ]; then
+  note=$(basename "$1" | sed -e "s/.md//")
+  ${OBS} open "${note}" > /dev/null 2>&1
+else
+  note="README"
+  ${OBS} open "${note}" > /dev/null 2>&1
+fi

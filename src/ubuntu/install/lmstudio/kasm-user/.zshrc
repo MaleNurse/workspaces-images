@@ -423,9 +423,6 @@ else
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 
-# Go paths
-# [ -d /usr/lib/go-1.13 ] && export GOROOT=/usr/lib/go-1.13
-# [ -d $HOME/go ] && export GOPATH=$HOME/go
 [ -d ${HOME}/go/bin ] && PATH=$PATH:${HOME}/go/bin
 [ -d /usr/local/go/bin ] && PATH=$PATH:/usr/local/go/bin
 export PATH

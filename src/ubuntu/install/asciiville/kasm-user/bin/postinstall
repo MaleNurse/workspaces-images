@@ -90,6 +90,9 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
   }
   rm -f ${HOME}/.config/dotobsidian.tar.gz
 }
+[ -x /usr/local/bin/obs ] && {
+  /usr/local/bin/obs set-default cheat-sheets-plus > /dev/null 2>&1
+}
 
 notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
