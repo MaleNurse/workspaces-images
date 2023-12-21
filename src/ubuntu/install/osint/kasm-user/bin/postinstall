@@ -59,6 +59,33 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
+notify-send "Installing Pillow and Pygments"
+python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
+python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
+
+notify-send "Installing Glow markdown previewer"
+go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
+
+notify-send "Installing Obsidian Cheat Sheets Vault"
+git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+[ -f ${HOME}/.config/obsidian.tar.gz ] && {
+  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
+  rm -f ${HOME}/.config/obsidian.tar.gz
+}
+[ -f ${HOME}/.config/dotobsidian.tar.gz ] && {
+  [ -d ${HOME}/Documents/cheat-sheets-plus ] && {
+    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
+  }
+  rm -f ${HOME}/.config/dotobsidian.tar.gz
+}
+# Register the mime type with XDG
+xdg-mime default obsidian.desktop x-scheme-handler/obsidian
+sudo update-desktop-database
+# Set the default vault for the obsidian command line utility
+[ -x /usr/local/bin/obs-cli ] && {
+  /usr/local/bin/obs-cli set-default cheat-sheets-plus > /dev/null 2>&1
+}
+
 notify-send "Starting SpiderFoot"
 start-spiderfoot &
 
@@ -94,10 +121,22 @@ notify-send "Installing Desktop entries and fixing permissions"
 # Correct permissions/ownership
 chmod 755 ${HOME}
 find ${HOME}/spiderfoot -type d | xargs chmod 755
-chmod 644 ${HOME}/.aliases ${HOME}/.bashrc
-find ${HOME}/.config -type f | xargs chmod 644
+chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc
 find ${HOME}/.config -type d | xargs chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
+  find ${cdir} -type f | xargs chmod 644
+done
+chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
+find ${HOME}/.local/share/icons -type f | xargs chmod 644
+find ${HOME}/.oh-my-zsh -type d | xargs chmod 755
+find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644
+find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755
+chmod 755 ${HOME}/.config/ranger/*.sh
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
 chmod 755 ${HOME}/bin

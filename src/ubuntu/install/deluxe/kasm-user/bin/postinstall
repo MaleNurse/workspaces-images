@@ -90,8 +90,11 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
   }
   rm -f ${HOME}/.config/dotobsidian.tar.gz
 }
-[ -x /usr/local/bin/obs ] && {
-  /usr/local/bin/obs set-default cheat-sheets-plus > /dev/null 2>&1
+# Register the mime type with XDG
+xdg-mime default obsidian.desktop x-scheme-handler/obsidian
+sudo update-desktop-database
+[ -x /usr/local/bin/obs-cli ] && {
+  /usr/local/bin/obs-cli set-default cheat-sheets-plus > /dev/null 2>&1
 }
 
 notify-send "Initializing Asciiville"

@@ -1,4 +1,4 @@
-ARG BASE_TAG="ubuntu-focal"
+ARG BASE_TAG="ubuntu-jammy"
 ARG BASE_IMAGE="kasm"
 FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
@@ -56,6 +56,7 @@ RUN \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
+  chsh -s /bin/zsh kasm-user && \
   rm -Rf ${INST_DIR}
 
 # Userspace Runtime

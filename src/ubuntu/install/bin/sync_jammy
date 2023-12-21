@@ -24,12 +24,12 @@ do
 #   }
 #   cp jammy/kasm-user/.config/kitty/sessions/ranger \
 #      $work/kasm-user/.config/kitty/sessions/ranger
-# [ -d $work/kasm-user/bin ] || {
-#   echo "Missing kasm-user/bin in $work"
-#   continue
-# }
-# cp jammy/kasm-user/bin/*window* $work/kasm-user/bin
-# chmod 755 $work/kasm-user/bin/*window*
+  [ -d $work/kasm-user/bin ] || {
+    echo "Missing kasm-user/bin in $work"
+    continue
+  }
+  cp jammy/kasm-user/bin/open-markdown $work/kasm-user/bin
+  chmod 755 $work/kasm-user/bin/open-markdown
 # [ -d $work/kasm-user/.config/glow ] || {
 #   cp -a /tmp/glow $work/kasm-user/.config/glow
 # }

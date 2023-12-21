@@ -18,8 +18,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/misc/install_tools.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/sublime_text/install_sublime_text.sh \
-                  /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/nextcloud/install_nextcloud.sh \
                   /ubuntu/install/remmina/install_remmina.sh \
                   /ubuntu/install/only_office/install_only_office.sh \
@@ -31,6 +29,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/terraform/install_terraform.sh \
                   /ubuntu/install/telegram/install_telegram.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
+                  /ubuntu/install/obsidian/install_obsidian_conf.sh \
                   /ubuntu/install/focal/install_tools_focal.sh \
                   /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
