@@ -1,4 +1,4 @@
-ARG BASE_TAG="ubuntu-jammy"
+ARG BASE_TAG="ubuntu-focal"
 ARG BASE_IMAGE="kasm"
 FROM doctorwhen/$BASE_IMAGE:$BASE_TAG
 
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
         libxss1 \
         libxtst6 \
     && wget -O /tmp/Anaconda3.sh \
-        https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh \
+        https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh \
     && bash /tmp/Anaconda3.sh -b -p /opt/anaconda3 \
     && rm -f /tmp/Anaconda3.sh \
     && echo 'source /opt/anaconda3/bin/activate' >> /etc/bash.bashrc \
@@ -51,16 +51,16 @@ RUN apt-get update && apt-get install -y \
     #                --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
     && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc \
     # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
-    && add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" \
+    && add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" \
     && apt install -y --no-install-recommends gdebi-core r-base \
     # RStudio Server
     && wget -O /tmp/rstudio-server.deb \
-        https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.0-369-amd64.deb \
+        https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.12.0-369-amd64.deb \
     && gdebi --n /tmp/rstudio-server.deb \
     && rm -f /tmp/rstudio-server.deb \
     # RStudio
     && wget -O /tmp/rstudio-desktop.deb \
-        https://download1.rstudio.org/electron/jammy/amd64/rstudio-2023.12.0-369-amd64.deb \
+        https://download1.rstudio.org/electron/focal/amd64/rstudio-2023.12.0-369-amd64.deb \
     && gdebi --n /tmp/rstudio-desktop.deb \
     && rm -f /tmp/rstudio-desktop.deb \
     && cp /usr/share/applications/rstudio.desktop $HOME/Desktop/ \
