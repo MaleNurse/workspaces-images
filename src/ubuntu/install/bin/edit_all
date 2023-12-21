@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# This script can be ignored. It is used to prepare and sync Jammy based user configuration
+#
+# Need to be in the install folder
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd ${SCRIPT_PATH}/..
+
+# Jammy based
+# for work in appimage asciigames asciiville deluxe jammy lmstudio neovim rclone wing wing-neovim
+# ALL
+workspaces="appimage asciigames asciiville-deluxe asciiville deluxe exodus \
+            focal jammy lmstudio musicplayerplus neovim-deluxe neovim-jammy \
+            neovim osint rclone spiderfoot wing wing-neovim"
+
+for work in ${workspaces}
+do
+  vi ${work}/install*.sh
+done

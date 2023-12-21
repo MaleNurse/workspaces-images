@@ -48,14 +48,23 @@ Advanced configuration is included for several components including:
 
 * [Bat](https://github.com/sharkdp/bat): A `cat(1)` clone with wings
 * [Btop](https://github.com/aristocratos/btop): Resource monitor
+* [Cheat Sheets](https://github.com/doctorfree/cheat-sheets-plus): Cheat sheets Obsidian vault
+  - Integrated with `ranger` and `glow` for terminal/console viewing
+* [Fzf](https://github.com/junegunn/fzf): A command-line fuzzy finder
 * [Glow](https://github.com/charmbracelet/glow): Markdown previewer
 * [Kitty](https://sw.kovidgoyal.net/kitty): The fast, feature-rich, GPU based terminal emulator
 * [Lsd](https://github.com/lsd-rs/lsd): The next generation `ls` command
 * [Neofetch](https://github.com/dylanaraps/neofetch): System information tool
+* [Node](https://nodejs.org): Node version 20
+  * [Nvm](https://github.com/nvm-sh/nvm): Node version manager
+* [Nerd Fonts](https://www.nerdfonts.com): Large number of extra glyphs and icons
+* [Obsidian](https://obsidian.md): Markdown based personal knowledge base and note-taking application
 * [Ranger](https://github.com/ranger/ranger): A Vim-inspired file manager for the terminal
-  * Extensive configuration for the Ranger file executor/opener `rifle`
-  * Integration with `Glow`, `AppImage`, `Wing`, and more
+  - Extensive configuration for the Ranger file executor/opener `rifle`
+  - Integration with `Glow`, `AppImage`, `Wing`, and more
+* [Vim](https://www.vim.org): Preconfigured `vim` text editor with plugins, keymaps, theme
 * [Xfce4](https://www.xfce.org): The Xfce desktop environment
+* [Zoxide](https://github.com/ajeetdsouza/zoxide): Smart `cd` command
 * [Zsh](https://www.zsh.org): Features from `bash`, `ksh`, `tcsh`, and more
   * [Oh My Zsh](https://ohmyz.sh): Framework for managing the `zsh` configuration
   * [Powerlevel10k](https://github.com/romkatv/powerlevel10k): Theme for `zsh`

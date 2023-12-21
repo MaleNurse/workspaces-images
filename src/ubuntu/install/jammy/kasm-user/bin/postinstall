@@ -79,6 +79,9 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
   rm -f ${HOME}/.config/dotobsidian.tar.gz
 }
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+
 notify-send "Installing fzf fuzzy finder"
 if [ "${GH_TOKEN}" ]; then
   AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
@@ -105,9 +108,6 @@ DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
   rm -f "${TEMP_TGZ}"
   rm -rf /tmp/fzft$$
 }
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
 
 rm -f $HOME/.config/autostart/postinstall.desktop
 
