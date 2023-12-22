@@ -2,7 +2,7 @@
 #
 # Kitty HOME tab
 new_tab
-launch bash
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png
 launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
@@ -17,11 +17,5 @@ layout tall
 new_tab Help
 cd ~/Documents/cheat-sheets-plus/kasm
 launch --env PAGER="less -r" ranger --selectfile=workspaces.md
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
-new_tab
-cd ~
-launch --hold --env PAGER="less -r" ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall

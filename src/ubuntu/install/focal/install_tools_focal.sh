@@ -7,7 +7,7 @@ install_external_package() {
   DL_URL=
   DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "\.amd64\.deb")
+    | grep "amd64\.deb")
 
   [ "${DL_URL}" ] && {
     printf "\n\tInstalling %s ..." "${PROJECT}"
