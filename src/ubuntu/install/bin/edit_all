@@ -11,10 +11,12 @@ cd ${SCRIPT_PATH}/..
 # for work in appimage asciigames asciiville deluxe jammy lmstudio neovim rclone wing wing-neovim
 # ALL
 workspaces="appimage asciigames asciiville-deluxe asciiville deluxe exodus \
-            focal jammy lmstudio musicplayerplus neovim-deluxe neovim-jammy \
+            focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy \
             neovim osint rclone spiderfoot wing wing-neovim"
 
 for work in ${workspaces}
 do
-  vi ${work}/install*.sh
+# vi ${work}/install*.sh
+# vi ${work}/kasm-user/bin/postinstall
+  vi ${work}/kasm-user/.config/kitty/sessions/startup
 done

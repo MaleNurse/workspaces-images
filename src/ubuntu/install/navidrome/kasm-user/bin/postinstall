@@ -105,7 +105,7 @@ sudo update-desktop-database
 }
 
 notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > ${LOGDIR}/install-vimplugs.log 2>&1
+vim +PlugInstall +qall > /dev/null 2>&1
 
 notify-send "Installing fzf fuzzy finder"
 if [ "${GH_TOKEN}" ]; then
@@ -210,4 +210,10 @@ kill $(pgrep "notifyd")
 have_open=$(type -p exo-open)
 [ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
+}
+
+[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
+  /home/kasm-user/.local/kitty.app/bin/kitty \
+      --session /home/kasm-user/.config/kitty/sessions/startup \
+      --title 'Welcome to the Navidrome Kasm workspace' 2> /dev/null &
 }

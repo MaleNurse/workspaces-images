@@ -6,12 +6,6 @@ launch bash -c lazyman
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for Asciiville
-# new_tab
-# launch bash -c asciiville
-# enabled_layouts tall:bias=50;full_size=1
-# layout tall
-
 # Kitty tab with Bash shell
 new_tab
 launch bash
@@ -19,8 +13,15 @@ launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for SSH sessions
+# Kitty tab for Cheat Sheets
+new_tab Help
+cd ~/Documents/cheat-sheets-plus/kasm
+launch --env PAGER="less -r" ranger --selectfile=workspaces.md
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
 new_tab
-launch bash
+cd ~
+launch --hold --env PAGER="less -r" ranger
 enabled_layouts tall:bias=50;full_size=1
 layout tall

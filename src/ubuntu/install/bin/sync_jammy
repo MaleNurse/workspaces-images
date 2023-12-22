@@ -9,22 +9,25 @@ cd ${SCRIPT_PATH}/..
 
 # Jammy based except jammy
 # for work in appimage asciigames asciiville deluxe lmstudio neovim rclone wing wing-neovim
+# Some
+# for work in focal navidrome osint spiderfoot
 # ALL except jammy
-# for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
-for work in focal navidrome osint spiderfoot
+for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
 do
+#   jammy/kasm-user/.config/kitty/sessions/startup
+# 	jammy/kasm-user/bin/postinstall
 #   [ -d $work/kasm-user/.config/kitty/sessions ] || {
 #       echo "Missing .config/kitty/sessions in $work"
 #       continue
 #   }
-#   cp jammy/kasm-user/.config/kitty/sessions/btop \
-#      $work/kasm-user/.config/kitty/sessions/btop
-#   [ -d $work/kasm-user/.config/kitty/sessions ] || {
-#       echo "Missing .config/kitty/sessions in $work"
-#       continue
-#   }
-#   cp jammy/kasm-user/.config/kitty/sessions/ranger \
-#      $work/kasm-user/.config/kitty/sessions/ranger
+#   cp jammy/kasm-user/.config/kitty/sessions/help \
+#      $work/kasm-user/.config/kitty/sessions/help
+#  cp jammy/kasm-user/.local/share/applications/help.desktop \
+#     $work/kasm-user/.local/share/applications/help.desktop
+#  cp jammy/kasm-user/.local/share/icons/hicolor/256x256/apps/help.png \
+#     $work/kasm-user/.local/share/icons/hicolor/256x256/apps/help.png
+#  cp jammy/kasm-user/Desktop/help.desktop \
+#     $work/kasm-user/Desktop/help.desktop
 # [ -d $work/kasm-user/bin ] || {
 #   echo "Missing kasm-user/bin in $work"
 #   continue
@@ -38,10 +41,10 @@ do
 #   mkdir -p $work/kasm-user/.local/share
 #   mkdir -p $work/kasm-user/.local/share/doc
 # }
-  cp jammy/kasm-user/.local/share/applications/obsidian.desktop \
-     $work/kasm-user/.local/share/applications/obsidian.desktop
-  cp jammy/kasm-user/Desktop/obsidian.desktop \
-     $work/kasm-user/Desktop/obsidian.desktop
+# cp jammy/kasm-user/.local/share/applications/obsidian.desktop \
+#    $work/kasm-user/.local/share/applications/obsidian.desktop
+# cp jammy/kasm-user/Desktop/obsidian.desktop \
+#    $work/kasm-user/Desktop/obsidian.desktop
 # cp jammy/kasm-user/.local/share/doc/*.md \
 #    $work/kasm-user/.local/share/doc
 # [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
@@ -50,6 +53,12 @@ do
 # }
 # cp jammy/kasm-user/.config/ranger/rifle.conf \
 #    $work/kasm-user/.config/ranger/rifle.conf
+  [ -f $work/kasm-user/.config/ranger/rc.conf ] || {
+     echo "Missing rc.conf in $work"
+     continue
+  }
+  cp jammy/kasm-user/.config/ranger/rc.conf \
+     $work/kasm-user/.config/ranger/rc.conf
 # [ -f $work/kasm-user/.zshrc ] || {
 #   echo "Missing .zshrc in $work"
 #   continue
