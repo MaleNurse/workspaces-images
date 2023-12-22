@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# open-markdown - Open a Markdown format file with Obsidian or Glow
+#                 Filename argument should be in the default Obsidian vault
+
+# Filename argument required
+[ "$1" ] || exit 1
+# It must exist
+[ -f "$1" ] || exit 1
+
+OBS=
+have_obs=$(type -p obs-cli)
+if [ "${have_obs}" ]; then
+  OBS="obs-cli"
+else
+  if [ -x /usr/local/bin/obs-cli ]; then
+    OBS="/usr/local/bin/obs-cli"
+  else
+    glow "$1"
+    exit 0
+  fi
+fi
+
+[ "${OBS}" ] || {
+  glow "$1"
+  exit 0
+}
+
+note=$(basename "$1" | sed -e "s/.md//")
+${OBS} open "${note}" > /dev/null 2>&1

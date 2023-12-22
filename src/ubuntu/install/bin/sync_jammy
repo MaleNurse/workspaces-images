@@ -10,7 +10,8 @@ cd ${SCRIPT_PATH}/..
 # Jammy based except jammy
 # for work in appimage asciigames asciiville deluxe lmstudio neovim rclone wing wing-neovim
 # ALL except jammy
-for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
+# for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
+for work in focal navidrome osint spiderfoot
 do
 #   [ -d $work/kasm-user/.config/kitty/sessions ] || {
 #       echo "Missing .config/kitty/sessions in $work"
@@ -24,12 +25,12 @@ do
 #   }
 #   cp jammy/kasm-user/.config/kitty/sessions/ranger \
 #      $work/kasm-user/.config/kitty/sessions/ranger
-  [ -d $work/kasm-user/bin ] || {
-    echo "Missing kasm-user/bin in $work"
-    continue
-  }
-  cp jammy/kasm-user/bin/open-markdown $work/kasm-user/bin
-  chmod 755 $work/kasm-user/bin/open-markdown
+# [ -d $work/kasm-user/bin ] || {
+#   echo "Missing kasm-user/bin in $work"
+#   continue
+# }
+# cp jammy/kasm-user/bin/open-markdown $work/kasm-user/bin
+# chmod 755 $work/kasm-user/bin/open-markdown
 # [ -d $work/kasm-user/.config/glow ] || {
 #   cp -a /tmp/glow $work/kasm-user/.config/glow
 # }
@@ -37,14 +38,18 @@ do
 #   mkdir -p $work/kasm-user/.local/share
 #   mkdir -p $work/kasm-user/.local/share/doc
 # }
+  cp jammy/kasm-user/.local/share/applications/obsidian.desktop \
+     $work/kasm-user/.local/share/applications/obsidian.desktop
+  cp jammy/kasm-user/Desktop/obsidian.desktop \
+     $work/kasm-user/Desktop/obsidian.desktop
 # cp jammy/kasm-user/.local/share/doc/*.md \
 #    $work/kasm-user/.local/share/doc
-  [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
-     echo "Missing rifle.conf in $work"
-     continue
-  }
-  cp jammy/kasm-user/.config/ranger/rifle.conf \
-     $work/kasm-user/.config/ranger/rifle.conf
+# [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
+#    echo "Missing rifle.conf in $work"
+#    continue
+# }
+# cp jammy/kasm-user/.config/ranger/rifle.conf \
+#    $work/kasm-user/.config/ranger/rifle.conf
 # [ -f $work/kasm-user/.zshrc ] || {
 #   echo "Missing .zshrc in $work"
 #   continue

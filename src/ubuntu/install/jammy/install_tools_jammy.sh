@@ -59,7 +59,6 @@ install_obs() {
     TEMP_TGZ="$(mktemp --suffix=.tgz)"
     wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
     chmod 644 "${TEMP_TGZ}"
-    tar "${TEMP_TGZ}"
     [ -d /usr/local ] || mkdir -p /usr/local
     [ -d /usr/local/bin ] || mkdir -p /usr/local/bin
     tar -C /usr/local/bin -xf "${TEMP_TGZ}"

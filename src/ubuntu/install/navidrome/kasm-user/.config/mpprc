@@ -1,0 +1,115 @@
+## MusicPlayerPlus runtime configuration
+#
+#  After modifying any of the following settings, run the command:
+#    mppinit sync
+#  as your normal MusicPlayerPlus user
+
+## Music library location
+#
+MUSIC_DIR="/share/Music"
+
+## MPD Client
+#
+# Album cover art is only supported with 'mpcplus' and 'ncmpcpp'
+MPD_CLIENT="mpcplus"
+
+## General settings
+#
+# To enable any of these, set to 1
+# For example, to enable cover art display in tmux sessions set COVER_ART=1
+#
+# Has mppinit been run
+MPPINIT=1
+# Play audio during asciimatics animations
+AUDIO=1
+# Display cover art in tmux sessions
+COVER_ART=1
+# Display mpcplus and mppcava in a tmux session
+USE_TMUX=1
+
+## Terminal emulator preference
+#
+#  Can be one of: console, current, gnome, kitty, retro, simple, tilix
+#  Where:
+#    'console' will force a tmux session
+#    'current' will force a tmux session in the current terminal window
+#    'gnome' will use the gnome-terminal emulator if installed
+#    'kitty' will use the Kitty terminal emulator if installed
+#    'retro' will use cool-retro-term if installed
+#    'simple' will use the ST terminal emulator if installed
+#    'tilix' will use the Tilix terminal emulator if installed
+#  Default fallback if none specified or not available is Kitty
+#
+#  Uncomment the preferred mode
+#MPP_MODE=console
+#MPP_MODE=current
+#MPP_MODE=gnome
+#MPP_MODE=retro
+#MPP_MODE=simple
+#MPP_MODE=tilix
+MPP_MODE=kitty
+
+## Service access
+#
+# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'
+# If you do not have a Bandcamp account, leave blank
+BANDCAMP_USER=
+
+# The Discogs username can be found by visiting discogs.com. Login, use the
+# dropdown of your user icon in the upper right corner, click on 'Profile'.
+# Your Discogs username is the last component of the profile URL.
+DISCOGS_USER=
+# The Discogs API token can be found by visiting
+# https://www.discogs.com/settings/developers
+DISCOGS_TOKEN=
+# Location of the generated custom Discogs Obsidian vault
+# Can be anywhere you have write permission
+# DISCOGS_DIR="~/Documents/Obsidian/Discogs"
+DISCOGS_DIR=
+
+# Your Last.fm username, api key, and api secret
+# If you do not have a Last.fm account, leave blank
+LASTFM_USER=
+LASTFM_APIKEY=
+LASTFM_SECRET=
+
+# The Soundcloud user slug can be found by logging in to Soundcloud
+# click on the username at top right then 'Profile'. The user slug
+# is the last component of the URL when viewing your Soundcloud Profile.
+# If you do not have a Soundcloud account, leave blank
+SOUNDCLOUD_SLUG=
+
+# Your Spotify client id and client secret
+# If you do not have a Spotify account, leave blank
+SPOTIFY_CLIENT=
+SPOTIFY_SECRET=
+
+# Your YouTube api key
+# If you do not have a YouTube account, leave blank
+YOUTUBE_APIKEY=
+
+## Album cover art position
+#
+# Album cover art is positioned within the preferred terminal window with
+# padding values hard coded in the cover art display script. These padding
+# values are customized for each of the supported terminal emulators. The
+# default padding values should suffice but they can be overriden here. To
+# override the padding values, set OVERRIDE_PADDING=1 and set any or all of
+# the 'padding_override_*' values to adjust album cover art placement. See
+# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values.
+#
+# Set to 1 to override default padding, leave unset to use custom defaults
+OVERRIDE_PADDING=
+# Uncomment any or all and set preferred padding value(s)
+# padding_override_top=3
+# padding_override_bottom=1
+# padding_override_left=1
+# padding_override_right=0
+#
+# The font size in pixels is set to 22x45 for album cover art display.
+# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or
+# font height in pixels to match your system.
+OVERRIDE_FONT_SIZE=
+# Uncomment either or both and set font width and/or font height value(s)
+# font_override_width=22
+# font_override_height=45
