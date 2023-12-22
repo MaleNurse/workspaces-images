@@ -151,6 +151,9 @@ PROJECT=btop
 install_external_package
 PROJECT=cbftp
 install_external_package
+OWNER=obsidianmd
+PROJECT=obsidian-releases
+install_external_package
 
 FIGLET_DIR="/usr/share/figlet-fonts"
 FIGLET_ZIP="figlet-fonts.zip"
