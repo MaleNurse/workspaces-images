@@ -15,6 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
     INST_SCRIPTS="/ubuntu/install/asciigames/install_tools_asciigames.sh \
+                  /ubuntu/install/obsidian/install_pokemon_conf.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
 # Copy install scripts

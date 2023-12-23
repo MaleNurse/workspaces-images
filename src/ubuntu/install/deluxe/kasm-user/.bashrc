@@ -198,3 +198,5 @@ export NVIM_APPNAME="nvim-Lazyman"
 # Source the Lazyman .nvimsbind for nvims key binding
 # shellcheck source=.config/nvim-Lazyman/.nvimsbind
 [ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+# Override xterm-kitty for NetHack and others
+export TERM=xterm-256color

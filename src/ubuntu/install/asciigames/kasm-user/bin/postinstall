@@ -65,8 +65,10 @@ export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 notify-send "Installing zoxide smart cd command"
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
-notify-send "Installing Obsidian Cheat Sheets Vault"
+notify-send "Installing Cheat Sheets Vault"
 git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+notify-send "Installing Pokémon Pokédex Vault"
+git clone https://github.com/doctorfree/Pokedex-Markdown ${HOME}/Documents/Pokedex-Markdown
 [ -f ${HOME}/.config/obsidian.tar.gz ] && {
   tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
   rm -f ${HOME}/.config/obsidian.tar.gz
@@ -76,6 +78,12 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
     tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
   }
   rm -f ${HOME}/.config/dotobsidian.tar.gz
+}
+[ -f ${HOME}/.config/pokedex-markdown.tar.gz ] && {
+  [ -d ${HOME}/Documents/Pokedex-Markdown ] && {
+    tar xzf ${HOME}/.config/pokedex-markdown.tar.gz -C ${HOME}/Documents/Pokedex-Markdown
+  }
+  rm -f ${HOME}/.config/pokedex-markdown.tar.gz
 }
 # Register the mime type with XDG
 xdg-mime default obsidian.desktop x-scheme-handler/obsidian

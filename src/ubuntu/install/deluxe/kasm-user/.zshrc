@@ -475,3 +475,5 @@ export NVIM_APPNAME="nvim-Lazyman"
 [ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
 
 export PATH=$HOME/bin:$PATH
+# Override xterm-kitty for NetHack and others
+export TERM=xterm-256color
