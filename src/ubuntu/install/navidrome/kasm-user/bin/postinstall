@@ -12,7 +12,13 @@ umask 022
     [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
   }
 }
-[ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+[ "${GH_TOKEN}" ] && {
+  # Check to make sure
+  echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
+    # It didn't get set right, unset it
+    export GH_TOKEN=
+  }
+}
 
 sleep 5
 notify-send -u critical "One-time Navidrome Desktop Configuration"

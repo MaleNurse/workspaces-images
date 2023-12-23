@@ -1,8 +1,23 @@
 #!/usr/bin/env bash
 #
-
 # GH_TOKEN, a GitHub token must be set in the environment
-export GH_TOKEN="__GITHUB_API_TOKEN__"
+# If it is not already set then the convenience build script will set it
+if [ "${GH_TOKEN}" ]; then
+  export GH_TOKEN="${GH_TOKEN}"
+else
+  export GH_TOKEN="__GITHUB_API_TOKEN__"
+fi
+# Check to make sure
+echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
+  # It didn't get set right, unset it
+  export GH_TOKEN=
+}
+if [ "${GH_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+
 export PATH="$HOME/.local/bin:$PATH:$HOME/.cargo/bin"
 
 [ -d $HOME/.local ] || mkdir -p $HOME/.local
@@ -23,7 +38,7 @@ OWNER="neovide"
 PROJECT="neovide"
 API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
 DL_URL=
-DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
+DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
     | grep "${name}\.${format}\.${suffix}$")
 [ "${DL_URL}" ] && {

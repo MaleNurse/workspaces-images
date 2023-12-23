@@ -59,7 +59,17 @@ install_external_package() {
 }
 
 # GH_TOKEN, a GitHub token must be set in the environment
-export GH_TOKEN="__GITHUB_API_TOKEN__"
+# If it is not already set then the convenience build script will set it
+if [ "${GH_TOKEN}" ]; then
+  export GH_TOKEN="${GH_TOKEN}"
+else
+  export GH_TOKEN="__GITHUB_API_TOKEN__"
+fi
+# Check to make sure
+echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
+  # It didn't get set right, unset it
+  export GH_TOKEN=
+}
 
 if [ "${GH_TOKEN}" ]; then
   AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""

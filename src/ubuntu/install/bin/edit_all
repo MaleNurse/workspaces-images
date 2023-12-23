@@ -16,7 +16,7 @@ workspaces="appimage asciigames asciiville-deluxe asciiville deluxe exodus \
 
 for work in ${workspaces}
 do
-# vi ${work}/install*.sh
+  vi ${work}/install*.sh
 # vi ${work}/kasm-user/bin/postinstall
-  vi ${work}/kasm-user/.config/kitty/sessions/startup
+# vi ${work}/kasm-user/.config/kitty/sessions/startup
 done

@@ -29,13 +29,21 @@ BOLD=$(tput bold 2>/dev/null)
 NORM=$(tput sgr0 2>/dev/null)
 LINE=$(tput smul 2>/dev/null)
 
-export GITHUB_TOKEN="__GITHUB_API_TOKEN__"
-# Use a Github API token if one is set
-[ "${GITHUB_TOKEN}" ] || {
-  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
-  [ "${GITHUB_TOKEN}" ] || {
-    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
-  }
+# GH_TOKEN, a GitHub token must be set in the environment
+# If it is not already set then the convenience build script will set it
+if [ "${GH_TOKEN}" ]; then
+  export GITHUB_TOKEN="${GH_TOKEN}"
+else
+  if [ "${GH_API_TOKEN}" ]; then
+    export GITHUB_TOKEN="${GH_API_TOKEN}"
+  else
+    export GITHUB_TOKEN="__GITHUB_API_TOKEN__"
+  fi
+fi
+# Check to make sure
+echo "${GITHUB_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
+  # It didn't get set right, unset it
+  export GITHUB_TOKEN=
 }
 
 prompt_continue() {
