@@ -1,0 +1,146 @@
+#!/bin/bash
+#
+# diff-kasmweb [-c] [-m] [-n] [-d] [-D] [-q] [-s]
+# list any newly added/modified files in the Kasmweb workspaces-images repo
+#
+# where:
+#   -c indicates copy new/modified files from Kasmweb into Record repo
+#   -m indicates modified only
+#   -n indicates new only
+#   -d indicates dockerfiles
+#   -D indicates display diffs
+#   -q indicates quiet
+#   -s indicates source files
+
+KASMWEB="/home/ronnie/src/Kasm/kasmweb/workspaces-images"
+RECORD="/home/ronnie/src/Kasm/workspaces-images"
+KASMRD="${RECORD}/kasmtech"
+
+usage() {
+  printf "\nUsage: diff-kasmweb [-c] [-m] [-n] [-d] [-D] [-q] [-s] [-u]\n"
+  printf "\nList any newly added/modified files in the Kasmweb workspaces-images repo"
+  printf "\nwhere:"
+  printf "\n\t-c indicates copy new/modified files from Kasmweb into Record repo"
+  printf "\n\t-d indicates dockerfiles"
+  printf "\n\t-D indicates display diffs"
+  printf "\n\t-m indicates modified only"
+  printf "\n\t-n indicates new only"
+  printf "\n\t-q indicates quiet mode"
+  printf "\n\t-s indicates source files"
+  printf "\n\t-u displays this usage message and exits\n"
+  exit 1
+}
+
+cpy=
+dsp=
+mod=1
+new=1
+dok=1
+src=1
+qut=
+while getopts ":cmndDqsu" flag; do
+  case $flag in
+    c)
+      cpy=1
+      ;;
+    d)
+      src=
+      ;;
+    D)
+      dsp=1
+      ;;
+    m)
+      new=
+      ;;
+    n)
+      mod=
+      ;;
+    q)
+      qut=1
+      ;;
+    s)
+      dok=
+      ;;
+    u)
+      usage
+      ;;
+    \?)
+      echo "Invalid option: $flag"
+      usage
+      ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "${mod}" ] && [ "${dok}" ] && {
+  [ "${qut}" ] || {
+    echo "Modified Dockerfiles in Kasmweb repository:"
+    echo "=========================================="
+  }
+  if [ "${dsp}" ]; then
+    gitdiff ${KASMWEB} ${KASMRD} | grep -v ^Only
+  else
+    gitdiff ${KASMWEB} ${KASMRD} | grep diff | grep kasmweb \
+        | grep -v ci-scripts \
+        | grep -v docs \
+        | grep -v .gitlab-ci.yml \
+        | grep -v LICENSE.md \
+        | grep -v README
+  fi
+  [ "${cpy}" ] && {
+    echo ""
+    [ "${qut}" ] || {
+      echo "Copying modified Dockerfiles from Kasmweb repository:"
+      echo "===================================================="
+    }
+    gitdiff ${KASMWEB} ${KASMRD} | grep diff | grep kasmweb \
+        | grep -v ci-scripts \
+        | grep -v docs \
+        | grep -v .gitlab-ci.yml \
+        | grep -v README \
+        | grep -v LICENSE.md | while read mods
+          do
+            kasmweb=$(echo ${mods} | awk '{ print $(NF-1) }')
+            record=$(echo ${mods} | awk '{ print $NF }')
+            [ -f ${kasmweb} ] && [ -f ${record} ] && {
+              cp ${kasmweb} ${record}
+            }
+          done
+  }
+}
+
+[ "${mod}" ] && [ "${src}" ] && {
+  echo ""
+  [ "${qut}" ] || {
+    echo "Modified src files in Kasmweb repository:"
+    echo "========================================"
+  }
+  if [ "${dsp}" ]; then
+    gitdiff ${KASMWEB} ${RECORD} | grep -v ^Only
+  else
+    gitdiff ${KASMWEB} ${RECORD} | grep diff | grep kasmweb | grep -v README
+  fi
+}
+
+[ "${new}" ] && [ "${src}" ] && {
+  echo ""
+  [ "${qut}" ] || {
+    echo "New src files in Kasmweb repository:"
+    echo "==================================="
+  }
+  gitdiff ${KASMWEB} ${RECORD} | grep Only | grep kasmweb | grep -v workspaces-images:
+}
+
+[ "${new}" ] && [ "${dok}" ] && {
+  echo ""
+  [ "${qut}" ] || {
+    echo "New Dockerfiles in Kasmweb repository:"
+    echo "====================================="
+  }
+  gitdiff ${KASMWEB} ${KASMRD} | grep Only | grep kasmweb \
+      | grep -v ci-scripts \
+      | grep -v docs \
+      | grep -v .gitlab-ci.yml \
+      | grep -v LICENSE.md \
+      | grep -v src$
+}
