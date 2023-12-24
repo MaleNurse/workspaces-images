@@ -38,6 +38,9 @@ RUN \
   rm -f /tmp/fonts.tar.gz && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
+  rm -f /usr/share/extra/backgrounds/bg_default.png && \
+  ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \
+        /usr/share/extra/backgrounds/bg_default.png && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \

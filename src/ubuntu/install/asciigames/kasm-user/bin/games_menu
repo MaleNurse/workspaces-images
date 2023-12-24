@@ -68,9 +68,9 @@ art_font_size=4
 txt_font_size=20
 re='^[0-9]+$'
 # fifo name
-fifo_name="/tmp/asciiville_$$"
+fifo_name="/tmp/asciiville"
 # Kitty socket
-sock_name="/tmp/asckitty_$$"
+sock_name="/tmp/asckitty"
 
 if [ "${darwin}" ]; then
   KITTY_QUIT_OPT="--override macos_quit_when_last_window_closed=yes"
@@ -553,10 +553,7 @@ make_it_so() {
         if [ "${KITTY}" ]; then
           kitty --title="${MTITLE}" \
             --start-as normal \
-            --override font_size=18 \
             --override draw_minimal_borders=yes \
-            --override initial_window_width=90c \
-            --override initial_window_height=28c \
             --override tab_bar_min_tabs=2 \
             --override startup_session=none \
             ${KITTY_QUIT_OPT} \

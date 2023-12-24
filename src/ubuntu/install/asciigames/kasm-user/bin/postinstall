@@ -85,12 +85,32 @@ git clone https://github.com/doctorfree/Pokedex-Markdown ${HOME}/Documents/Poked
   }
   rm -f ${HOME}/.config/pokedex-markdown.tar.gz
 }
+[ -f ${HOME}/.config/_obs-cli ] && {
+  [ -d ${HOME}/.oh-my-zsh/completions ] || mkdir -p ${HOME}/.oh-my-zsh/completions
+  cp ${HOME}/.config/_obs-cli ${HOME}/.oh-my-zsh/completions/_obs-cli
+  rm -f ${HOME}/.config/_obs-cli
+}
 # Register the mime type with XDG
 xdg-mime default obsidian.desktop x-scheme-handler/obsidian
 sudo update-desktop-database
 [ -x /usr/local/bin/obs-cli ] && {
   /usr/local/bin/obs-cli set-default cheat-sheets-plus > /dev/null 2>&1
 }
+
+# Point the default desktop background to our randomly selected image
+default_bg="/usr/share/extra/backgrounds/bg_default.png"
+custom_dir="${HOME}/.local/share/backgrounds"
+custom_bg="${custom_dir}/bg_default.png"
+[ -d ${custom_dir} ] || mkdir -p ${custom_dir}
+[ -f ${custom_bg} ] || {
+  if [ -f /usr/share/backgrounds/Earth-Galaxy-Space.png ]; then
+    cp /usr/share/backgrounds/Earth-Galaxy-Space.png ${custom_bg}
+  else
+    cp ${default_bg} ${custom_bg}
+  fi
+}
+sudo rm -f ${default_bg}
+sudo ln -s ${custom_bg} ${default_bg}
 
 notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
@@ -133,6 +153,12 @@ rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
 
+[ -x $HOME/bin/set_default_bg ] && $HOME/bin/set_default_bg
+[ -f $HOME/.local/share/applications/background.desktop ] && {
+  cp $HOME/.local/share/applications/background.desktop \
+     $HOME/.config/autostart/background.desktop
+  chmod 755 $HOME/.config/autostart/background.desktop
+}
 [ -f $HOME/.local/share/applications/btop.desktop ] && {
   cp $HOME/.local/share/applications/btop.desktop \
      $HOME/Desktop/btop.desktop

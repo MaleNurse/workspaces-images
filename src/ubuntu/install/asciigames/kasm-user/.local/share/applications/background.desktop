@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Desktop Background
+GenericName=Background
+Exec=/home/kasm-user/bin/set_default_bg
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/games.png
+Categories=System;TerminalEmulator;
