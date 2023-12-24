@@ -2,7 +2,7 @@
 
 default_bg="${HOME}/.local/share/backgrounds/bg_default.png"
 custom_bg_dir="/usr/share/backgrounds"
-background=("Ascii-House.png" "Owl-01.jpg" "Owl-02.jpg" "Earth-Galaxy-Space.jpg" "Nebula-Carina-Space.png" "Beautiful-Beach.png" "Beautiful-Landscape.png" "Nature.png")
+background=("Ascii-House.png" "Owl-01.png" "Owl-02.png" "Earth-Galaxy-Space.png" "Nebula-Carina-Space.png" "Beautiful-Beach.png" "Beautiful-Landscape.png" "Nature.png")
 
 # Seed random generator
 RANDOM=$$$(date +%s)
@@ -10,5 +10,7 @@ RANDOM=$$$(date +%s)
 use_bg=${background[$RANDOM % ${#background[@]}]}
 
 [ -f ${custom_bg_dir}/${use_bg} ] && {
+  rm -f ${default_bg}
   cp ${custom_bg_dir}/${use_bg} ${default_bg}
+  xfdesktop --reload
 }

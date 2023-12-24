@@ -102,15 +102,8 @@ default_bg="/usr/share/extra/backgrounds/bg_default.png"
 custom_dir="${HOME}/.local/share/backgrounds"
 custom_bg="${custom_dir}/bg_default.png"
 [ -d ${custom_dir} ] || mkdir -p ${custom_dir}
-[ -f ${custom_bg} ] || {
-  if [ -f /usr/share/backgrounds/Earth-Galaxy-Space.png ]; then
-    cp /usr/share/backgrounds/Earth-Galaxy-Space.png ${custom_bg}
-  else
-    cp ${default_bg} ${custom_bg}
-  fi
-}
-sudo rm -f ${default_bg}
-sudo ln -s ${custom_bg} ${default_bg}
+rm -f ${custom_bg}
+cp /usr/share/backgrounds/Ascii-House.png ${custom_bg}
 
 notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1

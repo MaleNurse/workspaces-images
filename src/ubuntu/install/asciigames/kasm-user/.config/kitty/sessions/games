@@ -2,7 +2,7 @@
 #
 new_tab Games
 launch zsh -c games_menu
-launch center-active-window
+launch upper-center-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 

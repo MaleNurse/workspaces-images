@@ -26,6 +26,7 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
+  bash ${INST_DIR}/ubuntu/install/backgrounds/install_backgrounds.sh Ascii-House && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh asciigames && \
   mkdir -p ${HOME}/.local && \

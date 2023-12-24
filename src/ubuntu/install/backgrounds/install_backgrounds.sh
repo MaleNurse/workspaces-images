@@ -3,6 +3,7 @@
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
 DEST="/usr/share/backgrounds"
+BG="Earth-Galaxy-Space.png"
 
 umask 022
 
@@ -14,10 +15,19 @@ do
   cp ${bg} ${DEST}
   chmod 644 ${DEST}/${bg}
 done
-[ -f ${DEST}/Earth-Galaxy-Space.png ] && {
+
+[ "$1" ] && {
+  if [ -f ${DEST}/$1 ]; then
+    BG="$1"
+  else
+    [ -f ${DEST}/$1.png ] && BG="$1.png"
+  fi
+}
+
+[ -f ${DEST}/${BG} ] && {
   [ -d ${HOME}/.local/share/backgrounds ] || {
     mkdir -p ${HOME}/.local/share/backgrounds
   }
-  ln -s ${DEST}/Earth-Galaxy-Space.png \
+  cp ${DEST}/${BG} \
      ${HOME}/.local/share/backgrounds/bg_default.png
 }

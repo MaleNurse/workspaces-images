@@ -3,12 +3,12 @@ MUSEDIR=/usr/share/asciiville/music
 SONG=/usr/asciiville/music/Chronos.mp3
 ALTSONG=/usr/asciiville/music/Epic_Dramatic-Yuriy_Bespalov.wav
 
-AUDIO=1
+AUDIO=
 BROWSER=w3m
-COMMAND="btop"
+COMMAND="nudoku"
 FULLSCREEN=
 LOLCAT="lolcat"
-MTITLE="Asciiville"
+MTITLE="Sudoku"
 CURRENT=
 GNOME=
 RETRO=
