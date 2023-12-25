@@ -97,8 +97,35 @@ sudo update-desktop-database
   /usr/local/bin/obs-cli set-default cheat-sheets-plus > /dev/null 2>&1
 }
 
-notify-send "Starting SpiderFoot"
-start-spiderfoot &
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > /dev/null 2>&1
+
+notify-send "Installing fzf fuzzy finder"
+if [ "${GH_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
+DL_URL=
+DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "linux_amd64\.tar\.gz")
+
+[ "${DL_URL}" ] && {
+  TEMP_TGZ="$(mktemp --suffix=.tgz)"
+  wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
+  chmod 644 "${TEMP_TGZ}"
+  mkdir -p /tmp/fzft$$
+  tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
+  [ -f /tmp/fzft$$/fzf ] && {
+    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+    cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
+    chmod 755 ${HOME}/.local/bin/fzf
+  }
+  rm -f "${TEMP_TGZ}"
+  rm -rf /tmp/fzft$$
+}
 
 notify-send "Installing Desktop entries and fixing permissions"
 
@@ -131,8 +158,19 @@ notify-send "Installing Desktop entries and fixing permissions"
 
 # Correct permissions/ownership
 chmod 755 ${HOME}
-find ${HOME}/spiderfoot -type d | xargs chmod 755
 chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc
+find ${HOME}/spiderfoot -type d | xargs chmod 755
+for fdir in launchpadlib mozilla vim
+do
+  [ -d ${HOME}/.${fdir} ] && {
+    find ${HOME}/.${fdir} -type f | xargs chmod 644
+    find ${HOME}/.${fdir} -type d | xargs chmod 755
+  }
+done
+find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
+do
+  chmod 755 $f
+done
 find ${HOME}/.config -type d | xargs chmod 755
 for cdir in ${HOME}/.config/*
 do
@@ -180,36 +218,6 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > /dev/null 2>&1
-
-notify-send "Installing fzf fuzzy finder"
-if [ "${GH_TOKEN}" ]; then
-  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
-else
-  AUTH_HEADER=
-fi
-API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
-DL_URL=
-DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
-    | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "linux_amd64\.tar\.gz")
-
-[ "${DL_URL}" ] && {
-  TEMP_TGZ="$(mktemp --suffix=.tgz)"
-  wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
-  chmod 644 "${TEMP_TGZ}"
-  mkdir -p /tmp/fzft$$
-  tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
-  [ -f /tmp/fzft$$/fzf ] && {
-    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
-    cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
-    chmod 755 ${HOME}/.local/bin/fzf
-  }
-  rm -f "${TEMP_TGZ}"
-  rm -rf /tmp/fzft$$
-}
-
 notify-send "Spiderfoot desktop initialization complete!"
 sleep 5
 
@@ -220,8 +228,5 @@ have_open=$(type -p exo-open)
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
 }
 
-[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
-  /home/kasm-user/.local/kitty.app/bin/kitty \
-      --session /home/kasm-user/.config/kitty/sessions/startup \
-      --title 'Welcome to the OS Intelligence Kasm workspace' 2> /dev/null &
-}
+notify-send "Starting SpiderFoot"
+start-spiderfoot &

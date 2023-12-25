@@ -28,7 +28,7 @@ do
         cd $HOME/spiderfoot/
         if [ "${have_kitty}" ]; then
           kitty --title="SpiderFoot Logs" \
-            --start-as normal \
+            --start-as minimized \
             --override draw_minimal_borders=yes \
             --override initial_window_width=90c \
             --override initial_window_height=28c \

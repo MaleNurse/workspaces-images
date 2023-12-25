@@ -61,6 +61,7 @@ RUN \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
+  chsh -s /bin/bash kasm-user && \
   rm -Rf ${INST_DIR}
 
 # Userspace Runtime

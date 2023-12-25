@@ -1,6 +1,6 @@
 # Kitty tabbed startup session
 #
-new_tab
+new_tab SpiderFoot
 cd ~/spiderfoot
 launch zsh -c "python3 ./sfcli.py -s http://127.0.0.1:5002"
 enabled_layouts tall:bias=50;full_size=1

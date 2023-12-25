@@ -15,17 +15,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
     INST_SCRIPTS="/ubuntu/install/vs_code/install_vs_code.sh \
-                  /ubuntu/install/nextcloud/install_nextcloud.sh \
-                  /ubuntu/install/remmina/install_remmina.sh \
-                  /ubuntu/install/only_office/install_only_office.sh \
-                  /ubuntu/install/signal/install_signal.sh \
-                  /ubuntu/install/gimp/install_gimp.sh \
-                  /ubuntu/install/zoom/install_zoom.sh \
-                  /ubuntu/install/obs/install_obs.sh \
-                  /ubuntu/install/ansible/install_ansible.sh \
-                  /ubuntu/install/terraform/install_terraform.sh \
-                  /ubuntu/install/telegram/install_telegram.sh \
-                  /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
                   /ubuntu/install/deluxe/install_tools_deluxe.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
 
