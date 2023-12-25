@@ -81,11 +81,7 @@ git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/chea
   }
   rm -f ${HOME}/.config/dotobsidian.tar.gz
 }
-[ -f ${HOME}/.config/_obs-cli ] && {
-  [ -d ${HOME}/.oh-my-zsh/completions ] || mkdir -p ${HOME}/.oh-my-zsh/completions
-  cp ${HOME}/.config/_obs-cli ${HOME}/.oh-my-zsh/completions/_obs-cli
-  rm -f ${HOME}/.config/_obs-cli
-}
+[ -f ${HOME}/.config/_obs-cli ] && rm -f ${HOME}/.config/_obs-cli
 # Register the mime type with XDG
 xdg-mime default obsidian.desktop x-scheme-handler/obsidian
 sudo update-desktop-database

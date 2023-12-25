@@ -21,7 +21,7 @@ umask 022
 }
 
 sleep 5
-notify-send -u critical "One-time Ubuntu Jammy Desktop Configuration"
+notify-send -u critical "One-time Ascii Games Desktop Configuration"
 
 LOGDIR="$HOME/logs"
 
@@ -143,7 +143,6 @@ rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-[ -x $HOME/bin/set_default_bg ] && $HOME/bin/set_default_bg
 [ -f $HOME/.local/share/applications/background.desktop ] && {
   cp $HOME/.local/share/applications/background.desktop \
      $HOME/.config/autostart/background.desktop
@@ -236,7 +235,7 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Ubuntu Jammy desktop initialization complete!"
+notify-send "Ascii Games desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")

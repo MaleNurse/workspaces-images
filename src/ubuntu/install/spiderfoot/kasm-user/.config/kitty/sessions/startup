@@ -1,6 +1,6 @@
 # Kitty tabbed startup session
 #
-new_tab
+new_tab SpiderFoot
 cd ~/spiderfoot
 launch bash -c "python3 ./sfcli.py -s http://127.0.0.1:5002"
 enabled_layouts tall:bias=50;full_size=1
@@ -8,8 +8,14 @@ layout tall
 
 new_tab
 cd ~/spiderfoot
-launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/spiderfoot.png
 launch center-active-window
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+new_tab
+cd ~
+launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/spiderfoot.png
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
