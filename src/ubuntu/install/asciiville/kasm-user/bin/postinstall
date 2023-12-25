@@ -28,9 +28,6 @@ notify-send -u critical "Initializing Asciiville" \
 LOGDIR="$HOME/logs"
 
 notify-send "Installing JetBrainsMono Nerd Font"
-have_fc=$(type -p fc-cache)
-[ "${have_fc}" ] && fc-cache -f
-
 FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
             .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
             .config/xfce4/terminal/terminalrc"

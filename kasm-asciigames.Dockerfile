@@ -29,14 +29,6 @@ RUN \
   bash ${INST_DIR}/ubuntu/install/backgrounds/install_backgrounds.sh Ascii-House && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh asciigames && \
-  mkdir -p ${HOME}/.local && \
-  mkdir -p ${HOME}/.local/share && \
-  mkdir -p ${HOME}/.local/share/fonts && \
-  wget -O /tmp/fonts.tar.gz \
-    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
-  tar xzf /tmp/fonts.tar.gz \
-    -C ${HOME}/.local/share/fonts && \
-  rm -f /tmp/fonts.tar.gz && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   rm -f /usr/share/extra/backgrounds/bg_default.png && \
