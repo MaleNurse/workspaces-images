@@ -27,16 +27,20 @@ do
 #      $work/kasm-user/.config/kitty/sessions/help
 #  cp jammy/kasm-user/.local/share/applications/help.desktop \
 #     $work/kasm-user/.local/share/applications/help.desktop
-   cp jammy/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png \
-      $work/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png
+#  cp jammy/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png \
+#     $work/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png
 #  cp jammy/kasm-user/Desktop/help.desktop \
 #     $work/kasm-user/Desktop/help.desktop
 # [ -d $work/kasm-user/bin ] || {
 #   echo "Missing kasm-user/bin in $work"
 #   continue
 # }
-# cp jammy/kasm-user/bin/open-markdown $work/kasm-user/bin
+# cp asciigames/kasm-user/bin/set_default_bg $work/kasm-user/bin
 # chmod 755 $work/kasm-user/bin/open-markdown
+# cp asciigames/kasm-user/Desktop/setbg.desktop \
+#    $work/kasm-user/Desktop/setbg.desktop
+# cp asciigames/kasm-user/Desktop/setbg.desktop \
+#    $work/kasm-user/.local/share/applications/setbg.desktop
 # [ -d $work/kasm-user/.config/glow ] || {
 #   cp -a /tmp/glow $work/kasm-user/.config/glow
 # }
