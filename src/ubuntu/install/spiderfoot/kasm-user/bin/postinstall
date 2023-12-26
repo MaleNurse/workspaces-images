@@ -45,6 +45,22 @@ have_kitty=$(type -p kitty)
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
+[ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
+     ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
+}
+[ -f ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty-128.png
+}
+[ -f ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
+}
+[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
+  cp ${HOME}/.local/share/applications/kitty.desktop \
+     ${HOME}/Desktop/kitty.desktop
+}
 
 notify-send "Installing nvm node version manager"
 
@@ -65,9 +81,6 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
 python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
-
-notify-send "Installing Glow markdown previewer"
-go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
 
 notify-send "Installing Obsidian Cheat Sheets Vault"
 git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
@@ -122,22 +135,6 @@ DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
 
 notify-send "Installing Desktop entries and fixing permissions"
 
-[ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
-  cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
-     ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
-}
-[ -f ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
-  cp ${HOME}/.local/share/icons/hicolor/128x128/apps/kitty.png \
-     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty-128.png
-}
-[ -f ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
-  cp ${HOME}/.local/share/icons/hicolor/32x32/apps/kitty.png \
-     ${HOME}/.local/kitty.app/lib/kitty/logo/kitty.png
-}
-[ -f ${HOME}/.local/share/applications/kitty.desktop ] && {
-  cp ${HOME}/.local/share/applications/kitty.desktop \
-     ${HOME}/Desktop/kitty.desktop
-}
 [ -f ${HOME}/.local/share/applications/spiderfoot.desktop ] && {
   cp ${HOME}/.local/share/applications/spiderfoot.desktop \
      ${HOME}/Desktop/spiderfoot.desktop

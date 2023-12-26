@@ -44,6 +44,22 @@ have_kitty=$(type -p kitty)
     ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
   }
 }
+[ -f $HOME/.local/share/applications/kitty.desktop ] && {
+  cp $HOME/.local/share/applications/kitty.desktop \
+     $HOME/Desktop/kitty.desktop
+}
+[ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
+     $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
+}
+[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
+}
+[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
+  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
+     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
+}
 
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
@@ -109,23 +125,6 @@ have_lazy=$(type -p lazyman)
   chmod 755 $HOME/.config/nvim-Lazyman/scripts/*.sh
   chmod 755 $HOME/.config/nvim-Lazyman/scripts/*/*.sh
   chmod 755 $HOME/.config/nvim-Lazyman/*.sh
-}
-
-[ -f $HOME/.local/share/applications/kitty.desktop ] && {
-  cp $HOME/.local/share/applications/kitty.desktop \
-     $HOME/Desktop/kitty.desktop
-}
-[ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
-     $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
-}
-[ -f $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/128x128/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty-128.png
-}
-[ -f $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png ] && {
-  cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
-     $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
 }
 
 # Correct permissions/ownership

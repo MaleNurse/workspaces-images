@@ -21,8 +21,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Copy install scripts
 COPY ./src/ $INST_DIR
 
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-
 # SpiderFoot startup is done in the postinstall script and as an autostart desktop entry
 # COPY ./src/ubuntu/install/spiderfoot/custom_startup.sh $STARTUPDIR/custom_startup.sh
 # RUN chmod +x $STARTUPDIR/custom_startup.sh

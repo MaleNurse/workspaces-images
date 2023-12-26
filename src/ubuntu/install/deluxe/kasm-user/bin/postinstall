@@ -137,9 +137,6 @@ notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
 python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
 
-notify-send "Installing Glow markdown previewer"
-go install github.com/charmbracelet/glow@latest > ${LOGDIR}/install-glow.log 2>&1
-
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)

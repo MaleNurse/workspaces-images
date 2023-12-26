@@ -53,6 +53,10 @@ RUN \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh jammy && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
+  cp /usr/share/extra/backgrounds/bg_kasm.png $HOME/.local/share/backgrounds/bg_default.png && \
+  rm -f /usr/share/extra/backgrounds/bg_default.png && \
+  ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \
+        /usr/share/extra/backgrounds/bg_default.png && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
@@ -80,7 +84,8 @@ RUN \
   git clone https://github.com/redxtech/zsh-kitty \
       ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-kitty && \
   git clone https://github.com/Aloxaf/fzf-tab \
-      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+      ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab && \
+  /usr/local/go/bin/go install github.com/charmbracelet/glow@latest
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME

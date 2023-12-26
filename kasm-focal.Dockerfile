@@ -39,8 +39,6 @@ COPY ./src/ $INST_DIR
 
 # Run installations
 RUN \
-  cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png && \
-  cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png && \
   sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml && \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
@@ -56,6 +54,11 @@ RUN \
   sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
+  cp /usr/share/extra/backgrounds/bg_kasm.png $HOME/.local/share/backgrounds/bg_default.png && \
+  cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png && \
+  rm -f /usr/share/extra/backgrounds/bg_default.png && \
+  ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \
+        /usr/share/extra/backgrounds/bg_default.png && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
@@ -63,6 +66,13 @@ RUN \
   rm -Rf ${INST_DIR}
 
 # Userspace Runtime
+ENV HOME /home/kasm-default-profile
+ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
+WORKDIR $HOME
+USER 1000
+
+RUN /usr/local/go/bin/go install github.com/charmbracelet/glow@latest
+
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000

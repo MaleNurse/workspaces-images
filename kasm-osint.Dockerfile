@@ -20,12 +20,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # Update the desktop environment to be optimized for a single application
 RUN cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
 
 # Copy install scripts
 COPY ./src/ $INST_DIR
-
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
 
 # SpiderFoot/Maltego startup setup in postinstall script as an autostart desktop entry
 # COPY ./src/ubuntu/install/spiderfoot/custom_startup.sh $STARTUPDIR/custom_startup.sh
