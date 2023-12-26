@@ -53,7 +53,7 @@ RUN \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh jammy && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
-  cp /usr/share/extra/backgrounds/bg_kasm.png $HOME/.local/share/backgrounds/bg_default.png && \
+  cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
   rm -f /usr/share/extra/backgrounds/bg_default.png && \
   ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \
         /usr/share/extra/backgrounds/bg_default.png && \

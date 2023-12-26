@@ -27,6 +27,7 @@ RUN \
   done && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh wing && \
+  cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \

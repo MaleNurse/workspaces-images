@@ -184,6 +184,9 @@ do
   find ${cdir} -type f | xargs chmod 644
 done
 chmod 600 ${HOME}/.config/user-dirs.*
+find ${HOME}/go -type d | xargs chmod 755
+find ${HOME}/go/pkg -type f | xargs chmod 644
+chmod 755 ${HOME}/go/bin/*
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/.local/share/icons -type f | xargs chmod 644
 find ${HOME}/.oh-my-zsh -type d | xargs chmod 755

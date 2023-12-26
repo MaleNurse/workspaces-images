@@ -171,6 +171,9 @@ do
   [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
   find ${cdir} -type f | xargs chmod 644
 done
+find ${HOME}/go -type d | xargs chmod 755
+find ${HOME}/go/pkg -type f | xargs chmod 644
+chmod 755 ${HOME}/go/bin/*
 chmod 600 ${HOME}/.config/user-dirs.*
 find ${HOME}/.local -type d | xargs chmod 755
 find ${HOME}/.local/share/icons -type f | xargs chmod 644

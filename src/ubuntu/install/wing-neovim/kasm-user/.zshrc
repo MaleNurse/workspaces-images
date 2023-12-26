@@ -423,8 +423,8 @@ else
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 
-[ -d ${HOME}/go/bin ] && PATH=$PATH:${HOME}/go/bin
-[ -d /usr/local/go/bin ] && PATH=$PATH:/usr/local/go/bin
+PATH=$PATH:${HOME}/go/bin
+PATH=$PATH:/usr/local/go/bin
 export PATH
 
 [ -d "$HOME/.nvm" ] && {

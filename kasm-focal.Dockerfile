@@ -54,7 +54,7 @@ RUN \
   sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
-  cp /usr/share/extra/backgrounds/bg_kasm.png $HOME/.local/share/backgrounds/bg_default.png && \
+  cp /usr/share/backgrounds/Nebula-Carina-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
   cp /usr/share/extra/icons/icon_kasm.png /usr/share/extra/icons/icon_default.png && \
   rm -f /usr/share/extra/backgrounds/bg_default.png && \
   ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \

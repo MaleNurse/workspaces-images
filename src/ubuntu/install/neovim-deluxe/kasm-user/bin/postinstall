@@ -139,6 +139,9 @@ chmod 644 $HOME/.aliases $HOME/.bashrc
 find $HOME/.config -type f | xargs chmod 644
 find $HOME/.config -type d | xargs chmod 755
 find $HOME/.local -type d | xargs chmod 755
+find ${HOME}/go -type d | xargs chmod 755
+find ${HOME}/go/pkg -type f | xargs chmod 644
+chmod 755 ${HOME}/go/bin/*
 chmod 755 $HOME/Desktop
 chmod 755 $HOME/Desktop/*
 chmod 755 $HOME/bin
