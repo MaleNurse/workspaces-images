@@ -8,6 +8,6 @@ layout tall
 
 # Kitty tab with Neofetch
 new_tab
-launch --hold neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/games.png
+launch --env SHELL="/bin/zsh" --hold zsh -c "neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/games.png"
 enabled_layouts tall:bias=50;full_size=1
 layout tall

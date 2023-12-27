@@ -192,15 +192,11 @@ vim +PlugInstall +qall > /dev/null 2>&1
 have_rclone=$(type -p rclone)
 [ "${have_rclone}" ] && {
   notify-send "Configuring rclone"
-  /home/kasm-user/.local/kitty.app/bin/kitty --session none \
-                                             --title 'Rclone Configuration' \
-                                             rclone config
+  ${HOME}/bin/rclone-config &
 }
-[ -s ${HOME}/.config/rclone/rclone.conf ] || {
-  [ -f ${HOME}/.local/share/applications/rclone-config.desktop ] && {
-    cp ${HOME}/.local/share/applications/rclone-config.desktop \
-       ${HOME}/.config/autostart/rclone-config.desktop
-  }
+[ -f ${HOME}/.local/share/applications/rclone-config.desktop ] && {
+  cp ${HOME}/.local/share/applications/rclone-config.desktop \
+     ${HOME}/.config/autostart/rclone-config.desktop
 }
 
 notify-send "Installing fzf fuzzy finder"
