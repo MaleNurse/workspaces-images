@@ -167,15 +167,16 @@ have_kitty=$(type -p kitty)
     nohup kitty --title="Lazyman Initialization" \
                 --start-as normal \
                 --override startup_session=none \
-          install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+                kitty-install-lazyman 2>&1
   else
-    nohup xfce4-terminal -x install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+    nohup xfce4-terminal -x kitty-install-lazyman 2>&1
   fi
 }
 
 # We gave it our best shot
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
+rm -f /home/*/bin/kitty-install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f ${HOME}/.config/autostart/postinstall.desktop
@@ -296,8 +297,8 @@ else
   }
 fi
 sleep 4
-have_center=$(type -p center-active-window)
-[ "${have_center}" ] && center-active-window
+have_upper=$(type -p upper-right-window)
+[ "${have_upper}" ] && upper-right-window
 sleep 4
 
 kill $(pgrep "notifyd")

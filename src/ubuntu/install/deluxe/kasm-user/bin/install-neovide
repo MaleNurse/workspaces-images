@@ -50,7 +50,7 @@ DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
   tar -C /tmp/neov$$ -xzf "${TEMP_ASS}"
   [ -f /tmp/neov$$/neovide ] && {
     chmod 755 /tmp/neov$$/neovide
-    /tmp/neov$$/neovide --version > /dev/null 2>&1 && {
+    /tmp/neov$$/neovide --version && {
       rm -f /tmp/neovide$$
       mv /tmp/neov$$/neovide /tmp/neovide$$
     }
