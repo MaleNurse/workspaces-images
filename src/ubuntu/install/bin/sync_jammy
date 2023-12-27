@@ -54,12 +54,12 @@ do
 #    $work/kasm-user/Desktop/obsidian.desktop
 # cp jammy/kasm-user/.local/share/doc/*.md \
 #    $work/kasm-user/.local/share/doc
-# [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
-#    echo "Missing rifle.conf in $work"
-#    continue
-# }
-# cp jammy/kasm-user/.config/ranger/rifle.conf \
-#    $work/kasm-user/.config/ranger/rifle.conf
+  [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
+     echo "Missing rifle.conf in $work"
+     continue
+  }
+  cp jammy/kasm-user/.config/ranger/rifle.conf \
+     $work/kasm-user/.config/ranger/rifle.conf
 # [ -f $work/kasm-user/.config/ranger/rc.conf ] || {
 #    echo "Missing rc.conf in $work"
 #    continue
