@@ -15,7 +15,7 @@ layout tall
 
 # Kitty tab for Cheat Sheets
 new_tab Help
-cd ~/Documents/cheat-sheets-plus/kasm
-launch --env PAGER="less -r" ranger --selectfile=workspaces.md
+cd ~/Documents/cheat-sheets-plus/cloud
+launch --env PAGER="less -r" ranger --selectfile=rclone.md
 enabled_layouts tall:bias=50;full_size=1
 layout tall
