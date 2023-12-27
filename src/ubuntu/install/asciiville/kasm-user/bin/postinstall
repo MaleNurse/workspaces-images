@@ -143,6 +143,11 @@ notify-send "Initializing Asciiville"
 [ -x $HOME/bin/init-asciiville ] && {
   ${HOME}/bin/init-asciiville -y > ${LOGDIR}/init-asciiville.log 2>&1
 }
+[ -f $HOME/.config/asciiville-config ] && {
+  [ -d $HOME/.config/asciiville ] || mkdir -p $HOME/.config/asciiville
+  cp $HOME/.config/asciiville-config \
+     $HOME/.config/asciiville/config
+}
 
 [ -f $HOME/.local/share/applications/asciiville.desktop ] && {
   cp $HOME/.local/share/applications/asciiville.desktop \
@@ -215,7 +220,7 @@ rm -f $HOME/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Asciiville desktop initialization and configuration complete!"
+notify-send "Asciiville desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")

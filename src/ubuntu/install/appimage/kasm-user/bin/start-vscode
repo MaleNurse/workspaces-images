@@ -6,7 +6,7 @@ export NODE_VERSION="20.9.0"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
 if [ "$1" ]; then
-  /usr/share/code/code $* > /dev/null 2>&1
+  /usr/share/code/bin/code $* > /dev/null 2>&1
 else
-  /usr/share/code/code --no-sandbox --new-window > /dev/null 2>&1
+  /usr/share/code/bin/code --no-sandbox --new-window > /dev/null 2>&1
 fi

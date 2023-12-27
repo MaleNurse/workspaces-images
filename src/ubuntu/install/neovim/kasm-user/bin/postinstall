@@ -269,7 +269,7 @@ done
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
 rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 
-notify-send "Neovim desktop initialization and configuration complete!"
+notify-send "Neovim desktop initialization complete!"
 
 have_lazyman=$(type -p lazyman)
 have_kitty=$(type -p kitty)

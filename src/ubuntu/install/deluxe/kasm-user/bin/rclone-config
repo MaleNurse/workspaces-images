@@ -1,0 +1,53 @@
+#!/bin/bash
+
+usage() {
+  printf "\nUsage: rclone-config [-c] [-g] [-s] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-c indicates use character based interface"
+  printf "\n\t-g indicates use browser based GUI interface (default)"
+  printf "\n\t-s indicates skip if a configuration already exists"
+  printf "\n\t-u displays this usage message and exits\n"
+  exit 1
+}
+
+config=1
+gui=1
+cmd="rclone rcd --rc-web-gui --rc-no-auth"
+start_as="--start-as minimized"
+while getopts ":cgsu" flag; do
+  case $flag in
+    c)
+      gui=
+      cmd="rclone config"
+      start_as="--start-as normal"
+      ;;
+    g)
+      gui=1
+      cmd="rclone rcd --rc-web-gui --rc-no-auth"
+      start_as="--start-as minimized"
+      ;;
+    s)
+      [ -s ${HOME}/.config/rclone/rclone.conf ] && config=
+      ;;
+    u)
+      usage
+      ;;
+    \?)
+      echo "Invalid option: $flag"
+      usage
+      ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "${config}" ] && {
+  have_rclone=$(type -p rclone)
+  [ "${have_rclone}" ] && {
+    /home/kasm-user/.local/kitty.app/bin/kitty --session none \
+                                               ${start_as} \
+                                               --title 'Rclone Configuration' \
+                                               ${cmd} &
+  }
+}
+
+exit 0

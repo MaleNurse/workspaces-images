@@ -176,18 +176,19 @@ have_lazy=$(type -p install-lazyman)
 have_kitty=$(type -p kitty)
 [ "${have_lazy}" ] && {
   if [ "${have_kitty}" ]; then
-    kitty --title="Lazyman Initialization" \
-          --start-as normal \
-          --override startup_session=none \
-          install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+    nohup kitty --title="Lazyman Initialization" \
+                --start-as normal \
+                --override startup_session=none \
+                kitty-install-lazyman 2>&1
   else
-    xfce4-terminal -x install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+    nohup xfce4-terminal -x kitty-install-lazyman 2>&1
   fi
 }
 
 # We gave it our best shot
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
+rm -f /home/*/bin/kitty-install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 

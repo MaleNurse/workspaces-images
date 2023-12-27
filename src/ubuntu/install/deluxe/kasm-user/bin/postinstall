@@ -22,8 +22,8 @@ umask 022
 
 sleep 4
 notify-send -u critical "One-time Deluxe Desktop Configuration"
-notify-send -u critical "Installing Neovim Configuration Manager and dependencies"
-notify-send -u critical "Installing Asciiville ascii art laboratory and dependencies"
+notify-send -u critical "Installing Neovim Configuration Manager"
+notify-send -u critical "Installing Asciiville ascii art laboratory"
 notify-send -u critical "This process can take several minutes, please be patient"
 
 LOGDIR="${HOME}/logs"
@@ -109,6 +109,11 @@ notify-send "Initializing Asciiville"
 [ -x ${HOME}/bin/init-asciiville ] && {
   ${HOME}/bin/init-asciiville -y > ${LOGDIR}/init-asciiville.log 2>&1
 }
+[ -f $HOME/.config/asciiville-config ] && {
+  [ -d $HOME/.config/asciiville ] || mkdir -p $HOME/.config/asciiville
+  cp $HOME/.config/asciiville-config \
+     $HOME/.config/asciiville/config
+}
 
 notify-send "Installing SpiderFoot"
 cd ${HOME}
@@ -158,6 +163,12 @@ notify-send "Installing Neovide"
 notify-send "Installing Vim plugins"
 vim +PlugInstall +qall > /dev/null 2>&1
 
+have_rclone=$(type -p rclone)
+[ "${have_rclone}" ] && {
+  notify-send "Configuring rclone"
+  ${HOME}/bin/rclone-config &
+}
+
 notify-send "Installing fzf fuzzy finder"
 if [ "${GH_TOKEN}" ]; then
   AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
@@ -190,28 +201,24 @@ have_lazy=$(type -p install-lazyman)
 have_kitty=$(type -p kitty)
 [ "${have_lazy}" ] && {
   if [ "${have_kitty}" ]; then
-    kitty --title="Lazyman Initialization" \
+    nohup kitty --title="Lazyman Initialization" \
           --start-as normal \
           --override startup_session=none \
-          install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+          kitty-install-lazyman 2>&1
   else
-    xfce4-terminal -x install-lazyman -z noinstall 2>&1 | tee -a ${LOGDIR}/install-lazyman.log
+    nohup xfce4-terminal -x kitty-install-lazyman 2>&1
   fi
 }
 
 # We gave it our best shot
 rm -f /home/*/bin/install-kitty
 rm -f /home/*/bin/install-lazyman
+rm -f /home/*/bin/kitty-install-lazyman
 rm -f /home/*/bin/install-neovim
 rm -f /home/*/bin/install-neovide
 rm -f /home/*/bin/fix-kasm-user-path
 
 notify-send "Installing Desktop entries and fixing permissions"
-
-#[ -f ${HOME}/.local/share/applications/session.desktop ] && {
-#  cp ${HOME}/.local/share/applications/session.desktop \
-#     ${HOME}/.config/autostart/session.desktop
-#}
 
 for desk in asciiville btop code lazyman neovide neovim ranger spiderfoot
 do
@@ -248,6 +255,7 @@ find ${HOME}/Wing -type f | xargs chmod 644
 find ${HOME}/Wing -type d | xargs chmod 755
 
 chmod 600 ${HOME}/.config/user-dirs.*
+chmod 600 ${HOME}/.config/rclone/rclone.conf
 find ${HOME}/go -type d | xargs chmod 755
 find ${HOME}/go/pkg -type f | xargs chmod 644
 chmod 755 ${HOME}/go/bin/*
@@ -305,7 +313,7 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Deluxe desktop initialization and configuration complete!"
+notify-send "Deluxe desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")

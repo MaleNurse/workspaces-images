@@ -311,7 +311,7 @@ export MANPATH="/usr/local/share/man:$MANPATH"
 # else
 #   export EDITOR='mvim'
 # fi
-export VISUAL=vim
+export VISUAL=start-neovim
 export EDITOR=${VISUAL}
 
 # Compilation flags

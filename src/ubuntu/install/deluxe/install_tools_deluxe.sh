@@ -78,3 +78,5 @@ PROJECT=endoh1
 install_external_package
 PROJECT=asciiville-aewan
 install_external_package
+
+curl https://rclone.org/install.sh | bash
