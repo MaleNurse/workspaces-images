@@ -12,7 +12,7 @@ usage() {
 
 config=1
 gui=1
-cmd="rclone rcd --rc-web-gui --rc-no-auth"
+cmd="rclone rcd --rc-web-gui"
 start_as="--start-as minimized"
 while getopts ":cgsu" flag; do
   case $flag in
@@ -23,7 +23,7 @@ while getopts ":cgsu" flag; do
       ;;
     g)
       gui=1
-      cmd="rclone rcd --rc-web-gui --rc-no-auth"
+      cmd="rclone rcd --rc-web-gui"
       start_as="--start-as minimized"
       ;;
     s)

@@ -15,13 +15,13 @@ layout tall
 
 new_tab
 cd ~
-launch --env SHELL="/bin/bash" --hold bash -c "neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/spiderfoot.png"
+launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
 # Kitty tab for Cheat Sheets
 new_tab Help
-cd ~/Documents/cheat-sheets-plus/kasm
-launch --env PAGER="less -r" ranger --selectfile=workspaces.md
+cd ~/Documents/cheat-sheets-plus/security
+launch --env PAGER="less -r" ranger --selectfile=spiderfoot.md
 enabled_layouts tall:bias=50;full_size=1
 layout tall

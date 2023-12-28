@@ -163,11 +163,11 @@ notify-send "Installing Neovide"
 notify-send "Installing Vim plugins"
 vim +PlugInstall +qall > /dev/null 2>&1
 
-have_rclone=$(type -p rclone)
-[ "${have_rclone}" ] && {
-  notify-send "Configuring rclone"
-  ${HOME}/bin/rclone-config &
-}
+#have_rclone=$(type -p rclone)
+#[ "${have_rclone}" ] && {
+#  notify-send "Configuring rclone"
+#  ${HOME}/bin/rclone-config &
+#}
 
 notify-send "Installing fzf fuzzy finder"
 if [ "${GH_TOKEN}" ]; then
