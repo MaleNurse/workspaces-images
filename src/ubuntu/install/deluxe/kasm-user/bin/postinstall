@@ -23,7 +23,7 @@ umask 022
 sleep 4
 notify-send -u critical "One-time Deluxe Desktop Configuration"
 notify-send -u critical "Installing Neovim Configuration Manager"
-notify-send -u critical "Installing Asciiville ascii art laboratory"
+notify-send -u critical "Installing Asciiville Ascii Art Laboratory"
 notify-send -u critical "This process can take several minutes, please be patient"
 
 LOGDIR="${HOME}/logs"
