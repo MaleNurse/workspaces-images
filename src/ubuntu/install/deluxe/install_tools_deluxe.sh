@@ -58,6 +58,7 @@ else
   AUTH_HEADER=
 fi
 
+add-apt-repository -y universe
 apt-get update
 apt-get upgrade -y
 apt-get install -y libportaudio2
@@ -67,6 +68,13 @@ apt-get install -y bsdgames
 apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y speedtest-cli
+apt-get install -y ubuntu-desktop
+apt-get install -y gnome-session
+apt-get install -y gdm3
+apt-get install -y gnome-shell-extensions
+apt-get install -y chrome-gnome-shell
+apt-get install -y gnome-tweaks
+apt-get install -y $(apt search gnome-shell-extension | grep ^gnome | cut -d / -f1)
 
 install_asciiville
 

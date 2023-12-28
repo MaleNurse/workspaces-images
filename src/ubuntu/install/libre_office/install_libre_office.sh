@@ -4,7 +4,7 @@ set -ex
 apt-get update
 apt-get install -y software-properties-common
 
-add-apt-repository ppa:libreoffice/ppa
+add-apt-repository -y ppa:libreoffice/ppa
 apt-get update
 apt-get install -y libreoffice
 
