@@ -11,43 +11,30 @@ WORKDIR $HOME
 
 ######### Customize Container Here ###########
 
-RUN apt-get update && apt-get install -y tmux screen nano dnsutils zip
-
-RUN echo "set -g mouse on" > $HOME/.tmux.conf && chown 1000:1000  $HOME/.tmux.conf
-
-### Update .zshrc to run an arbitrary command if specified as an environment variable
-RUN echo "if [ ! -z \"\${SHELL_EXEC}\" ] && [ \"\${TERM}\" == \"xterm-256color\" ] ; \n\
+RUN apt-get update && apt-get install -y tmux screen nano dnsutils zip && \
+    echo "set -g mouse on" > $HOME/.tmux.conf && chown 1000:1000  $HOME/.tmux.conf && \
+    echo "if [ ! -z \"\${SHELL_EXEC}\" ] && [ \"\${TERM}\" == \"xterm-256color\" ] ; \n\
 then \n\
     set +e \n\
     eval \${SHELL_EXEC} \n\
 fi  " >> $HOME/.zshrc && chown 1000:1000  $HOME/.zshrc
 
-### Install Ansible
 COPY ./src/ubuntu/install/ansible $INST_SCRIPTS/ansible/
-RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansible/
-
-### Install Terraform
 COPY ./src/ubuntu/install/terraform $INST_SCRIPTS/terraform/
-RUN bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/terraform/
-
-### Install kasm-user home
 COPY ./src/ubuntu/install/kitty $INST_SCRIPTS/kitty/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/install_kasm_user.sh
-RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
-    rm -rf $INST_SCRIPTS/kitty/ && \
-    rm -f $INST_SCRIPTS/install_kasm_user.sh
-
 COPY ./src/ubuntu/install/terminal/custom_startup.sh $STARTUPDIR/custom_startup.sh
-RUN chmod +x $STARTUPDIR/custom_startup.sh
-RUN chmod 755 $STARTUPDIR/custom_startup.sh
-
-# Update the desktop environment to be optimized for a single application
-RUN cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/
-RUN cp /usr/share/extra/backgrounds/bg_kasm.png /usr/share/extra/backgrounds/bg_default.png
-RUN apt-get remove -y xfce4-panel
-
-RUN chown 1000:0 $HOME
-RUN $STARTUPDIR/set_user_permission.sh $HOME
+RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansible/ && \
+    bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/terraform/ && \
+    bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
+    rm -rf $INST_SCRIPTS/kitty/ && \
+    rm -f $INST_SCRIPTS/install_kasm_user.sh && \
+    chmod 755 $STARTUPDIR/custom_startup.sh && \
+    cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/ && \
+    cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
+    apt-get remove -y xfce4-panel && \
+    chown 1000:0 $HOME && \
+    $STARTUPDIR/set_user_permission.sh $HOME
 
 # Customize kasm-user HOME
 USER 1000
