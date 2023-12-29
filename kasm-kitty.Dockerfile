@@ -80,7 +80,6 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     chmod 755 ${HOME}/.local/share/applications/*.desktop && \
     chmod 755 ${HOME}/bin && \
     chmod 755 ${HOME}/bin/* && \
-    chmod 755 ${HOME}/.cargo && \
     chmod 755 ${HOME}/logs && \
     mkdir -p ${HOME}/.cache && \
     chmod 755 ${HOME}/.cache && \
