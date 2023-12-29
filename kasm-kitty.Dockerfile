@@ -64,9 +64,6 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     done && \
     find ${HOME}/.config -type d -print0 | xargs -0 chmod 755 && \
     for cdir in ${HOME}/.config/*; do \
-      [ "${cdir}" == "${HOME}/.config/*" ] && continue; \
-      [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue; \
-      [ "${cdir}" == "${HOME}/.config/autostart" ] && continue; \
       find ${cdir} -type f -print0 | xargs -0 chmod 644; \
     done && \
     chmod 600 ${HOME}/.config/user-dirs.* && \
@@ -97,12 +94,7 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     mkdir -p ${HOME}/.pki && \
     chmod 700 ${HOME}/.pki && \
     mkdir -p ${HOME}/.pki/nssdb && \
-    chmod 700 ${HOME}/.pki/nssdb && \
-    for nss in ${HOME}/.pki/nssdb/*; do \
-      [ "${nss}" == "${HOME}/.pki/nssdb/*" ] && continue; \
-      [ -d "${nss}" ] && chmod 700 "${nss}"; \
-      [ -f "${nss}" ] && chmod 600 "${nss}"; \
-    done
+    chmod 700 ${HOME}/.pki/nssdb
 
 ######### End Customizations ###########
 
