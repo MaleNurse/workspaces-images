@@ -21,14 +21,11 @@ then \n\
     eval \${SHELL_EXEC} \n\
 fi  " >> $HOME/.zshrc && chown 1000:1000  $HOME/.zshrc
 
-COPY ./src/ubuntu/install/ansible $INST_SCRIPTS/ansible/
-COPY ./src/ubuntu/install/terraform $INST_SCRIPTS/terraform/
 COPY ./src/ubuntu/install/kitty $INST_SCRIPTS/kitty/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/install_kasm_user.sh
 COPY ./src/ubuntu/install/terminal/custom_startup.sh $STARTUPDIR/custom_startup.sh
-RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansible/ && \
-    bash $INST_SCRIPTS/terraform/install_terraform.sh  && rm -rf $INST_SCRIPTS/terraform/ && \
-    bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
+
+RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     rm -rf $INST_SCRIPTS/kitty/ && \
     rm -f $INST_SCRIPTS/install_kasm_user.sh && \
     chmod 755 $STARTUPDIR/custom_startup.sh && \
@@ -40,7 +37,6 @@ RUN bash $INST_SCRIPTS/ansible/install_ansible.sh  && rm -rf $INST_SCRIPTS/ansib
 
 # Customize kasm-user HOME
 USER 1000
-ENV HOME /home/kasm-user
 ENV PATH "$HOME/bin:$HOME/.local/bin:$PATH"
 
 RUN chmod 755 ${HOME}/bin/install-kitty && \
