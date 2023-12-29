@@ -1,7 +1,7 @@
 # Kitty tab for Ranger
 new_tab Ranger
-cd ~/Documents/cheat-sheets-plus/kasm
-launch --env VISUAL="start-neovim" --env PAGER="less -r" ranger --selectfile=workspaces.md
+cd ~/Documents/cheat-sheets-plus/text
+launch --env VISUAL="start-neovim" --env PAGER="less -r" ranger --selectfile=neovim.md
 launch lower-right-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall

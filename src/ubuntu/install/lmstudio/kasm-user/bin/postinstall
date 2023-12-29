@@ -162,35 +162,6 @@ llm aliases set starcoder starcoder-q4_0
 #  }
 #}
 
-LMS="LM_Studio.AppImage"
-[ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
-if [ -f /share/AppImages/${LMS} ]; then
-  notify-send "Installing LM Studio"
-  if [ -x ${HOME}/bin/appimage-launcher ]; then
-    ${HOME}/bin/appimage-launcher /share/AppImages/${LMS}
-  else
-    cp /share/AppImages/${LMS} ${HOME}/Applications
-  fi
-else
-  [ -x ${HOME}/.local/kitty.app/bin/kitty ] && {
-    [ -x ${HOME}/bin/appimage-launcher ] && {
-      ${HOME}/.local/kitty.app/bin/kitty \
-          --session none \
-          --title 'AppImage Launcher Select' \
-          ${HOME}/bin/appimage-launcher
-    }
-  }
-fi
-# Copy the AppImage back to /share/AppImages if needed
-[ -f /share/AppImages/${LMS} ] || {
-  for appimg in ${HOME}/Applications/LM_Studio*AppImage
-  do
-    [ "${appimg}" == "${HOME}/Applications/LM_Studio*AppImage" ] && continue
-    cp "${appimg}" /share/AppImages/${LMS}
-    break
-  done
-}
-
 notify-send "Installing Vim plugins"
 vim +PlugInstall +qall > /dev/null 2>&1
 
@@ -307,7 +278,43 @@ rm -f ${HOME}/Desktop/xfce4-file-manager.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
+[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
+  /home/kasm-user/.local/kitty.app/bin/kitty \
+      --session /home/kasm-user/.config/kitty/sessions/startup \
+      --title 'Welcome to the LM Studio Kasm workspace' 2> /dev/null &
+}
+
+LMS="LM_Studio.AppImage"
+[ -d ${HOME}/Applications ] || mkdir ${HOME}/Applications
+if [ -f /share/AppImages/${LMS} ]; then
+  notify-send "Installing LM Studio"
+  if [ -x ${HOME}/bin/appimage-launcher ]; then
+    ${HOME}/bin/appimage-launcher /share/AppImages/${LMS}
+  else
+    cp /share/AppImages/${LMS} ${HOME}/Applications
+  fi
+else
+  [ -x ${HOME}/.local/kitty.app/bin/kitty ] && {
+    [ -x ${HOME}/bin/appimage-launcher ] && {
+      ${HOME}/.local/kitty.app/bin/kitty \
+          --session none \
+          --title 'AppImage Launcher Select' \
+          ${HOME}/bin/appimage-launcher
+    }
+  }
+fi
+# Copy the AppImage back to /share/AppImages if needed
+[ -f /share/AppImages/${LMS} ] || {
+  for appimg in ${HOME}/Applications/LM_Studio*AppImage
+  do
+    [ "${appimg}" == "${HOME}/Applications/LM_Studio*AppImage" ] && continue
+    cp "${appimg}" /share/AppImages/${LMS}
+    break
+  done
+}
+
 notify-send "LM Studio desktop initialization complete!"
+
 sleep 5
 
 kill $(pgrep "notifyd")
@@ -315,10 +322,4 @@ kill $(pgrep "notifyd")
 have_open=$(type -p exo-open)
 [ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
-}
-
-[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
-  /home/kasm-user/.local/kitty.app/bin/kitty \
-      --session /home/kasm-user/.config/kitty/sessions/startup \
-      --title 'Welcome to the LM Studio Kasm workspace' 2> /dev/null &
 }
