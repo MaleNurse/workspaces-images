@@ -26,12 +26,6 @@ RUN \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
-  mkdir -p /etc/opt/chrome/policies && \
-  mkdir -p /etc/opt/chrome/policies/managed && \
-  cp ${INST_DIR}/ubuntu/install/deluxe/shell_integration_policy.json \
-     /etc/opt/chrome/policies/managed && \
-  rm -f /etc/alternatives/x-session-manager && \
-  ln -s /usr/bin/gnome-session /etc/alternatives/x-session-manager && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh deluxe && \
   cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
