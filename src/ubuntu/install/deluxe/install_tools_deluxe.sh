@@ -68,7 +68,7 @@ apt-get install -y bsdgames
 apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y speedtest-cli
-apt-get install -y ubuntu-desktop
+apt-get install -y ubuntu-gnome-desktop
 apt-get install -y gnome-session
 apt-get install -y gdm3
 apt-get install -y gnome-shell-extensions
