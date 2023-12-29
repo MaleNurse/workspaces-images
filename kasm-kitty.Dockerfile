@@ -66,7 +66,6 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     for cdir in ${HOME}/.config/*; do \
       find ${cdir} -type f -print0 | xargs -0 chmod 644; \
     done && \
-    chmod 600 ${HOME}/.config/user-dirs.* && \
     find ${HOME}/go -type d -print0 | xargs -0 chmod 755 && \
     find ${HOME}/go/pkg -type f -print0 | xargs -0 chmod 644 && \
     chmod 755 ${HOME}/go/bin/* && \
