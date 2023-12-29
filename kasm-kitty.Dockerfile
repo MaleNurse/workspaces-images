@@ -59,29 +59,25 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     vim +PlugInstall +qall && \
     chmod 755 ${HOME} && \
     chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc && \
-    for fdir in launchpadlib mozilla vim; do \
-      find ${HOME}/.${fdir} -type f | xargs chmod 644; \
-      find ${HOME}/.${fdir} -type d | xargs chmod 755; \
-    done && \
     find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f; do \
       chmod 755 $f; \
     done && \
-    find ${HOME}/.config -type d | xargs chmod 755 && \
+    find ${HOME}/.config -type d -print0 | xargs -0 chmod 755 && \
     for cdir in ${HOME}/.config/*; do \
       [ "${cdir}" == "${HOME}/.config/*" ] && continue; \
       [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue; \
       [ "${cdir}" == "${HOME}/.config/autostart" ] && continue; \
-      find ${cdir} -type f | xargs chmod 644; \
+      find ${cdir} -type f -print0 | xargs -0 chmod 644; \
     done && \
     chmod 600 ${HOME}/.config/user-dirs.* && \
-    find ${HOME}/go -type d | xargs chmod 755 && \
-    find ${HOME}/go/pkg -type f | xargs chmod 644 && \
+    find ${HOME}/go -type d -print0 | xargs -0 chmod 755 && \
+    find ${HOME}/go/pkg -type f -print0 | xargs -0 chmod 644 && \
     chmod 755 ${HOME}/go/bin/* && \
-    find ${HOME}/.local -type d | xargs chmod 755 && \
-    find ${HOME}/.local/share/icons -type f | xargs chmod 644 && \
-    find ${HOME}/.oh-my-zsh -type d | xargs chmod 755 && \
-    find ${HOME}/.oh-my-zsh -perm 666 | xargs chmod 644 && \
-    find ${HOME}/.oh-my-zsh -perm 777 | xargs chmod 755 && \
+    find ${HOME}/.local -type d -print0 | xargs -0 chmod 755 && \
+    find ${HOME}/.local/share/icons -type f -print0 | xargs -0 chmod 644 && \
+    find ${HOME}/.oh-my-zsh -type d -print0 | xargs -0 chmod 755 && \
+    find ${HOME}/.oh-my-zsh -perm 666 -print0 | xargs -0 chmod 644 && \
+    find ${HOME}/.oh-my-zsh -perm 777 -print0 | xargs -0 chmod 755 && \
     chmod 755 ${HOME}/.config/ranger/*.sh && \
     chmod 755 ${HOME}/Desktop && \
     chmod 755 ${HOME}/Desktop/* && \
