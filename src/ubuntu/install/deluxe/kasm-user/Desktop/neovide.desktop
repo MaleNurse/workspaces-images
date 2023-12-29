@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Neovide
+Comment=Neovim GUI
+Exec=notify-send "Install in progress - please be patient"
+Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovide.png
+Categories=System;

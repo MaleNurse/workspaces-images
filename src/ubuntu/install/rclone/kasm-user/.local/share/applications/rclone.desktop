@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Rclone Config
 Comment=Rclone Configuration
-Exec=/home/kasm-user/bin/rclone-config -g
+Exec=/home/kasm-user/bin/rclone-config
 Icon=/home/kasm-user/.local/share/icons/hicolor/256x256/apps/rclone.png
 Categories=System;

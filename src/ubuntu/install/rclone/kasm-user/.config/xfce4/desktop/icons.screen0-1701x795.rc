@@ -9,6 +9,10 @@ col=1
 row=0
 col=1
 
+[/home/kasm-user/Desktop/kitty.desktop]
+row=6
+col=1
+
 [/home/kasm-user/Desktop/onlyoffice-desktopeditors.desktop]
 row=1
 col=1
@@ -69,15 +73,11 @@ col=2
 row=3
 col=1
 
+[/home/kasm-user/Desktop/rclone.desktop]
+row=5
+col=2
+
 [/home/kasm-user/Desktop/Uploads]
 row=1
 col=0
-
-[/home/kasm-user/Desktop/rclone-config.desktop]
-row=7
-col=0
-
-[/home/kasm-user/Desktop/kitty.desktop]
-row=6
-col=1
 

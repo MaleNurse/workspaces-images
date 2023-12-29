@@ -106,6 +106,36 @@ notify-send "Installing Pillow and Pygments"
 python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
 python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
 
+notify-send "Installing Vim plugins"
+vim +PlugInstall +qall > /dev/null 2>&1
+
+notify-send "Installing fzf fuzzy finder"
+if [ "${GH_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
+DL_URL=
+DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "linux_amd64\.tar\.gz")
+
+[ "${DL_URL}" ] && {
+  TEMP_TGZ="$(mktemp --suffix=.tgz)"
+  wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
+  chmod 644 "${TEMP_TGZ}"
+  mkdir -p /tmp/fzft$$
+  tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
+  [ -f /tmp/fzft$$/fzf ] && {
+    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+    cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
+    chmod 755 ${HOME}/.local/bin/fzf
+  }
+  rm -f "${TEMP_TGZ}"
+  rm -rf /tmp/fzft$$
+}
+
 notify-send "Installing Desktop entries and fixing permissions"
 
 [ -f ${HOME}/.local/share/applications/code.desktop ] && {
@@ -119,6 +149,10 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f $HOME/.local/share/applications/ranger.desktop ] && {
   cp $HOME/.local/share/applications/ranger.desktop \
      $HOME/Desktop/ranger.desktop
+}
+[ -f ${HOME}/.local/share/applications/rclone.desktop ] && {
+  cp ${HOME}/.local/share/applications/rclone.desktop \
+     ${HOME}/.config/autostart/rclone.desktop
 }
 
 # Correct permissions/ownership
@@ -185,47 +219,6 @@ done
   rm -f /tmp/k$$
 }
 
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > /dev/null 2>&1
-
-have_rclone=$(type -p rclone)
-[ "${have_rclone}" ] && {
-  notify-send "Configuring rclone"
-  ${HOME}/bin/rclone-config &
-}
-[ -f ${HOME}/.local/share/applications/rclone-config.desktop ] && {
-  cp ${HOME}/.local/share/applications/rclone-config.desktop \
-     ${HOME}/.config/autostart/rclone-config.desktop
-}
-
-notify-send "Installing fzf fuzzy finder"
-if [ "${GH_TOKEN}" ]; then
-  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
-else
-  AUTH_HEADER=
-fi
-API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
-DL_URL=
-DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
-    | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "linux_amd64\.tar\.gz")
-
-[ "${DL_URL}" ] && {
-  TEMP_TGZ="$(mktemp --suffix=.tgz)"
-  wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
-  chmod 644 "${TEMP_TGZ}"
-  mkdir -p /tmp/fzft$$
-  tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
-  [ -f /tmp/fzft$$/fzf ] && {
-    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
-    cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
-    chmod 755 ${HOME}/.local/bin/fzf
-  }
-  rm -f "${TEMP_TGZ}"
-  rm -rf /tmp/fzft$$
-}
-
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 rm -f ${HOME}/Desktop/xfce4-terminal.desktop
@@ -248,4 +241,10 @@ have_open=$(type -p exo-open)
   /home/kasm-user/.local/kitty.app/bin/kitty \
       --session /home/kasm-user/.config/kitty/sessions/startup \
       --title 'Welcome to the Cloud Storage Kasm workspace' 2> /dev/null &
+}
+
+have_rclone=$(type -p rclone)
+[ "${have_rclone}" ] && {
+  notify-send "Starting rclone configuration GUI"
+  ${HOME}/bin/rclone-config &
 }

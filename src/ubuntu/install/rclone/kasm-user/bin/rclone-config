@@ -12,7 +12,7 @@ usage() {
 
 config=1
 gui=1
-cmd="rclone rcd --rc-web-gui --rc-no-auth"
+cmd="rclone rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-no-auth"
 start_as="--start-as minimized"
 while getopts ":cgsu" flag; do
   case $flag in
@@ -23,7 +23,7 @@ while getopts ":cgsu" flag; do
       ;;
     g)
       gui=1
-      cmd="rclone rcd --rc-web-gui --rc-no-auth"
+      cmd="rclone rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-no-auth"
       start_as="--start-as minimized"
       ;;
     s)
@@ -47,6 +47,10 @@ shift $(( OPTIND - 1 ))
                                                ${start_as} \
                                                --title 'Rclone Configuration' \
                                                ${cmd} &
+    [ "${gui}" ] && {
+      sleep 4
+      open http://127.0.0.1:5572/\#dashboard
+    }
   }
 }
 
