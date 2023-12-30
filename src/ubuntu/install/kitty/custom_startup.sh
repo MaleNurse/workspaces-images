@@ -5,7 +5,7 @@ PGREP="kitty "
 export MAXIMIZE="true"
 export MAXIMIZE_NAME="Terminal"
 MAXIMIZE_SCRIPT=$STARTUPDIR/maximize_window.sh
-DEFAULT_ARGS="--title 'Kitty Terminal Session' --single-instance --start-as=maximized --session /home/kasm-user/.config/kitty/sessions/startup"
+DEFAULT_ARGS="--title Terminal --single-instance --start-as=maximized --session /home/kasm-user/.config/kitty/sessions/startup"
 ARGS=${APP_ARGS:-$DEFAULT_ARGS}
 
 options=$(getopt -o gau: -l go,assign,url: -n "$0" -- "$@") || exit
