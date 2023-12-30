@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/opt/anaconda3/bin/jupyter notebook --ip=127.0.0.1 2>/dev/null &
+sleep 4
+center-active-window

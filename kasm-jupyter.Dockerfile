@@ -71,7 +71,6 @@ RUN apt-get update && apt-get install -y \
     && bash $INST_DIR/edge/install_edge.sh \
     && bash $INST_DIR/install_kasm_user.sh jupyter \
     && cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png \
-    && apt-get remove -y xfce4-panel \
     && rm -f $HOME/bin/postinstall \
     && rm -f $HOME/.config/autostart/postinstall.desktop \
     && chown -R 1000:0 $HOME \

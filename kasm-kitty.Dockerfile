@@ -31,7 +31,6 @@ RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     chmod 755 $STARTUPDIR/custom_startup.sh && \
     cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/ && \
     cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
-    apt-get remove -y xfce4-panel && \
     rm -f $HOME/bin/postinstall && \
     rm -f $HOME/.config/autostart/postinstall.desktop && \
     chown 1000:0 $HOME && \
