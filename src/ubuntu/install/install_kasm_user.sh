@@ -28,11 +28,11 @@ else
     cp -a ${SCRIPT_PATH}/kasm-user $HOME
   }
 fi
-find $HOME -type f | xargs chmod 644
-find $HOME -type d | xargs chmod 755
-[ -d $HOME/bin ] && find $HOME/bin -type f | xargs chmod 755
-[ -d $HOME/.local/bin ] && find $HOME/.local/bin -type f | xargs chmod 755
-find $HOME -name \*\.desktop | xargs chmod 755
+find $HOME -type f -print0 | xargs -0 chmod 644
+find $HOME -type d -print0 | xargs -0 chmod 755
+[ -d $HOME/bin ] && find $HOME/bin -type f -print0 | xargs -0 chmod 755
+[ -d $HOME/.local/bin ] && find $HOME/.local/bin -type f -print0 | xargs -0 chmod 755
+find $HOME -name \*\.desktop -print0 | xargs -0 chmod 755
 [ -d $HOME/.cargo/bin ] && chmod 755 $HOME/.cargo/bin/*
 
 chown -R 1000:1000 $HOME/
