@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-START_COMMAND="kitty"
+START_COMMAND="/home/kasm-user/.local/kitty.app/bin/kitty"
 PGREP="kitty "
 export MAXIMIZE="true"
 export MAXIMIZE_NAME="Terminal"

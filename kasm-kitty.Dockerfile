@@ -23,7 +23,7 @@ fi  " >> $HOME/.zshrc && chown 1000:1000  $HOME/.zshrc
 
 COPY ./src/ubuntu/install/kitty $INST_SCRIPTS/kitty/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_SCRIPTS/install_kasm_user.sh
-COPY ./src/ubuntu/install/terminal/custom_startup.sh $STARTUPDIR/custom_startup.sh
+COPY ./src/ubuntu/install/kitty/custom_startup.sh $STARTUPDIR/custom_startup.sh
 
 RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     rm -rf $INST_SCRIPTS/kitty/ && \
@@ -32,6 +32,8 @@ RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/ && \
     cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
     apt-get remove -y xfce4-panel && \
+    rm -f $HOME/bin/postinstall && \
+    rm -f $HOME/.config/autostart/postinstall.desktop && \
     chown 1000:0 $HOME && \
     $STARTUPDIR/set_user_permission.sh $HOME
 
@@ -46,6 +48,8 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     python3 -m pip install --user Pygments && \
     git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
     $HOME/.fzf/install && \
+    sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.bash && \
+    sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.zsh && \
     git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus && \
     tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config && \
     rm -f ${HOME}/.config/obsidian.tar.gz && \
