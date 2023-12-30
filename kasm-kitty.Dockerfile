@@ -63,6 +63,10 @@ RUN chmod 755 ${HOME}/bin/install-kitty && \
     vim +PlugInstall +qall && \
     chmod 755 ${HOME} && \
     chmod 644 ${HOME}/.aliases ${HOME}/.bashrc ${HOME}/.zshrc && \
+    for fdir in launchpadlib mozilla vim; do \
+      find ${HOME}/.${fdir} -type f -print0 | xargs -0 chmod 644; \
+      find ${HOME}/.${fdir} -type d -print0 | xargs -0 chmod 755; \
+    done && \
     find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f; do \
       chmod 755 $f; \
     done && \
