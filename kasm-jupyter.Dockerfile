@@ -99,7 +99,6 @@ RUN bash -c "source /opt/anaconda3/bin/activate \
     git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
     $HOME/.fzf/install && \
     sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.bash && \
-    sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.zsh && \
     git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus && \
     tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config && \
     rm -f ${HOME}/.config/obsidian.tar.gz && \
