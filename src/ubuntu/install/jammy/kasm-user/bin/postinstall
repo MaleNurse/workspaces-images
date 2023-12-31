@@ -23,12 +23,23 @@ umask 022
 sleep 5
 notify-send -u critical "One-time Ubuntu Jammy Desktop Configuration"
 
-LOGDIR="$HOME/logs"
+notify-send "Installing nvm node version manager"
 
-#xfconf-query -c xsettings -p /Gtk/FontName -s "JetBrainsMono Nerd Font"
-#xfconf-query -c xsettings -p /Gtk/MonospaceFontName -s "JetBrainsMono Nerd Font Mono"
+export NVM_DIR="/home/kasm-user/.nvm"
+export NODE_VERSION="20.9.0"
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+. ${NVM_DIR}/nvm.sh
+nvm install ${NODE_VERSION}
+nvm alias default ${NODE_VERSION}
+nvm use default
 
-notify-send "Installing Kitty terminal emulator"
+export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
+export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
+
+rm -f $HOME/.config/autostart/postinstall.desktop
+
+notify-send "Installing Desktop entries and fixing permissions"
+
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
@@ -45,24 +56,6 @@ notify-send "Installing Kitty terminal emulator"
   cp $HOME/.local/share/icons/hicolor/32x32/apps/kitty.png \
      $HOME/.local/kitty.app/lib/kitty/logo/kitty.png
 }
-
-notify-send "Installing nvm node version manager"
-
-export NVM_DIR="/home/kasm-user/.nvm"
-export NODE_VERSION="20.9.0"
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-. ${NVM_DIR}/nvm.sh
-nvm install ${NODE_VERSION} > ${LOGDIR}/install-wing.log 2>&1
-nvm alias default ${NODE_VERSION}
-nvm use default
-
-export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
-export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
-
-rm -f $HOME/.config/autostart/postinstall.desktop
-
-notify-send "Installing Desktop entries and fixing permissions"
-
 [ -f $HOME/.local/share/applications/btop.desktop ] && {
   cp $HOME/.local/share/applications/btop.desktop \
      $HOME/Desktop/btop.desktop
