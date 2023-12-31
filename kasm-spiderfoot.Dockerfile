@@ -38,12 +38,27 @@ RUN \
   rm -f /etc/X11/xinit/Xclients && \
   chown 1000:0 $HOME && \
   mkdir -p /home/kasm-user && \
-  chown -R 1000:0 /home/kasm-user && \
-  rm -Rf ${INST_DIR}
+  chown -R 1000:0 /home/kasm-user
 
 # Userspace Runtime
+ENV HOME /home/kasm-default-profile
+ENV PATH "$HOME/bin:$HOME/.local/bin:$PATH"
+WORKDIR $HOME
+USER 1000
+
+RUN bash ${INST_DIR}/ubuntu/install/focal/install_user_utils.sh
+
+######### End Customizations ###########
+
+USER root
+
+RUN update-desktop-database && \
+    rm -Rf ${INST_DIR}
+
 ENV HOME /home/kasm-user
 WORKDIR $HOME
+RUN mkdir -p $HOME && chown -R 1000:0 $HOME
+
 USER 1000
 
 CMD ["--tail-log"]

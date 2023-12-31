@@ -23,8 +23,6 @@ umask 022
 sleep 5
 notify-send -u critical "One-time AppImage Launcher Desktop Configuration"
 
-LOGDIR="${HOME}/logs"
-
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png \
      ${HOME}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -48,7 +46,7 @@ export NVM_DIR="/home/kasm-user/.nvm"
 export NODE_VERSION="20.9.0"
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 . ${NVM_DIR}/nvm.sh
-nvm install ${NODE_VERSION} > ${LOGDIR}/install-node.log 2>&1
+nvm install ${NODE_VERSION}
 nvm alias default ${NODE_VERSION}
 nvm use default
 

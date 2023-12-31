@@ -134,6 +134,7 @@ apt-get install -y khard
 apt-get install -y exuberant-ctags
 apt-get install -y build-essential
 apt-get install -y git
+apt-get install -y file
 apt-get install -y mplayer
 apt-get install -y bsdgames
 apt-get install -y greed
