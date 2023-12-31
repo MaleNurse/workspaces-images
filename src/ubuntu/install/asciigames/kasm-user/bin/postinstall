@@ -70,25 +70,9 @@ notify-send "Installing Desktop entries and fixing permissions"
 }
 
 # Correct permissions/ownership
-for cdir in ${HOME}/.config/*
-do
-  [ "${cdir}" == "${HOME}/.config/*" ] && continue
-  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
-  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
-  find ${cdir} -type f | xargs chmod 644
-done
-chmod 600 ${HOME}/.config/user-dirs.*
-chmod 755 ${HOME}/.cargo
-for nss in ${HOME}/.pki/nssdb/*
-do
-  [ "${nss}" == "${HOME}/.pki/nssdb/*" ] && continue
-  [ -d "${nss}" ] && chmod 700 "${nss}"
-  [ -f "${nss}" ] && chmod 600 "${nss}"
-done
-[ -f ${HOME}/.pki/nssdb/pkcs11.txt ] && {
-  cat ${HOME}/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
-  cp /tmp/k$$ ${HOME}/.pki/nssdb/pkcs11.txt
-  rm -f /tmp/k$$
+[ -f ${HOME}/bin/fix_permissions ] && {
+  chmod 755 ${HOME}/bin/fix_permissions
+  ${HOME}/bin/fix_permissions
 }
 
 rm -rf /home/kasm-default-profile/*

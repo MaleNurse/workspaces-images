@@ -1,0 +1,57 @@
+#!/bin/bash
+
+default_bg="${HOME}/.local/share/backgrounds/bg_default.png"
+custom_bg_dir="/usr/share/backgrounds"
+background=("Ascii-House.png" "Owl-01.png" "Owl-02.png" "Earth-Galaxy-Space.png" "Nebula-Carina-Space.png" "Beautiful-Beach.png" "Beautiful-Landscape.png" "Nature.png")
+use_bg=
+
+choose_background() {
+  TMP="$(mktemp)"
+  ranger --choosefile="${TMP}" \
+         --selectfile="${custom_bg_dir}/Ascii-House.png" \
+         "${custom_bg_dir}" 1>&2
+  cat ${TMP}
+  rm -f ${TMP}
+}
+
+choose=
+random=1
+while getopts ":c" flag; do
+  case $flag in
+    c)
+      choose=1
+      random=
+      ;;
+    \?)
+      echo "Invalid option: $flag"
+      usage
+      ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "$1" ] && [ -f "$1" ] && {
+  suffix=$(echo $1 | awk -F '.' '{ print $NF }')
+  [ "${suffix}" == "png" ] || [ "${suffix}" == "PNG" ] && {
+    random=
+    use_bg="$1"
+  }
+}
+
+# Seed random generator
+[ "${random}" ] && RANDOM=$$$(date +%s)
+
+[ "${use_bg}" ] || {
+  if [ "${choose}" ]; then
+    export TERM=xterm-kitty
+    use_bg="$(choose_background)"
+  else
+    use_bg=${custom_bg_dir}/${background[$RANDOM % ${#background[@]}]}
+  fi
+}
+
+[ -f ${use_bg} ] && {
+  rm -f ${default_bg}
+  cp ${use_bg} ${default_bg}
+  xfdesktop --reload
+}

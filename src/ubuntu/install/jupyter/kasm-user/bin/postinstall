@@ -21,7 +21,7 @@ umask 022
 }
 
 sleep 5
-notify-send -u critical "One-time Ubuntu Focal Desktop Configuration"
+notify-send -u critical "One-time Jupyter Desktop Configuration"
 
 notify-send "Installing nvm node version manager"
 
@@ -70,7 +70,7 @@ notify-send "Installing Desktop entries and fixing permissions"
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Ubuntu Focal desktop initialization complete!"
+notify-send "Jupyter desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
@@ -78,10 +78,4 @@ kill $(pgrep "notifyd")
 have_open=$(type -p exo-open)
 [ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
-}
-
-[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
-  /home/kasm-user/.local/kitty.app/bin/kitty \
-      --session /home/kasm-user/.config/kitty/sessions/startup \
-      --title 'Welcome to the Ubuntu 20.04 (Focal) Kasm workspace' 2> /dev/null &
 }

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# grep " install " /var/log/dpkg.log
+
+dpkgout="/tmp/dpkg$$.log"
+
+zcat -f /var/log/dpkg.log* | grep " install " | sort > ${dpkgout}
+
+grep -F "`comm -12 <(apt-mark showmanual | sort) <(cat ${dpkgout} | \
+  cut -d " " -sf4 | grep -o "^[^:]*" | sort)`" ${dpkgout} | grep \<none\>

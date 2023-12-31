@@ -1,0 +1,81 @@
+#!/bin/bash
+
+chmod 755 ${HOME}
+for rc in aliases bashrc zshrc
+do
+  [ -f ${HOME}/.${rc} ] && chmod 644 ${HOME}/.${rc}
+done
+for fdir in launchpadlib mozilla vim
+do
+  [ -d ${HOME}/.${fdir} ] && {
+    find ${HOME}/.${fdir} -type f -print0 | xargs -0 chmod 644
+    find ${HOME}/.${fdir} -type d -print0 | xargs -0 chmod 755
+  }
+done
+[ -d ${HOME}/.vim ] && {
+  find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
+  do
+    chmod 755 $f
+  done
+}
+find ${HOME}/.config -type d -print0 | xargs -0 chmod 755
+for cdir in ${HOME}/.config/*
+do
+  [ "${cdir}" == "${HOME}/.config/*" ] && continue
+  [ "${cdir}" == "${HOME}/.config/nvim-Lazyman" ] && continue
+  [ "${cdir}" == "${HOME}/.config/autostart" ] && continue
+  [ -d ${cdir} ] && {
+    find ${cdir} -type f -print0 | xargs -0 chmod 644
+  }
+done
+chmod 600 ${HOME}/.config/user-dirs.*
+[ -d ${HOME}/go ] && {
+  find ${HOME}/go -type d -print0 | xargs -0 chmod 755
+}
+[ -d ${HOME}/go/pkg ] && {
+  find ${HOME}/go/pkg -type f -print0 | xargs -0 chmod 644
+}
+chmod 755 ${HOME}/go/bin/*
+[ -d ${HOME}/.local ] && {
+  find ${HOME}/.local -type d -print0 | xargs -0 chmod 755
+}
+[ -d ${HOME}/.local/share/icons ] && {
+  find ${HOME}/.local/share/icons -type f -print0 | xargs -0 chmod 644
+}
+[ -d ${HOME}/.oh-my-zsh ] && {
+  find ${HOME}/.oh-my-zsh -type d -print0 | xargs -0 chmod 755
+  find ${HOME}/.oh-my-zsh -perm 666 -print0 | xargs -0 chmod 644
+  find ${HOME}/.oh-my-zsh -perm 777 -print0 | xargs -0 chmod 755
+}
+chmod 755 ${HOME}/.config/ranger/*.sh
+chmod 755 ${HOME}/Desktop
+chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/.local/share/applications/*.desktop
+chmod 755 ${HOME}/bin
+chmod 755 ${HOME}/bin/*
+chmod 755 ${HOME}/logs
+mkdir -p ${HOME}/.cache
+chmod 755 ${HOME}/.cache
+mkdir -p ${HOME}/.cache/mozilla
+chmod 755 ${HOME}/.cache/mozilla
+mkdir -p ${HOME}/.mozilla
+chmod 755 ${HOME}/.mozilla
+mkdir -p ${HOME}/.mozilla/firefox
+chmod 755 ${HOME}/.mozilla/firefox
+mkdir -p ${HOME}/.pki
+chmod 700 ${HOME}/.pki
+mkdir -p ${HOME}/.pki/nssdb
+chmod 700 ${HOME}/.pki/nssdb
+
+[ -d ${HOME}/.cargo ] && chmod 755 ${HOME}/.cargo
+for nss in ${HOME}/.pki/nssdb/*
+do
+  [ "${nss}" == "${HOME}/.pki/nssdb/*" ] && continue
+  [ -d "${nss}" ] && chmod 700 "${nss}"
+  [ -f "${nss}" ] && chmod 600 "${nss}"
+done
+[ -f ${HOME}/.pki/nssdb/pkcs11.txt ] && {
+  cat ${HOME}/.pki/nssdb/pkcs11.txt | sed -e "s/kasm-default-profile/kasm-user/g" > /tmp/k$$
+  cp /tmp/k$$ ${HOME}/.pki/nssdb/pkcs11.txt
+  rm -f /tmp/k$$
+}

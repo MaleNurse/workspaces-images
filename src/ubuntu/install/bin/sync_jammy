@@ -12,8 +12,14 @@ cd ${SCRIPT_PATH}/..
 # Some
 # for work in focal navidrome osint spiderfoot
 # ALL except jammy
-for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
+for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal jammy lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
 do
+  [ -d $work/kasm-user/bin ] || {
+    echo "$work/kasm-user/bin does not exist"
+    continue
+  }
+  cp /tmp/p $work/kasm-user/bin/fix_permissions
+  chmod 755 $work/kasm-user/bin/fix_permissions
 # [ -d $work/kasm-user/.config/neofetch ] || {
 #   cp -a jammy/kasm-user/.config/neofetch $work/kasm-user/.config/neofetch
 # }
@@ -54,12 +60,12 @@ do
 #    $work/kasm-user/Desktop/obsidian.desktop
 # cp jammy/kasm-user/.local/share/doc/*.md \
 #    $work/kasm-user/.local/share/doc
-  [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
-     echo "Missing rifle.conf in $work"
-     continue
-  }
-  cp jammy/kasm-user/.config/ranger/rifle.conf \
-     $work/kasm-user/.config/ranger/rifle.conf
+# [ -f $work/kasm-user/.config/ranger/rifle.conf ] || {
+#    echo "Missing rifle.conf in $work"
+#    continue
+# }
+# cp jammy/kasm-user/.config/ranger/rifle.conf \
+#    $work/kasm-user/.config/ranger/rifle.conf
 # [ -f $work/kasm-user/.config/ranger/rc.conf ] || {
 #    echo "Missing rc.conf in $work"
 #    continue
