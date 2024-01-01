@@ -38,6 +38,18 @@ nvm use default
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
 
+have_code=$(type -p code)
+[ "${have_code}" ] && {
+  notify-send "Installing Visual Studio Code C/C++ extensions"
+  code --install-extension ms-vscode.cpptools-extension-pack
+  notify-send "Installing Visual Studio Code Go extension"
+  code --install-extension golang.Go
+  notify-send "Installing Visual Studio Code Jupyter extension"
+  code --install-extension ms-toolsai.jupyter
+  notify-send "Installing Visual Studio Code solarized theme"
+  code --install-extension sherloach.solarized-osaka
+}
+
 notify-send "Installing Desktop entries and fixing permissions"
 
 [ -f ${HOME}/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
