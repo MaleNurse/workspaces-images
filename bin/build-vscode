@@ -1,0 +1,13 @@
+#!/bin/bash
+
+IMG_NAME="doctorwhen/kasm:vscode"
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd $(dirname "${SCRIPT_PATH}")
+
+sudo docker image rm ${IMG_NAME} 2>/dev/null
+
+sudo docker build --pull \
+                  --no-cache \
+                  -t ${IMG_NAME} \
+                  -f kasm-vscode.Dockerfile .
