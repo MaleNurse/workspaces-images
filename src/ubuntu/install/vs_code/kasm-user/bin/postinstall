@@ -21,7 +21,7 @@ umask 022
 }
 
 sleep 4
-notify-send -u critical "One-time Wing Desktop Configuration"
+notify-send -u critical "One-time VS-Code Desktop Configuration"
 
 LOGDIR="${HOME}/logs"
 
@@ -37,22 +37,6 @@ nvm use default
 
 export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
 export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
-
-notify-send "Installing Wing"
-
-have_npm=$(type -p npm)
-[ "${have_npm}" ] && npm -g install winglang > ${LOGDIR}/install-wing.log 2>&1
-
-notify-send "Cloning Wing examples into ${HOME}/Wing/"
-git clone https://github.com/winglang/examples.git \
-  ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
-
-notify-send "Installing Visual Studio Code Wing extension"
-# Install VS Code Wing extension
-have_code=$(type -p code)
-[ "${have_code}" ] && {
-  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
-}
 
 notify-send "Installing Desktop entries and fixing permissions"
 
@@ -90,15 +74,13 @@ notify-send "Installing Desktop entries and fixing permissions"
   chmod 755 ${HOME}/bin/fix_permissions
   ${HOME}/bin/fix_permissions
 }
-find ${HOME}/Wing -type f -print0 | xargs -0 chmod 644
-find ${HOME}/Wing -type d -print0 | xargs -0 chmod 755
 
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
-notify-send "Wing desktop initialization complete!"
+notify-send "VS-Code desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
@@ -106,10 +88,4 @@ kill $(pgrep "notifyd")
 have_open=$(type -p exo-open)
 [ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
-}
-
-[ -x /home/kasm-user/.local/kitty.app/bin/kitty ] && {
-  /home/kasm-user/.local/kitty.app/bin/kitty \
-      --session /home/kasm-user/.config/kitty/sessions/startup \
-      --title 'Welcome to the Wing Kasm workspace' 2> /dev/null &
 }

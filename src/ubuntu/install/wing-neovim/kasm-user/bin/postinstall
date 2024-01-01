@@ -158,7 +158,7 @@ rm -f ${HOME}/.config/autostart/postinstall.desktop
 rm -rf /home/kasm-default-profile/*
 rm -rf /home/kasm-default-profile/.??*
 
-notify-send "Wing desktop initialization and configuration complete!"
+notify-send "Wing desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")
