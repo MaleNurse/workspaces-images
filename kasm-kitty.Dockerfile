@@ -29,7 +29,6 @@ RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     rm -rf $INST_SCRIPTS/kitty/ && \
     rm -f $INST_SCRIPTS/install_kasm_user.sh && \
     chmod 755 $STARTUPDIR/custom_startup.sh && \
-    cp $HOME/.config/xfce4/xfconf/single-application-xfce-perchannel-xml/* $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/ && \
     cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
     rm -f $HOME/bin/postinstall && \
     rm -f $HOME/.config/autostart/postinstall.desktop && \
