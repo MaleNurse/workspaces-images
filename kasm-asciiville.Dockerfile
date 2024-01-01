@@ -36,17 +36,17 @@ RUN \
   chsh -s /bin/zsh kasm-user
 
 # Userspace Runtime
-#ENV HOME /home/kasm-default-profile
-#ENV PATH "$HOME/bin:$HOME/.local/bin:$PATH"
-#ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
-#WORKDIR $HOME
-#USER 1000
+ENV HOME /home/kasm-default-profile
+ENV PATH "$HOME/bin:$HOME/.local/bin:$PATH"
+ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
+WORKDIR $HOME
+USER 1000
 
-#RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
+RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
 
 ######### End Customizations ###########
 
-#USER root
+USER root
 
 RUN update-desktop-database && \
     rm -Rf ${INST_DIR}
