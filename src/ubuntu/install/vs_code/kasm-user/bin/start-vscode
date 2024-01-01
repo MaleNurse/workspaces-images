@@ -10,3 +10,5 @@ if [ "$1" ]; then
 else
   /usr/share/code/bin/code --no-sandbox --new-window > /dev/null 2>&1
 fi
+sleep 4
+center-active-window
