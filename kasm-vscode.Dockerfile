@@ -14,7 +14,8 @@ WORKDIR $HOME
 # Copy install scripts
 COPY ./src/ $INST_DIR
 
-RUN bash $INST_DIR/vs_code/install_vs_code.sh  && rm -rf $INST_DIR/vs_code/ && \
+RUN bash $INST_DIR/ubuntu/install/vs_code/install_vs_code.sh && \
+    rm -rf $INST_DIR/ubuntu/install/vs_code/ && \
     rm -rf ${HOME}/.mozilla && \
     bash $INST_DIR/ubuntu/install/install_kasm_user.sh vs_code && \
     cp /usr/share/backgrounds/Nebula-Carina-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
