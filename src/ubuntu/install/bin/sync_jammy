@@ -12,14 +12,14 @@ cd ${SCRIPT_PATH}/..
 # Some
 # for work in focal navidrome osint spiderfoot
 # ALL except jammy
-for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal jammy lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy neovim osint rclone spiderfoot wing wing-neovim
+for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy jupyter kitty neovim osint rclone spiderfoot vs_code wing wing-neovim
 do
   [ -d $work/kasm-user/bin ] || {
     echo "$work/kasm-user/bin does not exist"
     continue
   }
-  cp /tmp/p $work/kasm-user/bin/fix_permissions
-  chmod 755 $work/kasm-user/bin/fix_permissions
+  cp jammy/kasm-user/bin/install-kitty $work/kasm-user/bin/install-kitty
+  chmod 755 $work/kasm-user/bin/install-kitty
 # [ -d $work/kasm-user/.config/neofetch ] || {
 #   cp -a jammy/kasm-user/.config/neofetch $work/kasm-user/.config/neofetch
 # }

@@ -23,19 +23,6 @@ umask 022
 sleep 5
 notify-send -u critical "One-time Ubuntu Focal Desktop Configuration"
 
-notify-send "Installing nvm node version manager"
-
-export NVM_DIR="/home/kasm-user/.nvm"
-export NODE_VERSION="20.9.0"
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-. ${NVM_DIR}/nvm.sh
-nvm install ${NODE_VERSION}
-nvm alias default ${NODE_VERSION}
-nvm use default
-
-export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
-export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
-
 rm -f $HOME/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"

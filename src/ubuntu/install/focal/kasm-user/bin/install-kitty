@@ -2,6 +2,8 @@
 #
 
 LOCAL=".local/kitty.app"
+RHOME="/home/kasm-user"
+
 printf "\n\tInstalling Kitty terminal emulator ..."
 curl --silent --location \
   https://sw.kovidgoyal.net/kitty/installer.sh >/tmp/kitty-$$.sh
@@ -20,20 +22,21 @@ if [ -s /tmp/kitty-$$.sh ]; then
   [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
   if [ -x ~/${LOCAL}/bin/kitty ]; then
     [ -x ~/.local/bin/kitty ] || {
-      ln -s ~/${LOCAL}/bin/kitty ~/.local/bin/
+      ln -s ${RHOME}/${LOCAL}/bin/kitty ~/.local/bin/kitty
     }
   else
     printf "\nUnable to create Kitty link to ~/.local/bin/\n"
   fi
   # Link the kitty man pages somewhere it can be found by the man command
   LINMAN="${HOME}/${LOCAL}/share/man"
+  RINMAN="${RHOME}/${LOCAL}/share/man"
   [ -d ~/.local/share/man/man1 ] || mkdir -p ~/.local/share/man/man1
   [ -f ~/.local/share/man/man1/kitty.1 ] || {
     [ -d ${HOME}/.local/share/man/man1 ] || {
       mkdir -p ${HOME}/.local/share/man/man1
     }
     [ -f "${LINMAN}/man1/kitty.1" ] && {
-      ln -s "${LINMAN}/man1/kitty.1" ~/.local/share/man/man1/
+      ln -s "${RINMAN}/man1/kitty.1" ~/.local/share/man/man1/
     }
   }
   [ -d ~/.local/share/man/man5 ] || mkdir -p ~/.local/share/man/man5
@@ -42,7 +45,7 @@ if [ -s /tmp/kitty-$$.sh ]; then
       mkdir -p ${HOME}/.local/share/man/man5
     }
     [ -f "${LINMAN}/man5/kitty.conf.5" ] && {
-      ln -s "${LINMAN}/man5/kitty.conf.5" ~/.local/share/man/man5/
+      ln -s "${RINMAN}/man5/kitty.conf.5" ~/.local/share/man/man5/
     }
   }
   # Place the kitty.desktop file somewhere it can be found by the OS

@@ -13,6 +13,7 @@ WORKDIR $HOME
 
 COPY ./src/ubuntu/install/chrome $INST_DIR/chrome/
 COPY ./src/ubuntu/install/edge $INST_DIR/edge/
+COPY ./src/ubuntu/install/focal $INST_DIR/focal/
 COPY ./src/ubuntu/install/jupyter $INST_DIR/jupyter/
 COPY ./src/ubuntu/install/install_kasm_user.sh $INST_DIR/
 
@@ -74,8 +75,7 @@ RUN apt-get update && apt-get install -y \
     && rm -f $HOME/bin/postinstall \
     && rm -f $HOME/.config/autostart/postinstall.desktop \
     && chown -R 1000:0 $HOME \
-    && chsh -s /bin/bash kasm-user \
-    && rm -rf $INST_DIR/
+    && chsh -s /bin/bash kasm-user
 
 COPY ./src/ubuntu/install/jupyter/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
 
@@ -90,63 +90,15 @@ RUN bash -c "source /opt/anaconda3/bin/activate \
         pgeocode \
     && conda install -c conda-forge \
         basemap \
-        matplotlib" && \
-    chmod 755 ${HOME}/bin/install-kitty && \
-    ${HOME}/bin/install-kitty && \
-    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash && \
-    python3 -m pip install --user Pillow && \
-    python3 -m pip install --user Pygments && \
-    git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
-    $HOME/.fzf/install && \
-    sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.bash && \
-    git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus && \
-    tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config && \
-    rm -f ${HOME}/.config/obsidian.tar.gz && \
-    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus && \
-    rm -f ${HOME}/.config/dotobsidian.tar.gz && \
-    rm -f ${HOME}/.config/_obs-cli && \
-    xdg-mime default obsidian.desktop x-scheme-handler/obsidian && \
-    /usr/local/bin/obs-cli set-default cheat-sheets-plus && \
-    vim +PlugInstall +qall && \
-    chmod 755 ${HOME} && \
-    chmod 644 ${HOME}/.aliases ${HOME}/.bashrc && \
-    find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f; do \
-      chmod 755 $f; \
-    done && \
-    find ${HOME}/.config -type d -print0 | xargs -0 chmod 755 && \
-    for cdir in ${HOME}/.config/*; do \
-      find ${cdir} -type f -print0 | xargs -0 chmod 644; \
-    done && \
-    find ${HOME}/go -type d -print0 | xargs -0 chmod 755 && \
-    find ${HOME}/go/pkg -type f -print0 | xargs -0 chmod 644 && \
-    chmod 755 ${HOME}/go/bin/* && \
-    find ${HOME}/.local -type d -print0 | xargs -0 chmod 755 && \
-    find ${HOME}/.local/share/icons -type f -print0 | xargs -0 chmod 644 && \
-    chmod 755 ${HOME}/.config/ranger/*.sh && \
-    chmod 755 ${HOME}/Desktop && \
-    chmod 755 ${HOME}/Desktop/* && \
-    chmod 755 ${HOME}/.local/share/applications/*.desktop && \
-    chmod 755 ${HOME}/bin && \
-    chmod 755 ${HOME}/bin/* && \
-    chmod 755 ${HOME}/logs && \
-    mkdir -p ${HOME}/.cache && \
-    chmod 755 ${HOME}/.cache && \
-    mkdir -p ${HOME}/.cache/mozilla && \
-    chmod 755 ${HOME}/.cache/mozilla && \
-    mkdir -p ${HOME}/.mozilla && \
-    chmod 755 ${HOME}/.mozilla && \
-    mkdir -p ${HOME}/.mozilla/firefox && \
-    chmod 755 ${HOME}/.mozilla/firefox && \
-    mkdir -p ${HOME}/.pki && \
-    chmod 700 ${HOME}/.pki && \
-    mkdir -p ${HOME}/.pki/nssdb && \
-    chmod 700 ${HOME}/.pki/nssdb
+        matplotlib"
+
+RUN bash ${INST_DIR}/focal/install_user_utils.sh
 
 ######### End Customizations ###########
 
 USER root
 
-RUN update-desktop-database
+RUN update-desktop-database && rm -rf $INST_DIR/
 
 ENV HOME /home/kasm-user
 WORKDIR $HOME

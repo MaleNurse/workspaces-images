@@ -44,19 +44,6 @@ LOGDIR="${HOME}/logs"
      ${HOME}/Desktop/kitty.desktop
 }
 
-notify-send "Installing nvm node version manager"
-
-export NVM_DIR="/home/kasm-user/.nvm"
-export NODE_VERSION="20.9.0"
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-. ${NVM_DIR}/nvm.sh
-nvm install ${NODE_VERSION}
-nvm alias default ${NODE_VERSION}
-nvm use default
-
-export NODE_PATH="${NVM_DIR}/v${NODE_VERSION}/lib/node_modules"
-export PATH="${NVM_DIR}/v${NODE_VERSION}/bin:${PATH}"
-
 # Try to install Neovim and Neovide
 have_nvim=$(type -p nvim)
 have_neov=$(type -p neovide)
