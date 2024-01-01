@@ -74,6 +74,7 @@ RUN apt-get update && apt-get install -y \
     && rm -f $HOME/bin/postinstall \
     && rm -f $HOME/.config/autostart/postinstall.desktop \
     && chown -R 1000:0 $HOME \
+    && chsh -s /bin/bash kasm-user \
     && rm -rf $INST_DIR/
 
 COPY ./src/ubuntu/install/jupyter/post_run_root.sh /dockerstartup/kasm_post_run_root.sh
