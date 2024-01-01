@@ -106,6 +106,8 @@ fi
 apt-get update
 apt-get upgrade -y
 apt-get install -y apt-utils
+add-apt-repository universe
+apt-get update
 apt-get install -y curl
 apt-get install -y jq
 apt-get install -y g++
@@ -145,6 +147,9 @@ apt-get install -y tmux
 apt-get install -y w3m
 apt-get install -y asciinema
 apt-get install -y gnupg
+apt-get install -y gnome-shell-extensions
+apt-get install -y gnome-tweak-tool
+apt-get install -y chrome-gnome-shell
 apt-get install -y zip
 apt-get install -y imagemagick
 apt-get install -y cmatrix
@@ -153,6 +158,7 @@ apt-get install -y newsboat
 apt-get install -y neofetch
 apt-get install -y ca-certificates
 apt-get install -y ubuntu-desktop
+apt install $(apt search gnome-shell-extension | grep ^gnome | cut -d / -f1)
 
 install_go
 install_lsd
