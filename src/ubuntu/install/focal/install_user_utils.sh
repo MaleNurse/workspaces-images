@@ -40,6 +40,8 @@ do
     find ${HOME}/.${fdir} -type d -print0 | xargs -0 chmod 755
   }
 done
+find ${HOME}/Documents -type f -print0 | xargs -0 chmod 644
+find ${HOME}/Documents -type d -print0 | xargs -0 chmod 755
 [ -d ${HOME}/.vim ] && {
   find ${HOME}/.vim -type f -print0 | xargs -0 grep -l /usr/bin/env | while read f
   do

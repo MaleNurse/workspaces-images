@@ -82,5 +82,5 @@ have_open=$(type -p exo-open)
 }
 
 [ -x /home/kasm-user/bin/open-markdown ] && {
-  /home/kasm-user/bin/open-markdown kasm/workspaces 2> /dev/null &
+  /home/kasm-user/bin/open-markdown kasm/asciigames 2> /dev/null &
 }

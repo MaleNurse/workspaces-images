@@ -40,10 +40,13 @@ $HOME/.fzf/install
 sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.bash
 sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.zsh
 git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
+git clone https://github.com/doctorfree/Pokedex-Markdown.git ${HOME}/Documents/Pokedex-Markdown
 tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
 rm -f ${HOME}/.config/obsidian.tar.gz
 tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
 rm -f ${HOME}/.config/dotobsidian.tar.gz
+tar xzf ${HOME}/.config/pokedex-markdown.tar.gz -C ${HOME}/Documents/Pokedex-Markdown
+rm -f ${HOME}/.config/pokedex-markdown.tar.gz
 mkdir -p ${HOME}/.oh-my-zsh/completions
 cp ${HOME}/.config/_obs-cli ${HOME}/.oh-my-zsh/completions/_obs-cli
 rm -f ${HOME}/.config/_obs-cli
