@@ -5,7 +5,7 @@ export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 umask 022
 
 sleep 5
-notify-send -u critical "One-time Jupyter Desktop Configuration"
+notify-send -u critical "One-time Kitty Desktop Configuration"
 
 rm -f $HOME/.config/autostart/postinstall.desktop
 
@@ -38,7 +38,7 @@ notify-send "Installing Desktop entries and fixing permissions"
   ${HOME}/bin/fix_permissions
 }
 
-notify-send "Jupyter desktop initialization complete!"
+notify-send "Kitty desktop initialization complete!"
 sleep 5
 
 kill $(pgrep "notifyd")

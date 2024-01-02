@@ -20,8 +20,7 @@ cd $(dirname "${SCRIPT_PATH}")
 
 PATH_PRIVS=$(dirname ${SCRIPT_PATH})
 PATH_PRIVS="${PATH_PRIVS}/src/ubuntu/install"
-PRIVS="${PATH_PRIVS}/asciigames/install_tools_asciigames.sh \
-       ${PATH_PRIVS}/asciigames/kasm-user/.config/autostart/postinstall.desktop"
+PRIVS="${PATH_PRIVS}/asciigames/install_tools_asciigames.sh"
 for priv in ${PRIVS}
 do
   [ -f ${priv} ] && {

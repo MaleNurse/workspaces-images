@@ -4,22 +4,6 @@ export HOME="/home/kasm-user"
 export PATH="${HOME}/bin:${HOME}/.local/bin:$PATH"
 umask 022
 
-# Do we have a Github API token?
-[ "${GH_TOKEN}" ] || {
-  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  [ "${GH_TOKEN}" ] || {
-    [ -f ${HOME}/.private ] && source ${HOME}/.private
-    [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  }
-}
-[ "${GH_TOKEN}" ] && {
-  # Check to make sure
-  echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
-    # It didn't get set right, unset it
-    export GH_TOKEN=
-  }
-}
-
 sleep 5
 notify-send -u critical "One-time LM Studio Desktop Initialization"
 
@@ -58,29 +42,6 @@ llm aliases set wizard wizardlm-13b-v1
 llm aliases set hermes nous-hermes-llama2-13b
 llm aliases set starcoder starcoder-q4_0
 
-#notify-send "Installing AI Messenger LLM GUI"
-#git clone https://github.com/shinomakoi/AI-Messenger > ${LOGDIR}/install-messenger.log 2>&1
-#[ -d AI-Messenger ] && {
-#  cd AI-Messenger
-#  python3 -m venv .venv
-#  source ./.venv/bin/activate
-#  python3 -m pip install -r requirements.txt >> ${LOGDIR}/install-messenger.log 2>&1
-#  [ -d presets/Cards ] && {
-#    cd presets/Cards
-#    for card in ../../../.local/share/cards/*.png
-#    do
-#      [ "${card}" == "../../../.local/share/cards/*.png" ] && continue
-#      ln -s ${card} .
-#    done
-#    cd ../..
-#  }
-#  cd ..
-#  [ -f ${HOME}/.local/share/applications/messenger.desktop ] && {
-#    cp ${HOME}/.local/share/applications/messenger.desktop \
-#       ${HOME}/Desktop/messenger.desktop
-#  }
-#}
-
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 
 notify-send "Installing Desktop entries and fixing permissions"
@@ -115,9 +76,6 @@ notify-send "Installing Desktop entries and fixing permissions"
   chmod 755 ${HOME}/bin/fix_permissions
   ${HOME}/bin/fix_permissions
 }
-
-rm -rf /home/kasm-default-profile/*
-rm -rf /home/kasm-default-profile/.??*
 
 [ -d ${HOME}/Applications ] || mkdir -p ${HOME}/Applications
 chmod 755 ${HOME}/Applications

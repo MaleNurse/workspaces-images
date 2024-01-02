@@ -29,8 +29,6 @@ COPY ./src/ubuntu/install/kitty/custom_startup.sh $STARTUPDIR/custom_startup.sh
 RUN bash $INST_SCRIPTS/install_kasm_user.sh kitty && \
     chmod 755 $STARTUPDIR/custom_startup.sh && \
     cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
-    rm -f $HOME/bin/postinstall && \
-    rm -f $HOME/.config/autostart/postinstall.desktop && \
     chown 1000:0 $HOME && \
     $STARTUPDIR/set_user_permission.sh $HOME
 

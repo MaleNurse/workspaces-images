@@ -4,22 +4,6 @@ export HOME="/home/kasm-user"
 export PATH="${HOME}/bin:${HOME}/.local/bin:$PATH"
 umask 022
 
-# Do we have a Github API token?
-[ "${GH_TOKEN}" ] || {
-  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  [ "${GH_TOKEN}" ] || {
-    [ -f ${HOME}/.private ] && source ${HOME}/.private
-    [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  }
-}
-[ "${GH_TOKEN}" ] && {
-  # Check to make sure
-  echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
-    # It didn't get set right, unset it
-    export GH_TOKEN=
-  }
-}
-
 sleep 4
 notify-send -u critical "Cloud Storage Desktop Configuration"
 
@@ -64,9 +48,6 @@ notify-send "Installing Desktop entries and fixing permissions"
   ${HOME}/bin/fix_permissions
 }
 chmod 600 $HOME/.config/rclone/rclone.conf
-
-rm -rf /home/kasm-default-profile/*
-rm -rf /home/kasm-default-profile/.??*
 
 rm -f ${HOME}/.config/autostart/postinstall.desktop
 

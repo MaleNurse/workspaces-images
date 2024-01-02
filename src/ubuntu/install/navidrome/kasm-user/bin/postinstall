@@ -26,27 +26,6 @@ notify-send -u critical "Initializing Navidrome, please be patient"
 
 LOGDIR="$HOME/logs"
 
-notify-send "Installing JetBrainsMono Nerd Font"
-FONT_FILES=".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
-            .config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml \
-            .config/xfce4/terminal/terminalrc"
-for font_file in ${FONT_FILES}
-do
-  [ -f ${HOME}/${font_file}-jb ] && mv ${HOME}/${font_file}-jb ${HOME}/${font_file}
-done
-xfce4-panel -r
-xfconf-query -c xsettings -p /Gtk/FontName -s "JetBrainsMono Nerd Font"
-xfconf-query -c xsettings -p /Gtk/MonospaceFontName -s "JetBrainsMono Nerd Font Mono"
-
-notify-send "Installing Kitty terminal emulator"
-# Install Kitty terminal emulator
-have_kitty=$(type -p kitty)
-[ "${have_kitty}" ] || {
-  [ -x $HOME/bin/install-kitty ] && {
-    ${HOME}/bin/install-kitty > ${LOGDIR}/install-kitty.log 2>&1
-  }
-}
-
 [ -f $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png ] && {
   cp $HOME/.local/share/icons/hicolor/256x256/apps/kitty.png \
      $HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png
@@ -62,68 +41,6 @@ have_kitty=$(type -p kitty)
 [ -f $HOME/.local/share/applications/kitty.desktop ] && {
   cp $HOME/.local/share/applications/kitty.desktop \
      $HOME/Desktop/kitty.desktop
-}
-
-notify-send "Installing zoxide smart cd command"
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-
-notify-send "Installing Pillow and Pygments"
-python3 -m pip install --user Pillow > ${LOGDIR}/install-python.log 2>&1
-python3 -m pip install --user Pygments >> ${LOGDIR}/install-python.log 2>&1
-
-notify-send "Installing Obsidian Cheat Sheets Vault"
-git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
-[ -f ${HOME}/.config/obsidian.tar.gz ] && {
-  tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
-  rm -f ${HOME}/.config/obsidian.tar.gz
-}
-[ -f ${HOME}/.config/dotobsidian.tar.gz ] && {
-  [ -d ${HOME}/Documents/cheat-sheets-plus ] && {
-    tar xzf ${HOME}/.config/dotobsidian.tar.gz -C ${HOME}/Documents/cheat-sheets-plus
-  }
-  rm -f ${HOME}/.config/dotobsidian.tar.gz
-}
-[ -f ${HOME}/.config/_obs-cli ] && {
-  [ -d ${HOME}/.oh-my-zsh/completions ] || mkdir -p ${HOME}/.oh-my-zsh/completions
-  cp ${HOME}/.config/_obs-cli ${HOME}/.oh-my-zsh/completions/_obs-cli
-  rm -f ${HOME}/.config/_obs-cli
-}
-# Register the mime type with XDG
-xdg-mime default obsidian.desktop x-scheme-handler/obsidian
-sudo update-desktop-database
-# Set the default vault for the obsidian command line utility
-[ -x /usr/local/bin/obs-cli ] && {
-  /usr/local/bin/obs-cli set-default cheat-sheets-plus > /dev/null 2>&1
-}
-
-notify-send "Installing Vim plugins"
-vim +PlugInstall +qall > /dev/null 2>&1
-
-notify-send "Installing fzf fuzzy finder"
-if [ "${GH_TOKEN}" ]; then
-  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
-else
-  AUTH_HEADER=
-fi
-API_URL="https://api.github.com/repos/junegunn/fzf/releases/latest"
-DL_URL=
-DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
-    | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "linux_amd64\.tar\.gz")
-
-[ "${DL_URL}" ] && {
-  TEMP_TGZ="$(mktemp --suffix=.tgz)"
-  wget --quiet -O "${TEMP_TGZ}" "${DL_URL}"
-  chmod 644 "${TEMP_TGZ}"
-  mkdir -p /tmp/fzft$$
-  tar -C /tmp/fzft$$ -xzf "${TEMP_TGZ}"
-  [ -f /tmp/fzft$$/fzf ] && {
-    [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
-    cp /tmp/fzft$$/fzf ${HOME}/.local/bin/fzf
-    chmod 755 ${HOME}/.local/bin/fzf
-  }
-  rm -f "${TEMP_TGZ}"
-  rm -rf /tmp/fzft$$
 }
 
 notify-send "Initializing MusicPlayerPlus"

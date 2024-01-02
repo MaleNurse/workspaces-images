@@ -4,22 +4,6 @@ export HOME="/home/kasm-user"
 export PATH="${HOME}/bin:${HOME}/.local/bin:$PATH"
 umask 022
 
-# Do we have a Github API token?
-[ "${GH_TOKEN}" ] || {
-  [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  [ "${GH_TOKEN}" ] || {
-    [ -f ${HOME}/.private ] && source ${HOME}/.private
-    [ "${GH_API_TOKEN}" ] && export GH_TOKEN="${GH_API_TOKEN}"
-  }
-}
-[ "${GH_TOKEN}" ] && {
-  # Check to make sure
-  echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
-    # It didn't get set right, unset it
-    export GH_TOKEN=
-  }
-}
-
 sleep 5
 notify-send -u critical "One-time AppImage Launcher Desktop Configuration"
 
@@ -62,9 +46,6 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -d ${HOME}/Applications ] || mkdir -p ${HOME}/Applications
 chmod 755 ${HOME}/Applications
 chmod 755 ${HOME}/Applications/*
-
-rm -rf /home/kasm-default-profile/*
-rm -rf /home/kasm-default-profile/.??*
 
 notify-send "AppImage Launcher desktop initialization complete!"
 sleep 5

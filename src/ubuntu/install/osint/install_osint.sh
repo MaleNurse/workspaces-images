@@ -17,11 +17,6 @@ chown 1000:1000 /usr/share/applications/maltego.desktop
 cp /usr/share/applications/maltego.desktop $HOME/Desktop/
 chmod 755 $HOME/Desktop/maltego.desktop
 
-# SPIDERFOOT_HOME=$HOME/spiderfoot
-# mkdir -p $SPIDERFOOT_HOME
-# cd $SPIDERFOOT_HOME
-# wget https://github.com/smicallef/spiderfoot/archive/v4.0.tar.gz
-# tar zxvf v4.0.tar.gz
 cd $HOME
 git clone https://github.com/smicallef/spiderfoot.git
 cd spiderfoot
