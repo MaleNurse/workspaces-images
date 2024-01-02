@@ -5,11 +5,14 @@ export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 export NVM_DIR="$HOME/.nvm"
 
+rm -rf ${NVM_DIR}
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-. ${NVM_DIR}/nvm.sh
-nvm install --lts
-nvm alias default node
-nvm use default
+[ -f ${NVM_DIR}/nvm.sh ] && {
+  . ${NVM_DIR}/nvm.sh
+  nvm install -b --lts
+  nvm alias default node
+  nvm use default
+}
 
 sh -c \
   "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \

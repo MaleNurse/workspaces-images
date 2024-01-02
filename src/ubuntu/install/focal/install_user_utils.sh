@@ -4,11 +4,14 @@ export HOME=/home/kasm-default-profile
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 
+rm -rf ${NVM_DIR}
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-. ${NVM_DIR}/nvm.sh
-nvm install --lts
-nvm alias default node
-nvm use default
+[ -f ${NVM_DIR}/nvm.sh ] && {
+  . ${NVM_DIR}/nvm.sh
+  nvm install -b --lts
+  nvm alias default node
+  nvm use default
+}
 
 /usr/local/go/bin/go install github.com/charmbracelet/glow@latest
 chmod 755 ${HOME}/bin/install-kitty
