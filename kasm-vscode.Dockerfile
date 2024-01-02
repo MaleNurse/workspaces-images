@@ -15,9 +15,9 @@ WORKDIR $HOME
 COPY ./src/ $INST_DIR
 
 RUN bash $INST_DIR/ubuntu/install/vs_code/install_vs_code.sh && \
-    rm -rf $INST_DIR/ubuntu/install/vs_code/ && \
     rm -rf ${HOME}/.mozilla && \
     bash $INST_DIR/ubuntu/install/install_kasm_user.sh vs_code && \
+    rm -rf $INST_DIR/ubuntu/install/vs_code/ && \
     cp /usr/share/backgrounds/Earth-Galaxy-Space.png \
        $HOME/.local/share/backgrounds/bg_default.png && \
     $STARTUPDIR/set_user_permission.sh $HOME && \
