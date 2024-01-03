@@ -40,19 +40,22 @@ COPY ./src/ $INST_DIR
 # Run installations
 RUN \
   sed -i 's/ubuntu-mono-dark/elementary-xfce/g' $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml && \
+  rm -rf ${INST_DIR}/ubuntu/install/backgrounds && \
+  wget -O /tmp/backgrounds.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/backgrounds/backgrounds.tar.gz && \
+  tar xzf /tmp/backgrounds.tar.gz -C ${INST_DIR}/ubuntu/install && \
+  rm -f /tmp/backgrounds.tar.gz && \
   rm -rf ${INST_DIR}/ubuntu/install/obsidian && \
   wget -O /tmp/obsidian.tar.gz \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
-  tar xzf /tmp/obsidian.tar.gz \
-    -C ${INST_DIR}/ubuntu/install && \
+  tar xzf /tmp/obsidian.tar.gz -C ${INST_DIR}/ubuntu/install && \
   rm -f /tmp/obsidian.tar.gz && \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
   wget -O /tmp/fonts.tar.gz \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
-  tar xzf /tmp/fonts.tar.gz \
-    -C /usr/share/fonts && \
+  tar xzf /tmp/fonts.tar.gz -C /usr/share/fonts && \
   rm -f /tmp/fonts.tar.gz && \
   fc-cache -f && \
   rm -rf ${HOME}/.mozilla && \
