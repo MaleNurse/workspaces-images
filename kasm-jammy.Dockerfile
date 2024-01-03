@@ -40,6 +40,12 @@ COPY ./src/ $INST_DIR
 
 # Run installations
 RUN \
+  rm -rf ${INST_DIR}/ubuntu/install/obsidian && \
+  wget -O /tmp/obsidian.tar.gz \
+    https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
+  tar xzf /tmp/obsidian.tar.gz \
+    -C ${INST_DIR}/ubuntu/install && \
+  rm -f /tmp/obsidian.tar.gz && \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
