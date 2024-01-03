@@ -50,6 +50,7 @@ chmod 755 ${HOME}/go/bin/*
 chmod 755 ${HOME}/.config/ranger/*.sh
 chmod 755 ${HOME}/Desktop
 chmod 755 ${HOME}/Desktop/*
+chmod 755 ${HOME}/.config/autostart/*.desktop
 chmod 755 ${HOME}/.local/share/applications/*.desktop
 chmod 755 ${HOME}/bin
 chmod 755 ${HOME}/bin/*

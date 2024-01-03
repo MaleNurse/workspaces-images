@@ -39,6 +39,12 @@ notify-send "Installing Desktop entries and fixing permissions"
   cp $HOME/.local/share/applications/btop.desktop \
      $HOME/Desktop/btop.desktop
 }
+[ -f $HOME/.local/share/applications/games.desktop ] && {
+  cp $HOME/.local/share/applications/games.desktop \
+     $HOME/Desktop/games.desktop
+  cp $HOME/.local/share/applications/games.desktop \
+     $HOME/.config/autostart/games.desktop
+}
 
 # Correct permissions/ownership
 [ -f ${HOME}/bin/fix_permissions ] && {
@@ -60,8 +66,4 @@ have_open=$(type -p exo-open)
   /home/kasm-user/.local/kitty.app/bin/kitty \
       --session /home/kasm-user/.config/kitty/sessions/startup \
       --title 'Welcome to the Ascii Games Kasm workspace' 2> /dev/null &
-}
-
-[ -x /home/kasm-user/bin/open-markdown ] && {
-  /home/kasm-user/bin/open-markdown kasm/asciigames 2> /dev/null &
 }

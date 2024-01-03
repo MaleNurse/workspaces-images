@@ -42,6 +42,8 @@ notify-send "Installing Desktop entries and fixing permissions"
 [ -f ${HOME}/.local/share/applications/code.desktop ] && {
   cp ${HOME}/.local/share/applications/code.desktop \
      ${HOME}/Desktop/code.desktop
+  cp ${HOME}/.local/share/applications/code.desktop \
+     ${HOME}/.config/autostart/code.desktop
 }
 [ -f $HOME/.local/share/applications/btop.desktop ] && {
   cp $HOME/.local/share/applications/btop.desktop \
@@ -69,3 +71,5 @@ have_open=$(type -p exo-open)
 [ -f /etc/xdg/autostart/xfce4-notifyd.desktop ] && {
   [ "${have_open}" ] && exo-open /etc/xdg/autostart/xfce4-notifyd.desktop
 }
+
+[ -x /home/kasm-user/bin/start-vscode ] && /home/kasm-user/bin/start-vscode
