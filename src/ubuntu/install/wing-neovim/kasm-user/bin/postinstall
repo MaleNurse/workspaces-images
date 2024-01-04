@@ -52,11 +52,17 @@ notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
 
-notify-send "Installing Visual Studio Code Wing extension"
-# Install VS Code Wing extension
+# Install VS Code extensions
 have_code=$(type -p code)
 [ "${have_code}" ] && {
-  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
+  notify-send "Installing Visual Studio Code Wing extension"
+  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-extensions.log 2>&1
+  notify-send "Installing Visual Studio Code C/C++ extensions"
+  code --install-extension ms-vscode.cpptools-extension-pack >> ${LOGDIR}/vscode-extensions.log 2>&1
+  notify-send "Installing Visual Studio Code Go extension"
+  code --install-extension golang.Go >> ${LOGDIR}/vscode-extensions.log 2>&1
+  notify-send "Installing Visual Studio Code solarized theme"
+  code --install-extension sherloach.solarized-osaka >> ${LOGDIR}/vscode-extensions.log 2>&1
 }
 
 # Try to install Neovim and Neovide

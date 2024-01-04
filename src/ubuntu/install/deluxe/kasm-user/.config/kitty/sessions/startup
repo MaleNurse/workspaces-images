@@ -2,22 +2,14 @@
 #
 # Kitty tab with Neofetch
 new_tab
-launch --env SHELL="/bin/zsh" --hold zsh -c "neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/neovim-hicontrast.png"
+launch --env SHELL="/bin/zsh" --hold zsh -c "neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/512x512/apps/deluxe.png"
 launch center-active-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
-# Kitty tab for Spiderfoot
-new_tab SpiderFoot
-cd ~/spiderfoot
-launch zsh
-enabled_layouts tall:bias=50;full_size=1
-layout tall
-
-# Kitty tab for Wing development
-new_tab Wing
-cd ~/Wing
-launch zsh
+# Kitty tab for Btop
+new_tab Btop
+launch btop
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 

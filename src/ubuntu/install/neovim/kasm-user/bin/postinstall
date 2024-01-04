@@ -117,23 +117,27 @@ rm -rf /home/kasm-default-profile/.??*
 
 notify-send "Neovim desktop initialization complete!"
 
-have_lazyman=$(type -p lazyman)
+[ -d $HOME/.nvm ] && {
+  export NVM_DIR="$HOME/.nvm"
+  [ -s $NVM_DIR/nvm.sh ] && . ${NVM_DIR}/nvm.sh
+}
+
+have_start=$(type -p start-neovim)
 have_kitty=$(type -p kitty)
 have_nvim=$(type -p nvim)
-if [ "${have_lazyman}" ]; then
+if [ "${have_start}" ]; then
   if [ "${have_kitty}" ]; then
-    kitty --title="Neovim" \
+    kitty --title="Lazyman Neovim Configuration Initialization" \
           --start-as normal \
-          --override startup_session=none \
-          lazyman open &
+          --session /home/kasm-user/.config/kitty/sessions/neovim &
   else
-    xfce4-terminal -x lazyman open &
+    xfce4-terminal -x start-neovim &
   fi
 else
   [ "${have_nvim}" ] && {
     export NVIM_APPNAME="nvim-Lazyman"
     if [ "${have_kitty}" ]; then
-      kitty --title="Neovim" \
+      kitty --title="Lazyman Neovim Configuration Initialization" \
             --start-as normal \
             --override startup_session=none \
             nvim &

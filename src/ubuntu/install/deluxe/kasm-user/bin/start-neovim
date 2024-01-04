@@ -1,5 +1,10 @@
 #!/bin/bash
 
+[ -d $HOME/.nvm ] && {
+  export NVM_DIR="$HOME/.nvm"
+  [ -s $NVM_DIR/nvm.sh ] && . ${NVM_DIR}/nvm.sh
+}
+
 [ "${NVIM_APPNAME}" ] || export NVIM_APPNAME=nvim-Lazyman
 
 if [ "$1" ]; then

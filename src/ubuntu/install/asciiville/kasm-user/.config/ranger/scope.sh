@@ -71,7 +71,7 @@ handle_extension() {
 
         ## Winglang
         #w)
-        #    /home/kasm-user/bin/start-vscode --no-sandbox -- "${FILE_PATH}" && exit 5
+        #    /home/kasm-user/bin/start-vscode -- "${FILE_PATH}" && exit 5
         #    exit 1;;
 
         ## PDF
