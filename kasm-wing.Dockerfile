@@ -48,12 +48,7 @@ ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
 WORKDIR $HOME
 USER 1000
 
-RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh && \
-    code --install-extension ms-vscode.cpptools-extension-pack && \
-    code --install-extension golang.Go && \
-    code --install-extension ms-toolsai.jupyter && \
-    code --install-extension Monada.vscode-wing && \
-    code --install-extension sherloach.solarized-osaka
+RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
 
 ######### End Customizations ###########
 
