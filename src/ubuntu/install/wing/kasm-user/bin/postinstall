@@ -18,12 +18,12 @@ notify-send "Cloning Wing examples into ${HOME}/Wing/"
 git clone https://github.com/winglang/examples.git \
   ${HOME}/Wing > ${LOGDIR}/clone-examples.log 2>&1
 
-notify-send "Installing Visual Studio Code Wing extension"
+#notify-send "Installing Visual Studio Code Wing extension"
 # Install VS Code Wing extension
-have_code=$(type -p code)
-[ "${have_code}" ] && {
-  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
-}
+#have_code=$(type -p code)
+#[ "${have_code}" ] && {
+#  code --install-extension Monada.vscode-wing > ${LOGDIR}/vscode-wing.log 2>&1
+#}
 
 notify-send "Installing Desktop entries and fixing permissions"
 
