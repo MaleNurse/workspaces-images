@@ -1,5 +1,10 @@
 #!/bin/bash
 
+[ -d $HOME/.nvm ] && {
+  export NVM_DIR="$HOME/.nvm"
+  [ -s $NVM_DIR/nvm.sh ] && . ${NVM_DIR}/nvm.sh
+}
+
 have_kitty=$(type -p kitty)
 [ "${have_kitty}" ] && {
   sleep 4
