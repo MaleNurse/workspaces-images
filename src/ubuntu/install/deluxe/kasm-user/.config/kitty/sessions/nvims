@@ -1,7 +1,7 @@
 # Kitty tab for Neovim
 #
 new_tab Neovim
-launch lazyman open
+launch zsh -c 'lazyman open'
 launch upper-center-window
 enabled_layouts tall:bias=50;full_size=1
 layout tall
