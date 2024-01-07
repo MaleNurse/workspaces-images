@@ -60,6 +60,7 @@ fi
 
 apt-get update
 apt-get upgrade -y
+apt-get install -y fuse3
 apt-get install -y libportaudio2
 apt-get install -y libportaudiocpp0
 apt-get install -y portaudio19-dev

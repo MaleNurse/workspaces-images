@@ -13,12 +13,12 @@ desktop=
 }
 win_id=$(xdotool getwindowfocus)
 
-export NVIM_APPNAME=nvim-Lazyman
+[ "${NVIM_APPNAME}" ] || export NVIM_APPNAME=nvim-Lazyman
 
 if [ "$1" ]; then
-  neovide $*
+  neovide --grid 108x32 $*
 else
-  neovide
+  neovide --grid 108x32
 fi
 
 sleep 1
