@@ -43,6 +43,7 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/* && \
+  cp -a ${INST_DIR}/ubuntu/install/mysql-workbench/root / && \
   rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh mysql-workbench && \
   cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
@@ -52,9 +53,6 @@ RUN \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
   chsh -s /bin/zsh kasm-user
-
-# Add local files
-COPY ${INST_DIR}/ubuntu/install/mysql-workbench/root /
 
 # Ports and volumes
 EXPOSE 3000
