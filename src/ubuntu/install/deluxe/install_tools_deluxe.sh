@@ -21,6 +21,27 @@ install_asciiville() {
   }
 }
 
+install_borg() {
+  API_URL="https://api.github.com/repos/borgbackup/borg/releases/latest"
+  DL_URL=
+  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+    | jq --raw-output '.assets | .[]?.browser_download_url' \
+    | grep "borg-linux64$")
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling Borg ..."
+    wget --quiet -O /tmp/borg$$ "${DL_URL}"
+    chmod 644 /tmp/borg$$
+    [ -d /usr/local/bin ] || mkdir -p /usr/local/bin
+    cp /tmp/borg$$ /usr/local/bin/borg
+    chown root:root /usr/local/bin/borg
+    chmod 755 /usr/local/bin/borg
+    ln -s /usr/local/bin/borg /usr/local/bin/borgfs
+    rm -f /tmp/borg$$
+    printf " done"
+  }
+}
+
 install_external_package() {
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
   DL_URL=
@@ -69,6 +90,7 @@ apt-get install -y greed
 apt-get install -y nudoku
 apt-get install -y speedtest-cli
 
+install_borg
 install_asciiville
 
 PROJECT=asciigames
