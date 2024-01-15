@@ -1,9 +1,24 @@
 #!/bin/bash
+#       _             ____
+#      | |__   _   _ |___ \  _ __  ___  _   _  _ __    ___
+#      | '_ \ | | | |  __) || '__|/ __|| | | || '_ \  / __|
+#      | |_) || |_| | / __/ | |   \__ \| |_| || | | || (__
+#      |_.__/  \__,_||_____||_|   |___/ \__, ||_| |_| \___|
+#                                       |___/
 #
+# Manage backups/storage on rsync.net
+# Usage: bu2rsync -u
+#
+# Written 2024-01-14 by Ronald Joe Record <ronaldrecord@gmail.com>
+# See: https://www.rsync.net/resources/howto/unix.html
+#
+# ========================= Customize ==============================
 # Modify 'user' and 'host' with your rsync.net username and hostname
 user="<rsync.net username>"
 host="<host>.rsync.net"
+# ======================= End Customize ============================
 myhost="$(hostname)"
+bdir="backups"
 borg=
 cmd=
 dryrun=
@@ -16,11 +31,18 @@ dudf=
 verbose=
 
 usage() {
-  printf "\nUsage: bu2rsync [-b init|create] [-c command] [-lL] [-n] [-q|Q] [-r] [-v] directory"
+  printf "\nUsage: bu2rsync [-b borg-command] [-c command] [-d dir] [-lL] [-n]"
+  printf "\n                [-q|Q] [-r] [-u] [-U user] [-H host] [-v] folder"
   printf "\nWhere:"
   printf "\n\t-b 'init' initializes a borg backup system on rsync.net"
+  printf "\n\t-b 'check' verifies the consistency of the borg backup repository"
   printf "\n\t-b 'create' creates a borg backup to rsync.net"
+  printf "\n\t-b 'info' displays detailed information about the borg backup repository"
+  printf "\n\t-b 'list' lists all archives in the borg backup repository"
+  printf "\n\t-b 'mount' mounts the borg backup repository on /mnt/borg"
+  printf "\n\t-b 'umount' unmounts the borg backup repository from /mnt/borg"
   printf "\n\t-c 'command' runs 'command' on rsync.net"
+  printf "\n\t-d 'dir' specifies a borg backup directory (default: 'backups'"
   printf "\n\t-l indicates list the contents of the backup folder"
   printf "\n\t-L indicates recursively list the contents of the backup folder"
   printf "\n\t-n indicates perform a dry run, don't make any changes"
@@ -28,7 +50,12 @@ usage() {
   printf "\n\t-Q indicates see how much space your account uses with the quota/df/du commands"
   printf "\n\t-r indicates remove remote backup"
   printf "\n\t-v indicates verbose mode"
+  printf "\n\t-U 'user' sets the rsync.net user to 'user'"
+  printf "\n\t-H 'host' sets the rsync.net host to 'host'"
   printf "\n\t-u displays this usage message and exits\n"
+  printf "\nThe 'folder' argument indicates the folder to sync/list/remove with rsync.net\n"
+  printf "\nCurrently using rsync.net user/host:"
+  printf "\n\t${user}@${host} for ${myhost}\n"
   exit 1
 }
 
@@ -43,20 +70,19 @@ install_borg() {
     printf "\n\tInstalling Borg ..."
     wget --quiet -O /tmp/borg$$ "${DL_URL}"
     chmod 644 /tmp/borg$$
-    [ -d /usr/local/bin ] || sudo mkdir -p /usr/local/bin
-    sudo cp /tmp/borg$$ /usr/local/bin/borg
-    sudo chown root:root /usr/local/bin/borg
-    sudo chmod 755 /usr/local/bin/borg
-    sudo ln -s /usr/local/bin/borg /usr/local/bin/borgfs
+    [ -d /usr/local/bin ] || ${SUDO} mkdir -p /usr/local/bin
+    ${SUDO} cp /tmp/borg$$ /usr/local/bin/borg
+    ${SUDO} chown root:root /usr/local/bin/borg
+    ${SUDO} chmod 755 /usr/local/bin/borg
+    ${SUDO} ln -s /usr/local/bin/borg /usr/local/bin/borgfs
     rm -f /tmp/borg$$
     printf " done"
   }
 }
 
 borg_create() {
-  REPOSITORY=${user}@${host}:${myhost}/backups
   export BORG_REMOTE_PATH=/usr/loca/bin/borg1/borg1
-  export BORG_REPO=ssh://${REPOSITORY}
+  export BORG_REPO=${user}@${host}:${myhost}/${bdir}
 
   [ "${BORG_PASSPHRASE}" ] || {
     printf "\nWARNING: No Borg passphrase detected."
@@ -69,40 +95,46 @@ borg_create() {
 
   info "Starting backup"
 
-  borg create                         \
-      --verbose                       \
-      --filter AME                    \
-      --list                          \
-      --stats                         \
-      --show-rc                       \
-      --compression lz4               \
-      --exclude-caches                \
-      --exclude 'home/*/.cache/*'     \
-      --exclude 'home/*/Music/*'      \
-      --exclude 'var/tmp/*'           \
-      --exclude '*.pyc'               \
-                                      \
-      ::'{hostname}-{now}'            \
-      /etc                            \
-      /home                           \
-      /root                           \
-      /var
+  borg create                                   \
+    --verbose                                   \
+    --filter AME                                \
+    --list                                      \
+    --stats                                     \
+    --show-rc                                   \
+    --compression lz4                           \
+    --exclude-caches                            \
+    --exclude '/root/.cache'                    \
+    --exclude '/home/*/.cache/*'                \
+    --exclude '/home/*/.local/share/Daedalus'   \
+    --exclude '/home/*/Music/*'                 \
+    --exclude '/var/tmp/*'                      \
+    --exclude '/var/cache'                      \
+    --exclude '/var/lib/docker/devicemapper'    \
+    --exclude '/var/lock/*'                     \
+    --exclude '/var/log/*'                      \
+    --exclude '/var/run/*'                      \
+    --exclude '/var/tmp/*'                      \
+    --exclude '/var/backups/*'                  \
+    --exclude '/var/spool/*'                    \
+    --exclude '*.pyc'                           \
+                                                \
+    ::'{hostname}-{now}'                        \
+    /etc                                        \
+    /home                                       \
+    /root                                       \
+    /var
 
   backup_exit=$?
 
   info "Pruning repository"
 
-  # Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
-  # archives of THIS machine. The '{hostname}-*' matching is very important to
-  # limit prune's operation to this machine's archives and not apply to
-  # other machines' archives also:
-  borg prune                          \
-      --list                          \
-      --glob-archives '{hostname}-*'  \
-      --show-rc                       \
-      --keep-daily    7               \
-      --keep-weekly   4               \
-      --keep-monthly  6
+  borg prune                        \
+    --list                          \
+    --glob-archives '{hostname}-*'  \
+    --show-rc                       \
+    --keep-daily    7               \
+    --keep-weekly   4               \
+    --keep-monthly  3
 
   prune_exit=$?
 
@@ -134,14 +166,19 @@ else
   AUTH_HEADER=
 fi
 export PATH="/usr/local/bin:$PATH"
-have_borg=$(type -p borg)
-while getopts ":b:c:lLnqQrvu" flag; do
+while getopts ":b:c:d:hHlLnqQrvuU" flag; do
   case $flag in
     b)
       borg="${OPTARG}"
       ;;
     c)
       cmd="${OPTARG}"
+      ;;
+    d)
+      bdir="${OPTARG}"
+      ;;
+    H)
+      host="${OPTARG}"
       ;;
     l)
       list=1
@@ -163,10 +200,13 @@ while getopts ":b:c:lLnqQrvu" flag; do
     r)
       remove=1
       ;;
+    U)
+      user="${OPTARG}"
+      ;;
     v)
       verbose="v"
       ;;
-    u)
+    h|u)
       usage
       ;;
     \?)
@@ -176,6 +216,24 @@ while getopts ":b:c:lLnqQrvu" flag; do
   esac
 done
 shift $(( OPTIND - 1 ))
+
+[ "${user}" == "<rsync.net username>" ] || [ "${host}" == "<host>.rsync.net" ] && {
+  printf "\nERROR: user and host variables must be set too rsync.net account values\n"
+  usage
+}
+
+uid=$(id -u)
+gid=$(id -g)
+SUDO=sudo
+if [ "${EUID}" ]; then
+  [ ${EUID} -eq 0 ] && SUDO=
+else
+  [ ${uid} -eq 0 ] && SUDO=
+fi
+
+[ "${BORG_PASSPHRASE}" ] || {
+  [ -f ${HOME}/.private ] && source ${HOME}/.private
+}
 
 [ "${cmd}" ] && {
   printf "\nCommand: ${cmd}\n"
@@ -208,12 +266,16 @@ shift $(( OPTIND - 1 ))
 }
 
 [ "${borg}" ] && {
+  have_borg=$(type -p borg)
+  [ "${have_borg}" ] || install_borg
   case "${borg}" in
     init|initialize)
-      [ "${have_borg}" ] || install_borg
-      borg init ${user}@${host}:${myhost}/backups
+      borg init --encryption=keyfile ${user}@${host}:${myhost}/${bdir} 2>/dev/null
       printf "\nExport your passphrase with:"
       printf "\n\texport BORG_PASSPHRASE='your-pass-phrase'\n"
+      ;;
+    check)
+      borg check ${user}@${host}:${myhost}/${bdir} 2>/dev/null
       ;;
     create)
       [ "${BORG_PASSPHRASE}" ] || {
@@ -221,9 +283,9 @@ shift $(( OPTIND - 1 ))
         printf "\nExport your passphrase in the environment variable:"
         printf "\n\texport BORG_PASSPHRASE='your-pass-phrase'\n"
       }
-      [ "${have_borg}" ] || {
-        install_borg
-        borg init ${user}@${host}:${myhost}/backups
+      borg check --repository-only ${user}@${host}:${myhost}/${bdir} 2>/dev/null
+      [ $? -eq 2 ] && {
+        borg init ${user}@${host}:${myhost}/${bdir} 2>/dev/null
         printf "\nExport your passphrase with:"
         printf "\n\texport BORG_PASSPHRASE='your-pass-phrase'\n"
       }
@@ -233,6 +295,20 @@ shift $(( OPTIND - 1 ))
       else
         borg_create
       fi
+      ;;
+    info|information)
+      borg info ${user}@${host}:${myhost}/${bdir} 2>/dev/null
+      ;;
+    list)
+      borg list ${user}@${host}:${myhost}/${bdir} 2>/dev/null
+      ;;
+    mount)
+      [ -d /mnt/borg ] || ${SUDO} mkdir -p /mnt/borg
+      ${SUDO} chown ${uid}:${gid} /mnt/borg
+      borg mount ${user}@${host}:${myhost}/${bdir} /mnt/borg 2>/dev/null
+      ;;
+    umount|unmount)
+      borg umount /mnt/borg
       ;;
     *)
       usage
