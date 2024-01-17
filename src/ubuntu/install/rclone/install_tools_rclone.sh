@@ -25,6 +25,7 @@ install_borg() {
 apt-get update -y
 apt-get upgrade -y
 apt-get install -y fuse3
+apt-get install -y pipx
 
 # GH_TOKEN, a GitHub token must be set in the environment
 # If it is not already set then the convenience build script will set it
@@ -46,5 +47,11 @@ else
 fi
 
 install_borg
+
+have_pipx=$(type -p pipx)
+[ "${have_pipx}" ] && {
+  pipx ensurepath
+  pipx install borgmatic
+}
 
 curl https://rclone.org/install.sh | bash
