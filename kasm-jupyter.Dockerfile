@@ -44,7 +44,7 @@ RUN apt-get update && apt-get install -y \
     && chown -R 1000:1000 /opt/anaconda3 /home/kasm-default-profile/.conda/ \
     # R
     # install two helper packages we need
-    && apt install --no-install-recommends software-properties-common dirmngr \
+    && apt install -y --no-install-recommends software-properties-common dirmngr \
     # add the signing key (by Michael Rutter) for these repos
     # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
     # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
