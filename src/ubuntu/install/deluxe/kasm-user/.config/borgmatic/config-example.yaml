@@ -1,0 +1,34 @@
+# List of source directories to backup.
+source_directories:
+    - /home
+    - /etc
+
+# Paths of local or remote repositories to backup to.
+repositories:
+    - path: ssh://k8pDxu32@k8pDxu32.repo.borgbase.com/./repo
+      label: borgbase
+    - path: /var/lib/backups/local.borg
+      label: local
+
+# Retention policy for how many backups to keep.
+keep_daily: 7
+keep_weekly: 4
+keep_monthly: 6
+
+# List of checks to run to validate your backups.
+checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks
+
+# Custom preparation scripts to run.
+before_backup:
+    - prepare-for-backup.sh
+
+# Databases to dump and include in backups.
+postgresql_databases:
+    - name: users
+
+# Third-party services to notify you if backups aren't happening.
+healthchecks:
+    ping_url: https://hc-ping.com/be067061-cf96-4412-8eae-62b0c50d6a8c

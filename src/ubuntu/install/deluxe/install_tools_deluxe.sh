@@ -82,6 +82,7 @@ fi
 apt-get update
 apt-get upgrade -y
 apt-get install -y fuse3
+apt-get install -y pipx
 apt-get install -y libportaudio2
 apt-get install -y libportaudiocpp0
 apt-get install -y portaudio19-dev
@@ -101,5 +102,11 @@ PROJECT=endoh1
 install_external_package
 PROJECT=asciiville-aewan
 install_external_package
+
+have_pipx=$(type -p pipx)
+[ "${have_pipx}" ] && {
+  pipx ensurepath
+  pipx install borgmatic
+}
 
 curl https://rclone.org/install.sh | bash
