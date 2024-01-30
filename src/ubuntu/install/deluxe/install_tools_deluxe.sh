@@ -103,10 +103,4 @@ install_external_package
 PROJECT=asciiville-aewan
 install_external_package
 
-have_pipx=$(type -p pipx)
-[ "${have_pipx}" ] && {
-  pipx ensurepath
-  pipx install borgmatic
-}
-
 curl https://rclone.org/install.sh | bash

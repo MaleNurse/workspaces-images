@@ -48,10 +48,4 @@ fi
 
 install_borg
 
-have_pipx=$(type -p pipx)
-[ "${have_pipx}" ] && {
-  pipx ensurepath
-  pipx install borgmatic
-}
-
 curl https://rclone.org/install.sh | bash
