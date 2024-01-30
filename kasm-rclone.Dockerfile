@@ -44,7 +44,6 @@ USER 1000
 
 RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
 RUN pipx ensurepath && \
-    pipx install pip && \
     pipx install borgmatic && \
     pipx install vorta
 
