@@ -42,7 +42,11 @@ ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
 WORKDIR $HOME
 USER 1000
 
-RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
+RUN bash \
+  ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh && \
+  pipx ensurepath && \
+  pipx install pip && \
+  pipx install vorta
 
 ######### End Customizations ###########
 
