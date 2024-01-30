@@ -1,3 +1,7 @@
 #!/bin/bash
 
-sudo docker push doctorwhen/kasm:asciigames
+if [ "$1" == "dryrun" ]; then
+  printf "\nsudo docker push doctorwhen/kasm:asciigames\n"
+else
+  sudo docker push doctorwhen/kasm:asciigames
+fi
