@@ -20,7 +20,7 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 python3 -m pip install --user Pillow
 python3 -m pip install --user Pygments
 git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-$HOME/.fzf/install
+$HOME/.fzf/install --all
 sed -i 's/kasm-default-profile/kasm-user/g' $HOME/.fzf.bash
 git clone https://github.com/doctorfree/cheat-sheets-plus ${HOME}/Documents/cheat-sheets-plus
 tar xzf ${HOME}/.config/obsidian.tar.gz -C ${HOME}/.config
