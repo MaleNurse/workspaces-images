@@ -10,14 +10,14 @@ cd ${SCRIPT_PATH}/..
 # Focal based except focal
 # for work in asciiville-deluxe exodus neovim-deluxe musicplayerplus osint spiderfoot
 # ALL except focal
-for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy jupyter kitty neovim osint rclone spiderfoot vs_code wing wing-neovim
+# for work in appimage asciigames asciiville-deluxe asciiville deluxe exodus focal lmstudio musicplayerplus navidrome neovim-deluxe neovim-jammy jupyter kitty neovim osint rclone spiderfoot vs_code wing wing-neovim
+for work in asciiville-deluxe exodus musicplayerplus neovim-deluxe neovim-jammy jupyter spiderfoot
 do
-  [ -d $work/kasm-user/bin ] || {
-    echo "$work/kasm-user/bin does not exist"
+  [ -d $work/kasm-user/.config/kitty ] || {
+    echo "$work/kasm-user/.config/kitty does not exist"
     continue
   }
-  cp jammy/kasm-user/bin/install-kitty $work/kasm-user/bin/install-kitty
-  chmod 755 $work/kasm-user/bin/install-kitty
+  cp focal/kasm-user/.config/kitty/kitty.conf $work/kasm-user/.config/kitty/kitty.conf
 # [ -d $work/kasm-user/.local/share/icons/hicolor/256x256/apps ] || {
 #   echo "Missing kasm-user/.local/share/icons/hicolor/256x256/apps in $work"
 #   continue
