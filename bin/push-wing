@@ -1,3 +1,7 @@
 #!/bin/bash
 
-sudo docker push doctorwhen/kasm:wing
+if [ "$1" == "dryrun" ]; then
+  printf "\nsudo docker push doctorwhen/kasm:wing\n"
+else
+  sudo docker push doctorwhen/kasm:wing
+fi

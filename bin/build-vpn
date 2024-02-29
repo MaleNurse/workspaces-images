@@ -1,0 +1,8 @@
+#!/bin/bash
+
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+cd $(dirname "${SCRIPT_PATH}")
+
+sudo docker build --pull --no-cache -t doctorwhen/kasm:vpn \
+                  -f kasm-vpn.Dockerfile .

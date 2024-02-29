@@ -122,6 +122,7 @@ apt-get install -y xsel
 apt-get install -y python3
 apt-get install -y python3-pip
 apt-get install -y python3-venv
+apt-get install -y net-tools
 apt-get install -y ruby
 apt-get install -y ruby-dev
 apt-get install -y wl-clipboard
