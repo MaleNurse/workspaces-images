@@ -1,0 +1,19 @@
+# Kitty tabbed startup session
+#
+new_tab RustDesk
+launch rustdesk
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+new_tab
+launch --env SHELL="/bin/zsh" --hold zsh -c "neofetch --kitty auto --source /home/kasm-user/.local/share/icons/hicolor/256x256/apps/ubuntu-jammy.png"
+launch center-active-window
+enabled_layouts tall:bias=50;full_size=1
+layout tall
+
+# Kitty tab for Cheat Sheets
+new_tab Help
+cd ~/Documents/cheat-sheets-plus/kasm
+launch --env PAGER="less -r" ranger --selectfile=workspaces.md
+enabled_layouts tall:bias=50;full_size=1
+layout tall

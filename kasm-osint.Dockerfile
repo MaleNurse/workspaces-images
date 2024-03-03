@@ -39,7 +39,7 @@ RUN \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
   rm -rf ${HOME}/.mozilla && \
-  bash $INST_DIR/ubuntu/install/install_kasm_user.sh spiderfoot && \
+  bash $INST_DIR/ubuntu/install/install_kasm_user.sh osint && \
   cp /usr/share/backgrounds/Owl-02.png $HOME/.local/share/backgrounds/bg_default.png && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \

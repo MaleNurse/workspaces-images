@@ -21,8 +21,8 @@ RUN  TEMP_DEB="$(mktemp).deb" \
         && wget -O $TEMP_DEB $LATESTURL \
         && apt install -f $TEMP_DEB -y \
         && rm -f "$TEMP_DEB" \
-        && cp ${INST_DIR}/ubuntu/install/rustdesk/rustdesk.desktop $HOME/Desktop/rustdesk.desktop \
-        && chmod +x $HOME/Desktop/rustdesk.desktop  \
+        && rm -rf ${HOME}/.mozilla \
+        && bash $INST_DIR/ubuntu/install/install_kasm_user.sh rustdesk \
         && $STARTUPDIR/set_user_permission.sh $HOME \
         && rm -f /etc/X11/xinit/Xclients \
         && chown 1000:0 $HOME \
