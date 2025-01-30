@@ -51,7 +51,7 @@ RUN \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
   tar xzf /tmp/obsidian.tar.gz -C ${INST_DIR}/ubuntu/install && \
   rm -f /tmp/obsidian.tar.gz && \
-  apt-get update && apt-get -y dist-upgrade
+  apt-get update && apt-get -y dist-upgrade \
   for SCRIPT in $INST_SCRIPTS; do \
     bash ${INST_DIR}${SCRIPT}; \
   done && \
