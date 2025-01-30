@@ -8,7 +8,8 @@ if [ "${ARCH}" == "arm64" ] ; then
     exit 0
 fi
 # Signal only releases its desktop app under the xenial release, however it is compatible with all versions of Debian and Ubuntu that we support.
-wget -O- https://updates.signal.org/desktop/apt/keys.asc | apt-key add -
+wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
+cat signal-desktop-keyring.gpg | tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
 echo "deb [arch=${ARCH}] https://updates.signal.org/desktop/apt xenial main" |  tee -a /etc/apt/sources.list.d/signal-xenial.list
 apt-get update
 apt-get install -y signal-desktop
