@@ -39,7 +39,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Copy install scripts
 COPY ./src/ $INST_DIR
 
-# Run installations
+# Copy custom fonts, wallpapers, apps
 RUN \
   rm -rf ${INST_DIR}/ubuntu/install/backgrounds && \
   wget -O /tmp/backgrounds.tar.gz \
@@ -51,16 +51,22 @@ RUN \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
   tar xzf /tmp/obsidian.tar.gz -C ${INST_DIR}/ubuntu/install && \
   rm -f /tmp/obsidian.tar.gz && \
-  apt-get update && apt-get -y dist-upgrade && \
-  for SCRIPT in $INST_SCRIPTS; do \
-    bash ${INST_DIR}${SCRIPT}; \
-  done && \
   wget -O /tmp/fonts.tar.gz \
     https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
   tar xzf /tmp/fonts.tar.gz -C /usr/share/fonts && \
   rm -f /tmp/fonts.tar.gz && \
-  fc-cache -f && \
-  rm -rf ${HOME}/.mozilla && \
+  fc-cache -f
+
+# Update base OS
+RUN apt-get update && apt-get -y dist-upgrade
+
+# Run installers
+RUN for SCRIPT in $INST_SCRIPTS; do \
+  bash ${INST_DIR}${SCRIPT}; \
+  done
+
+# Setup desktop user environment
+RUN rm -rf ${HOME}/.mozilla && \
   bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh noble && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
