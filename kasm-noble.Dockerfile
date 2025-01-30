@@ -29,7 +29,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/telegram/install_telegram.sh \
                   /ubuntu/install/zoom/install_zoom.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
-                  /ubuntu/install/jammy/install_tools_jammy.sh \
+                  /ubuntu/install/noble/install_tools_noble.sh \
                   /ubuntu/install/backgrounds/install_backgrounds.sh \
                   /ubuntu/install/obsidian/install_obsidian_conf.sh \
                   /ubuntu/install/torbrowser/install_torbrowser.sh \
@@ -61,7 +61,7 @@ RUN \
   rm -f /tmp/fonts.tar.gz && \
   fc-cache -f && \
   rm -rf ${HOME}/.mozilla && \
-  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh jammy && \
+  bash ${INST_DIR}/ubuntu/install/install_kasm_user.sh noble && \
   $STARTUPDIR/set_user_permission.sh $HOME && \
   rm -f /etc/X11/xinit/Xclients && \
   cp /usr/share/backgrounds/Earth-Galaxy-Space.png $HOME/.local/share/backgrounds/bg_default.png && \
@@ -80,7 +80,7 @@ ENV ZSH_CUSTOM $HOME/.oh-my-zsh/custom
 WORKDIR $HOME
 USER 1000
 
-RUN bash ${INST_DIR}/ubuntu/install/jammy/install_user_utils.sh
+RUN bash ${INST_DIR}/ubuntu/install/noble/install_user_utils.sh
 
 ######### End Customizations ###########
 
