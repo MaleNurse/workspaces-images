@@ -108,8 +108,8 @@ apt-get upgrade -y
 apt-get install -y apt-utils
 add-apt-repository universe
 apt-get update
-#apt-get install -y curl
-#apt-get install -y jq
+apt-get install -y curl
+apt-get install -y jq
 #apt-get install -y g++
 #apt-get install -y ripgrep
 #apt-get install -y bat
@@ -118,11 +118,11 @@ apt-get update
 #apt-get install -y libnotify-bin
 #apt-get install -y xclip
 #apt-get install -y xsel
-#apt-get install -y python3
-#apt-get install -y python3-pip
-#apt-get install -y python3-venv
-#apt-get install -y net-tools
-#apt-get install -y ruby
+apt-get install -y python3
+apt-get install -y python3-pip
+apt-get install -y python3-venv
+apt-get install -y net-tools
+apt-get install -y ruby
 apt-get install -y ruby-dev
 apt-get install -y wl-clipboard
 apt-get install -y uuid-runtime
