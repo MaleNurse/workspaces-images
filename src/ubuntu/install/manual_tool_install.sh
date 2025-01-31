@@ -206,4 +206,4 @@ mkdir -p /tmp/tor-browser/Browser/
 ln -s $TOR_HOME/tor-browser/start-tor-browser.desktop /tmp/tor-browser/Browser/start-tor-browser.desktop 
 chown -R 1000:0 $TOR_HOME/
 cp $TOR_HOME/tor-browser/start-tor-browser.desktop /home/kasm-user/Desktop/
-chown 1000:0  /home/kasm-user/Desktop/start-tor-browser.desktop
+chown -R 1000:1000 /home/kasm-user
