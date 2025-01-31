@@ -6,6 +6,7 @@ wget -O /tmp/backgrounds.tar.gz \
   https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/backgrounds/backgrounds.tar.gz && \
 tar xzf /tmp/backgrounds.tar.gz -C /home/kasm-user/workspaces-images/src/ubuntu/install && \
 rm -f /tmp/backgrounds.tar.gz && \
+cp /home/kasm-user/workspaces-images/src/ubuntu/install/backgrounds/Earth-Galaxy-Space.png /usr/share/backgrounds && \
 rm -rf /home/kasm-user/workspaces-images/src/ubuntu/install/obsidian && \
 wget -O /tmp/obsidian.tar.gz \
   https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
@@ -222,4 +223,19 @@ mkdir -p /tmp/tor-browser/Browser/
 ln -s $TOR_HOME/tor-browser/start-tor-browser.desktop /tmp/tor-browser/Browser/start-tor-browser.desktop 
 chown -R 1000:0 $TOR_HOME/
 cp $TOR_HOME/tor-browser/start-tor-browser.desktop /home/kasm-user/Desktop/
+
+mkdir /home/kasm-user/.local/share/backgrounds
+rm -rf /home/kasm-user/.mozilla && \
+bash /home/kasm-user/workspaces-images/src/ubuntu/install/install_kasm_user.sh noble && \
+/dockerstartup/set_user_permission.sh /home/kasm-user && \
+rm -f /etc/X11/xinit/Xclients && \
+cp /usr/share/backgrounds/Earth-Galaxy-Space.png /home/kasm-user/.local/share/backgrounds/bg_default.png && \
+rm -f /usr/share/extra/backgrounds/bg_default.png && \
+ln -s /home/kasm-user/.local/share/backgrounds/bg_default.png \
+      /usr/share/extra/backgrounds/bg_default.png && \
+chown 1000:1000 /home/kasm-user && \
+mkdir -p /home/kasm-user && \
+chown -R 1000:1000 /home/kasm-user && \
+chsh -s /bin/zsh kasm-user
+
 chown -R 1000:1000 /home/kasm-user
