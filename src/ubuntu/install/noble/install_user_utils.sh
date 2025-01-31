@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-export HOME=/home/kasm-default-profile
+export HOME=/home/kasm-user
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 export NVM_DIR="$HOME/.nvm"
