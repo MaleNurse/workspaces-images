@@ -30,8 +30,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
                   /ubuntu/install/zoom/install_zoom.sh \
                   /ubuntu/install/thunderbird/install_thunderbird.sh \
                   /ubuntu/install/noble/install_tools_noble.sh \
-                  /ubuntu/install/backgrounds/install_backgrounds.sh \
-                  /ubuntu/install/obsidian/install_obsidian_conf.sh \
                   /ubuntu/install/torbrowser/install_torbrowser.sh \
                   /ubuntu/install/github_desktop/install_github_desktop.sh \
                   /ubuntu/install/cleanup/cleanup.sh"
