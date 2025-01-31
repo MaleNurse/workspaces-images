@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 set -ex
 
+rm -rf /home/kasm-user/workspaces-images/src/ubuntu/install/backgrounds && \
+wget -O /tmp/backgrounds.tar.gz \
+  https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/backgrounds/backgrounds.tar.gz && \
+tar xzf /tmp/backgrounds.tar.gz -C /home/kasm-user/workspaces-images/src/ubuntu/install && \
+rm -f /tmp/backgrounds.tar.gz && \
+rm -rf /home/kasm-user/workspaces-images/src/ubuntu/install/obsidian && \
+wget -O /tmp/obsidian.tar.gz \
+  https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/obsidian/obsidian.tar.gz && \
+tar xzf /tmp/obsidian.tar.gz -C /home/kasm-user/workspaces-images/src/ubuntu/install && \
+rm -f /tmp/obsidian.tar.gz && \
+wget -O /tmp/fonts.tar.gz \
+  https://raw.githubusercontent.com/wiki/doctorfree/workspaces-images/fonts/JetBrainsMonoNerdFont.tar.gz && \
+tar xzf /tmp/fonts.tar.gz -C /usr/share/fonts && \
+rm -f /tmp/fonts.tar.gz && \
+fc-cache -f
+
 apt-add-repository -y ppa:remmina-ppa-team/remmina-next
 sed -i 's/oracular/noble/g' /etc/apt/sources.list.d/remmina-ppa-team-ubuntu-remmina-next-oracular.sources
 add-apt-repository ppa:libreoffice/ppa
