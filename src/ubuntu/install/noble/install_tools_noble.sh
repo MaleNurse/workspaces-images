@@ -152,7 +152,7 @@ apt-get install -y tmux
 apt-get install -y w3m
 apt-get install -y asciinema
 apt-get install -y gnupg
-apt-get install -y gnome-shell-extensions
+#apt-get install -y gnome-shell-extensions
 apt-get install -y gnome-tweaks
 apt-get install -y chrome-gnome-shell
 apt-get install -y zip
