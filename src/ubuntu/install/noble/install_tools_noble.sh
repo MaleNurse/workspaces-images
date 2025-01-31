@@ -161,8 +161,8 @@ apt-get install -y cmatrix
 apt-get install -y neomutt
 apt-get install -y newsboat
 apt-get install -y ca-certificates
-apt-get install -y ubuntu-desktop
-apt install $(apt search gnome-shell-extension | grep ^gnome | cut -d / -f1)
+#apt-get install -y ubuntu-desktop
+#apt install $(apt search gnome-shell-extension | grep ^gnome | cut -d / -f1)
 
 install_go
 install_lsd
