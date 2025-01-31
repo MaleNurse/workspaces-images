@@ -184,7 +184,7 @@ cp $TOR_HOME/tor-browser/Browser/browser/chrome/icons/default/default128.png /us
 chown 1000:0 /usr/share/icons/tor.png
 sed -i 's/^Name=.*/Name=Tor Browser/g' $TOR_HOME/tor-browser/start-tor-browser.desktop
 sed -i 's/Icon=.*/Icon=\/usr\/share\/icons\/tor.png/g' $TOR_HOME/tor-browser/start-tor-browser.desktop
-sed -i 's/Exec=.*/Exec=sh -c \x27"/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" --detach || ([ !  -x "/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" ] \&\& "$(dirname "$*")"\/Browser\/start-tor-browser --detach)\x27 dummy %k/g'  $TOR_HOME/tor-browser/start-tor-browser.desktop
+#sed -i 's/Exec=.*/Exec=sh -c \x27"/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" --detach || ([ !  -x "/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" ] \&\& "$(dirname "$*")"\/Browser\/start-tor-browser --detach)\x27 dummy %k/g'  $TOR_HOME/tor-browser/start-tor-browser.desktop
 cat >> $TOR_HOME/tor-browser/Browser/TorBrowser/Data/Browser/profile.default/prefs.js <<EOL
 user_pref("app.update.download.promptMaxAttempts", 0);
 user_pref("app.update.elevation.promptMaxAttempts", 0);
