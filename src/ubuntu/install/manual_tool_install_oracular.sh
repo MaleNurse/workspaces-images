@@ -339,27 +339,6 @@ install_go
 install_lsd
 install_obs
 
-FIGLET_DIR="/usr/share/figlet-fonts"
-FIGLET_ZIP="figlet-fonts.zip"
-zip_inst=$(type -p zip)
-if [ "${zip_inst}" ]; then
-  pyfig_inst=$(type -p pyfiglet)
-  [ "${pyfig_inst}" ] || {
-    python3 -m pip install pyfiglet
-    pyfig_inst=$(type -p pyfiglet)
-  }
-  if [ "${pyfig_inst}" ]; then
-    PYFIG=$(command -v pyfiglet)
-    ZIP=$(command -v zip)
-    if [ -d ${FIGLET_DIR} ]; then
-      cd ${FIGLET_DIR} || echo "Could not enter ${FIGLET_DIR}"
-      ${ZIP} -q ${FIGLET_ZIP} ./*.flf
-      ${PYFIG} -L ${FIGLET_ZIP}
-      rm -f ${FIGLET_ZIP}
-    fi
-  fi
-fi
-
 #setup desktop
 mkdir /home/kasm-user/.local/share/backgrounds
 rm -rf /home/kasm-user/.mozilla && \
