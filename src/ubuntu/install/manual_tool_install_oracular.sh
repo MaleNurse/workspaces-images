@@ -339,13 +339,6 @@ install_go
 install_lsd
 install_obs
 
-OWNER=aristocratos
-PROJECT=btop
-install_external_package
-OWNER=obsidianmd
-PROJECT=obsidian-releases
-install_external_package
-
 FIGLET_DIR="/usr/share/figlet-fonts"
 FIGLET_ZIP="figlet-fonts.zip"
 zip_inst=$(type -p zip)
