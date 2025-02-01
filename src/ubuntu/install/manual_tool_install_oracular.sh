@@ -339,9 +339,8 @@ install_go
 install_lsd
 install_obs
 
+OWNER=aristocratos
 PROJECT=btop
-install_external_package
-PROJECT=cbftp
 install_external_package
 OWNER=obsidianmd
 PROJECT=obsidian-releases
