@@ -25,6 +25,7 @@ sed -i 's/oracular/noble/g' /etc/apt/sources.list.d/remmina-ppa-team-ubuntu-remm
 add-apt-repository ppa:libreoffice/ppa
 wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
 sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
+add-apt-repository ppa:obsproject/obs-studio
 
 apt-get update
 apt-get install -y apt-utils
@@ -35,7 +36,10 @@ apt-get install -y nano zip xdotool vlc git tmux software-properties-common auda
   jq g++ ripgrep bat figlet lolcat libnotify-bin xclip xsel python3 python3-pip python3-venv net-tools ruby ruby-dev \
   wl-clipboard uuid-runtime libaa-bin libaa1 bb dconf-cli libncurses-dev libjpeg-dev libpng-dev khard build-essential \
   git git-core file zsh fonts-powerline mplayer dialog ranger exuberant-ctags highlight neofetch catdoc pandoc w3m \
-  asciinema gnupg zip imagemagick cmatrix neomutt newsboat ca-certificates
+  asciinema gnupg zip imagemagick cmatrix neomutt newsboat ca-certificatessudo obs-studio
+
+#Kitty Terminal
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
 
 #Discord
 curl -L -o discord.deb  "https://discord.com/api/download?platform=linux&format=deb"
