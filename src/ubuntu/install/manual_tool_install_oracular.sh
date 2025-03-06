@@ -343,6 +343,10 @@ install_go
 install_lsd
 install_obs
 
+curl --silent --location --output /tmp/btop.tbz \
+    https://github.com/aristocratos/btop/releases/latest/download/btop-x86_64-linux-musl.tbz
+tar -C /tmp -xjf /tmp/btop.tbz
+
 #setup desktop
 mkdir /home/kasm-user/.local/share/backgrounds
 rm -rf /home/kasm-user/.mozilla && \
