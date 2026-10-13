@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-OWNER=malenurse
+GH_TOKEN="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"
 
 rm -rf /home/kasm-user/workspaces-images/src/ubuntu/install/backgrounds && \
 wget -O /tmp/backgrounds.tar.gz \
@@ -23,8 +23,11 @@ fc-cache -f
 apt-add-repository -y ppa:remmina-ppa-team/remmina-next
 sed -i 's/oracular/noble/g' /etc/apt/sources.list.d/remmina-ppa-team-ubuntu-remmina-next-oracular.sources
 add-apt-repository ppa:libreoffice/ppa
-wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
-sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
+wget -qO - https://mirror.mwt.me/shiftkey-desktop/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/mwt-desktop.gpg > /dev/null
+sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mwt-desktop.gpg] https://mirror.mwt.me/shiftkey-desktop/deb/ any main" > /etc/apt/sources.list.d/mwt-desktop.list'
+wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
+cat signal-desktop-keyring.gpg | tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | tee /etc/apt/sources.list.d/signal-xenial.list
 add-apt-repository -y ppa:obsproject/obs-studio
 
 apt-get update
@@ -32,11 +35,11 @@ apt-get install -y apt-utils
 add-apt-repository universe
 apt-get update
 apt-get -y dist-upgrade
-apt-get install -y nano zip xdotool vlc git tmux software-properties-common audacity github-desktop curl \
+apt-get install -y nano zip xdotool vlc git tmux software-properties-common zoxide audacity github-desktop curl \
   jq g++ ripgrep bat figlet lolcat libnotify-bin xclip xsel python3 python3-pip python3-venv net-tools ruby ruby-dev \
   wl-clipboard uuid-runtime libaa-bin libaa1 bb dconf-cli libncurses-dev libjpeg-dev libpng-dev khard build-essential \
   git git-core file zsh fonts-powerline mplayer dialog ranger exuberant-ctags highlight neofetch catdoc pandoc w3m \
-  asciinema gnupg zip imagemagick cmatrix neomutt newsboat ca-certificatessudo obs-studio
+  asciinema gnupg zip imagemagick cmatrix neomutt newsboat ca-certificatessudo obs-studio signal-desktop
 
 #Kitty Terminal
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
@@ -241,7 +244,7 @@ cp $TOR_HOME/tor-browser/start-tor-browser.desktop /home/kasm-user/Desktop/
 install_external_package() {
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
   DL_URL=
-  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+  DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
     | grep "amd64\.deb")
 
@@ -267,7 +270,7 @@ install_go() {
 install_lsd() {
   API_URL="https://api.github.com/repos/lsd-rs/lsd/releases/latest"
   DL_URL=
-  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+  DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
     | grep "lsd_" | grep "_amd64\.deb")
 
@@ -285,7 +288,7 @@ install_lsd() {
 install_obs() {
   API_URL="https://api.github.com/repos/Yakitrak/obsidian-cli/releases/latest"
   DL_URL=
-  DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+  DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
     | jq --raw-output '.assets | .[]?.browser_download_url' \
     | grep "obsidian-cli" | grep "linux_amd64\.tar\.gz")
 
@@ -320,29 +323,11 @@ install_obs() {
   }
 }
 
-# GH_TOKEN, a GitHub token must be set in the environment
-# If it is not already set then the convenience build script will set it
-if [ "${GH_TOKEN}" ]; then
-  export GH_TOKEN="${GH_TOKEN}"
-else
-  export GH_TOKEN="__GITHUB_API_TOKEN__"
-fi
-# Check to make sure
-echo "${GH_TOKEN}" | grep __GITHUB_API | grep __TOKEN__ > /dev/null && {
-  # It didn't get set right, unset it
-  export GH_TOKEN=
-}
-
-if [ "${GH_TOKEN}" ]; then
-  AUTH_HEADER="-H \"Authorization: Bearer ${GH_TOKEN}\""
-else
-  AUTH_HEADER=
-fi
-
 install_go
 install_lsd
 install_obs
 
+ #install btop
 curl --silent --location --output /tmp/btop.tbz \
     https://github.com/aristocratos/btop/releases/latest/download/btop-x86_64-linux-musl.tbz
 tar -C /tmp -xjf /tmp/btop.tbz
