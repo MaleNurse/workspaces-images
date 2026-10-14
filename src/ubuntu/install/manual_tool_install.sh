@@ -21,7 +21,6 @@ rm -f /tmp/fonts.tar.gz && \
 fc-cache -f
 
 apt-add-repository -y ppa:remmina-ppa-team/remmina-next
-sed -i 's/oracular/noble/g' /etc/apt/sources.list.d/remmina-ppa-team-ubuntu-remmina-next-oracular.sources
 add-apt-repository ppa:libreoffice/ppa
 wget -qO - https://mirror.mwt.me/shiftkey-desktop/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/mwt-desktop.gpg > /dev/null
 sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mwt-desktop.gpg] https://mirror.mwt.me/shiftkey-desktop/deb/ any main" > /etc/apt/sources.list.d/mwt-desktop.list'
@@ -39,7 +38,7 @@ apt-get install -y nano zip xdotool vlc git tmux software-properties-common zoxi
   jq g++ ripgrep bat figlet lolcat libnotify-bin xclip xsel python3 python3-pip python3-venv net-tools ruby ruby-dev \
   wl-clipboard uuid-runtime libaa-bin libaa1 bb dconf-cli libncurses-dev libjpeg-dev libpng-dev khard build-essential \
   git git-core file zsh fonts-powerline mplayer dialog ranger exuberant-ctags highlight neofetch catdoc pandoc w3m \
-  asciinema gnupg zip imagemagick cmatrix neomutt newsboat ca-certificatessudo obs-studio signal-desktop
+  asciinema gnupg zip imagemagick cmatrix neomutt ca-certificates sudo obs-studio signal-desktop torbrowser-launcher
 
 #Kitty Terminal
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
@@ -199,66 +198,6 @@ cp /usr/share/applications/libreoffice-startcenter.desktop /home/kasm-user/Deskt
 chown 1000:1000 /home/kasm-user/Desktop/libreoffice-startcenter.desktop
 chmod +x /home/kasm-user/Desktop/libreoffice-startcenter.desktop
 
-#Tor Browser
-apt-get install -y xz-utils curl
-TOR_HOME=/home/kasm-user/tor-browser/
-mkdir -p $TOR_HOME
-if [ "$(arch)" == "aarch64" ]; then
-  SF_VERSION=$(curl -sI https://sourceforge.net/projects/tor-browser-ports/files/latest/download | awk -F'(ports/|/tor)' '/location/ {print $3}')
-  FULL_TOR_URL="https://downloads.sourceforge.net/project/tor-browser-ports/${SF_VERSION}/tor-browser-linux-arm64-${SF_VERSION}.tar.xz"
-else
-  TOR_URL=$(curl -q https://www.torproject.org/download/ | grep downloadLink | grep linux | sed 's/.*href="//g'  | cut -d '"' -f1 | head -1)
-  FULL_TOR_URL="https://www.torproject.org/${TOR_URL}"
-fi
-wget --quiet "${FULL_TOR_URL}" -O /tmp/torbrowser.tar.xz
-tar -xJf /tmp/torbrowser.tar.xz -C $TOR_HOME
-rm /tmp/torbrowser.tar.xz
-cp $TOR_HOME/tor-browser/start-tor-browser.desktop $TOR_HOME/tor-browser/start-tor-browser.desktop.bak
-cp $TOR_HOME/tor-browser/Browser/browser/chrome/icons/default/default128.png /usr/share/icons/tor.png
-chown 1000:0 /usr/share/icons/tor.png
-sed -i 's/^Name=.*/Name=Tor Browser/g' $TOR_HOME/tor-browser/start-tor-browser.desktop
-sed -i 's/Icon=.*/Icon=\/usr\/share\/icons\/tor.png/g' $TOR_HOME/tor-browser/start-tor-browser.desktop
-#sed -i 's/Exec=.*/Exec=sh -c \x27"/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" --detach || ([ !  -x "/home/kasm-user\/tor-browser\/tor-browser\/Browser\/start-tor-browser" ] \&\& "$(dirname "$*")"\/Browser\/start-tor-browser --detach)\x27 dummy %k/g'  $TOR_HOME/tor-browser/start-tor-browser.desktop
-cat >> $TOR_HOME/tor-browser/Browser/TorBrowser/Data/Browser/profile.default/prefs.js <<EOL
-user_pref("app.update.download.promptMaxAttempts", 0);
-user_pref("app.update.elevation.promptMaxAttempts", 0);
-user_pref("app.update.checkInstallTime", false);
-user_pref("app.update.background.interval", 315360000);
-user_pref("extensions.torlauncher.prompt_at_startup", false);
-user_pref("extensions.torlauncher.quickstart", true);
-user_pref("browser.download.lastDir", "/home/kasm-user/Downloads");
-user_pref("torbrowser.settings.bridges.builtin_type", "");
-user_pref("torbrowser.settings.bridges.enabled", false);
-user_pref("torbrowser.settings.bridges.source", -1);
-user_pref("torbrowser.settings.enabled", true);
-user_pref("torbrowser.settings.firewall.enabled", false);
-user_pref("torbrowser.settings.proxy.enabled", false);
-user_pref("torbrowser.settings.quickstart.enabled", true);
-EOL
-# Maintain backwards compatability with old image definitions that expect tor to be launched from /tmp
-mkdir -p /tmp/tor-browser/Browser/
-ln -s $TOR_HOME/tor-browser/start-tor-browser.desktop /tmp/tor-browser/Browser/start-tor-browser.desktop 
-chown -R 1000:0 $TOR_HOME/
-cp $TOR_HOME/tor-browser/start-tor-browser.desktop /home/kasm-user/Desktop/
-
-install_external_package() {
-  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
-  DL_URL=
-  DL_URL=$(curl --silent -H "Authorization: Bearer ${GH_TOKEN}" "${API_URL}" \
-    | jq --raw-output '.assets | .[]?.browser_download_url' \
-    | grep "amd64\.deb")
-
-  [ "${DL_URL}" ] && {
-    printf "\n\tInstalling %s ..." "${PROJECT}"
-    TEMP_DEB="$(mktemp --suffix=.deb)"
-    wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
-    chmod 644 "${TEMP_DEB}"
-    apt-get install -y "${TEMP_DEB}"
-    rm -f "${TEMP_DEB}"
-    printf " done"
-  }
-}
-
 install_go() {
   curl --silent --location --output /tmp/go.tgz \
        https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
@@ -324,13 +263,13 @@ install_obs() {
 }
 
 install_go
-install_lsd
-install_obs
+#install_lsd
+#install_obs
 
  #install btop
-curl --silent --location --output /tmp/btop.tbz \
-    https://github.com/aristocratos/btop/releases/latest/download/btop-x86_64-linux-musl.tbz
-tar -C /tmp -xjf /tmp/btop.tbz
+curl --silent --location --output /tmp/btop.tar.gz \
+    https://github.com/aristocratos/btop/releases/latest/download/btop-x86_64-unknown-linux-musl.tar.gz
+tar -C /tmp -xzf /tmp/btop.tar.gz
 
 #setup desktop
 mkdir /home/kasm-user/.local/share/backgrounds
