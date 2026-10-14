@@ -38,10 +38,16 @@ apt-get install -y nano zip xdotool vlc git tmux software-properties-common zoxi
   jq g++ ripgrep bat figlet lolcat libnotify-bin xclip xsel python3 python3-pip python3-venv net-tools ruby ruby-dev \
   wl-clipboard uuid-runtime libaa-bin libaa1 bb dconf-cli libncurses-dev libjpeg-dev libpng-dev khard build-essential \
   git git-core file zsh fonts-powerline mplayer dialog ranger exuberant-ctags highlight neofetch catdoc pandoc w3m \
-  asciinema gnupg zip imagemagick cmatrix neomutt ca-certificates sudo obs-studio signal-desktop torbrowser-launcher
+  asciinema gnupg zip imagemagick cmatrix neomutt ca-certificates sudo obs-studio signal-desktop torbrowser-launcher \
+  kwalletmanager kleopatra scdaemon
 
 #Kitty Terminal
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+
+#Mailspring
+wget https://updates.getmailspring.com/download?platform=linuxDeb -O /tmp/mailspring-1.26.0-amd64.deb
+dpkg --force-depends -i /tmp/mailspring-1.26.0-amd64.deb
+
 
 #Discord
 curl -L -o discord.deb  "https://discord.com/api/download?platform=linux&format=deb"
